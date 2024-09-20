@@ -62,6 +62,9 @@ router.put('/testimonial/status/:id', adminController.updateTestimonialStatus);
 router.get('/allContactUsListing', adminController.allContactUsListing);
 router.get('/admin-delete-review/:id', adminController.reviewDeleteMessage);
 
+// Cities API
+router.get('/allCitiesListing', adminController.allCitiesListing);
+
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);

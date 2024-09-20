@@ -13,6 +13,7 @@ const itenaryPriceDetails = require('../schema/itenaryShema/itenaryPriceDetails'
 const testimonial = require('../schema/testimonialSchema/testimonialSchema');
 const registerPage = require('../schema/registerPageSchema/registerPageSchema');
 const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
+const cities = require('../schema/citiesSchema/citiesSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -598,5 +599,23 @@ adminController.addInclusionAndExclusion = async (req, res) => {
         res.status(500).json({ message: "An error occurred while adding inclusion and exclusion" });
     }
 };
+
+adminController.allCitiesListing = async (req, res) => {
+    try {
+        const citiesList = await cities.find();
+
+        res.status(200).json({
+            success: true,
+            data: citiesList
+        });
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json({
+            success: false,
+            message: "An error occurred while fetching cities",
+            error: error.message
+        });
+    }
+}
 
 module.exports = adminController;

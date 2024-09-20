@@ -28,6 +28,10 @@ apiRoute.get('/get-all-details-itenary/:id', apiController.allDetailsOfItenaty)
 // Testimonial API
 apiRoute.get('/get-testimonial', apiController.getTestimonialListing);
 
+// Cities Listing API
+apiRoute.get('/get-all-cities', apiController.getAllCitiesListing);
+apiRoute.get('/search-all-cities', apiController.searchAllCitiesListing);
+
 // Contact Us API
 apiRoute.post('/contact-us-post', apiController.postContactUsAPI)
 apiRoute.get('/get-contact-us-review', apiController.getContactUsReview);

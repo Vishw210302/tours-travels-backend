@@ -7,6 +7,7 @@ const testimonial = require("../../schema/testimonialSchema/testimonialSchema");
 const { default: mongoose } = require("mongoose");
 const itenary = require("../../schema/itenaryShema/packagesDetailsItenary");
 const messageReview = require("../../schema/contactUsReview/contactUsReview");
+const cities = require("../../schema/citiesSchema/citiesSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -276,5 +277,21 @@ apicontroller.deleteContactUsReview = async (req, res) => {
   }
 }
 
+apicontroller.getAllCitiesListing = async (req, res) => {
+  try {
+    const getAllCities = await cities.find();
+    res.status(200).json({ status: true, data: getAllCities });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.searchAllCitiesListing = async (req, res) => {
+  try {
+    console.log("this is for testing search api")
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
 module.exports = apicontroller;
