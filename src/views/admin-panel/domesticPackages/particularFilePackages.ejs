@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin">Dashboard</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    <a href="/admin/domesticPackagesListing">Packages</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add Particular Package
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <%= packageData?.packageName %>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Index</th>
+                          <th>Itenary Name</th>
+                          <th>Price</th>
+                          <th>Categories</th>
+                          <th>Days</th>
+                          <th>Nights</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% packageData?.itenaries.forEach((itinerary, index) =>
+                        { %>
+                        <tr>
+                          <td class="py-1"><%= index + 1 %></td>
+                          <td><%= itinerary.packageTitle %></td>
+                          <td><%= itinerary.perPersonCost %></td>
+                          <td><%= itinerary.categories %></td>
+                          <td><%= itinerary.days.length %></td>
+                          <td><%= itinerary.days.length - 1%></td>
+                          <td>
+                            <a
+                              href="edit-link.html"
+                              style="
+                                margin-right: 1rem;
+                                margin-left: 1rem;
+                                text-decoration: none;
+                              "
+                              aria-label="Edit"
+                            >
+                              <i
+                                class="fa-solid fa-pen-to-square text-primary"
+                                style="font-size: 18px"
+                              ></i>
+                            </a>
+                            <a
+                              href="delete-link.html"
+                              style="text-decoration: none"
+                              aria-label="Delete"
+                            >
+                              <i
+                                class="fa-solid fa-trash text-danger"
+                                style="font-size: 18px"
+                              ></i>
+                            </a>
+                          </td>
+                        </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include("../partials/_footer.ejs") %>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

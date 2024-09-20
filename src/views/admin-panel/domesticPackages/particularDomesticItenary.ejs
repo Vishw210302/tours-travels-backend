@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <style>
+    .date-picker-container {
+      max-width: 300px;
+    }
+    .selected-dates {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .date-tag {
+      background-color: #e0e0e0;
+      padding: 5px 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+    .date-tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: 5px;
+      font-weight: bold;
+    }
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    .select-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .select-container .form-control {
+      cursor: pointer;
+    }
+
+    .form-control {
+      background-color: #191c24 !important;
+    }
+
+    .select-container .options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      border: 1px solid #ddd;
+      background: white;
+      display: none;
+      z-index: 1000;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .select-container .options div {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .select-container .options div.selected {
+      background: #007bff;
+      color: white;
+    }
+  </style>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Add Package</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin/packages">Packages</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add Package
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">
+                    Add <%- data.PackageName || '' %> Package
+                  </h4>
+                  <form
+                    class="forms-sample"
+                    action="/admin/add-itenary-create-package"
+                    method="POST"
+                    enctype="multipart/form-data"
+                  >
+                    <input
+                      type="hidden"
+                      id="mainPackageId"
+                      name="mainPackageId"
+                      value="<%= data._id %>"
+                    />
+                    <div class="step active">
+                      <div>
+                        <div class="my-4 border-bottom">
+                          <h3>Create Package</h3>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-md-6">
+                          <label for="packageBanner">Package Banner</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            id="packageBanner"
+                            name="bannerImage"
+                            onchange="previewBanner(event)"
+                          />
+                        </div>
+                        <div class="col-md-6">
+                          <label>Banner Preview</label>
+                          <div>
+                            <img
+                              id="bannerPreview"
+                              src=""
+                              alt="Banner Preview"
+                              style="
+                                max-width: 22%;
+                                height: auto;
+                                display: none;
+                                border: 1px solid #ccc;
+                              "
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="packageTitle">Package Title</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="packageTitle"
+                          name="packageTitle"
+                          placeholder="Enter Package Title"
+                        />
+                      </div>
+
+                      <div class="form-group">
+                        <label for="smallDescription">Small Description</label>
+                        <textarea
+                          class="form-control"
+                          id="smallDescription"
+                          name="smallDescription"
+                          rows="3"
+                          placeholder="Enter a small description"
+                        ></textarea>
+                      </div>
+                      <div class="d-flex">
+                        <div class="date-picker-container mr-3 mb-4">
+                          <div class="form-group">
+                            <label for="departureDates"
+                              >Select Departure Dates</label
+                            >
+                            <input
+                              type="date"
+                              class="form-control"
+                              id="departureDates"
+                            />
+                          </div>
+                          <div class="selected-dates" id="selectedDates"></div>
+                        </div>
+
+                        <div class="form-group mr-3">
+                          <label for="DepartureFrom">Departure From</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="DepartureFrom"
+                            name="departureFrom"
+                            placeholder="Enter Departure From"
+                          />
+                        </div>
+                        <div class="form-group mr-3">
+                          <label for="DepartureTo">Departure To</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="DepartureTo"
+                            name="departureTo"
+                            placeholder="Enter Departure To"
+                          />
+                        </div>
+                        <div class="form-group mr-3">
+                          <label for="perPersonCost">Per person Cost</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="perPersonCost"
+                            name="perPersonCost"
+                            placeholder="Enter per person cost"
+                          />
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label>Categories</label>
+                        <div class="d-flex">
+                          <div class="form-check mr-2">
+                            <input
+                              class="form-check-input styled-checkbox"
+                              type="radio"
+                              id="royalCategory"
+                              name="categories"
+                              value="royal"
+                            />
+                            <label
+                              class="form-check-label m-0 p-0"
+                              for="royalCategory"
+                              >Royal</label
+                            >
+                          </div>
+                          <div class="form-check mr-2">
+                            <input
+                              class="form-check-input styled-checkbox"
+                              type="radio"
+                              id="premiumCategory"
+                              name="categories"
+                              value="premium"
+                            />
+                            <label
+                              class="form-check-label m-0 p-0"
+                              for="premiumCategory"
+                              >Premium</label
+                            >
+                          </div>
+                          <div class="form-check mr-2">
+                            <input
+                              class="form-check-input styled-checkbox"
+                              type="radio"
+                              id="classicCategory"
+                              name="categories"
+                              value="classic"
+                            />
+                            <label
+                              class="form-check-label m-0 p-0"
+                              for="classicCategory"
+                              >Classic</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="buttons">
+                      <button
+                        type="submit"
+                        id="nextBtn"
+                        class="btn btn-primary"
+                        onclick="nextPrev(1)"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../partials/_script.ejs") %>
+
+    <script>
+      const departureDates = document.getElementById("departureDates");
+      const selectedDates = document.getElementById("selectedDates");
+      let dates = [];
+
+      departureDates.addEventListener("change", function () {
+        const selectedDate = this.value;
+        if (selectedDate && !dates.includes(selectedDate)) {
+          dates.push(selectedDate);
+          updateSelectedDates();
+        }
+        this.value = "";
+      });
+
+      function updateSelectedDates() {
+        selectedDates.innerHTML = "";
+
+        const existingHiddenInputs = document.querySelectorAll(
+          "input[name='departureDates[]']"
+        );
+        existingHiddenInputs.forEach((input) => input.remove());
+
+        const uniqueDates = new Set(dates);
+        uniqueDates.forEach((date) => {
+          const dateTag = document.createElement("span");
+          dateTag.className = "date-tag";
+          dateTag.innerHTML = `
+            ${date}
+            <button onclick="removeDate('${date}')">&times;</button>
+          `;
+
+          selectedDates.appendChild(dateTag);
+
+          const hiddenInput = document.createElement("input");
+          hiddenInput.type = "hidden";
+          hiddenInput.name = "departureDates[]";
+          hiddenInput.value = date;
+          document.querySelector("form").appendChild(hiddenInput);
+        });
+      }
+
+      function removeDate(date) {
+        dates = dates.filter((d) => d !== date);
+        updateSelectedDates();
+      }
+
+      function previewBanner(event) {
+        const file = event.target.files[0];
+        const preview = document.getElementById("bannerPreview");
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = "";
+          preview.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin">Dashboard</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Domestic Flights
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="d-flex align-items-center flex-wrap">
+                <% for (var i = 0; i < data.length; i++) { %> <% if
+                (data[i].categories === "international") { %>
+                <a
+                  class="card p-3 mr-2 mt-2"
+                  href="/admin/particularFilePackages/<%= data[i]._id %>"
+                >
+                  <img
+                    class="img-xs"
+                    src="/uploads/packages-Image/<%= data[i].packageImage %>"
+                    alt=""
+                    style="width: 200px; height: 200px; border-radius: 0"
+                  />
+                  <div class="d-flex justify-content-center mt-2">
+                    <p class="m-0" style="font-size: 25px">
+                      <%= data[i].packageName %>
+                    </p>
+                  </div>
+                </a>
+                <% } %> <% } %>
+              </div>
+            </div>
+
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

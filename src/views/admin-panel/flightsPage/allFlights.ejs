@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Flights
+                  </li>
+                </ol>
+              </nav>
+            </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h4 class="card-title">All Flights Details</h4>
+                      </div>
+                      <div>
+                        <a class="btn btn-primary" href="/admin/add-flights">Add flights</a>
+                      </div>
+                    </div>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Index</th>
+                            <th>Flights Name</th>
+                            <th>Amount</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="py-1">
+                             1
+                            </td>
+                            <td>Herman Beck</td>
+                            <td>$ 77.99</td>
+                            <td>May 15, 2015</td>
+                            <td>
+                              <a href="#" class="badge badge-success">Active</a>
+                              <a href="#" class="badge badge-danger">Deactive</a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

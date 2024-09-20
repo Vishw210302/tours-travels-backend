@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <style>
+    .date-picker-container {
+      max-width: 300px;
+    }
+    .selected-dates {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .date-tag {
+      background-color: #e0e0e0;
+      padding: 5px 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+    }
+    .date-tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: 5px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+    .select-container {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .select-container .form-control {
+      cursor: pointer;
+    }
+
+    .form-control {
+      background-color: #191c24 !important;
+      color: white;
+    }
+
+    .select-container .options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      border: 1px solid #ddd;
+      background: white;
+      display: none;
+      z-index: 1000;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .select-container .options div {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .select-container .options div.selected {
+      background: #007bff;
+      color: white;
+    }
+
+    .day-count {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .add-day {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .main-box {
+      padding: 20px;
+      border: 2px solid black;
+      margin-bottom: 20px;
+    }
+
+    .placeholder {
+      color: white;
+    }
+  </style>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Add Package</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin/packages">Packages</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add Package
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add Prices</h4>
+                  <form id="packageForm"  method="Post" action="/admin/add-price-details">
+                    <input
+                      type="hidden"
+                      name="itenaryId"
+                      value="<%= itenaryId %>"
+                    />
+                    <div id="daysContainer">
+                      <!-- First Day -->
+                      <div class="main-box">
+                        <div class="form-group row">
+                          <div class="col-md-6 mb-4">
+                            <label for="description1">Per Person Price</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="perPersonPrice"
+                              name="perPersonPrice"
+                            />
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <label for="description1">Child Without Bed </label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="childWithoutBed"
+                              name="childWithoutBed"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                          <div class="col-md-6 mb-4">
+                            <label for="description1">Child With Bed</label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="childWithBed"
+                              name="childWithBed"
+                            />
+                          </div>
+                          <div class="col-md-6 mb-4">
+                            <label for="description1">Cost Per Adult Extra Bed </label>
+                            <input
+                              type="number"
+                              class="form-control"
+                              id="costPerAdultExtraBed"
+                              name="costPerAdultExtraBed"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-6 ">
+                              <label for="description1">Cost Per Infont Below</label>
+                              <input
+                                type="number"
+                                class="form-control"
+                                id="costPerInfont"
+                                name="costPerInfont"
+                              />
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <div class="buttons">
+                      <button
+                        type="submit"
+                        id="nextBtn"
+                        class="btn btn-primary"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

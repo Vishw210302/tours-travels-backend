@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin/packages">Packages</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add Packages
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add Packages</h4>
+                  <form
+                    class="forms-sample"
+                    action="/admin/add-packages-listing"
+                    method="POST"
+                    ,
+                    enctype="multipart/form-data"
+                  >
+                    <!-- Package Name -->
+                    <div class="form-group">
+                      <label for="packageName">Package Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="packageName"
+                        name="packageName"
+                        placeholder="Enter Package Name"
+                      />
+                    </div>
+
+                    <!-- Slider Image -->
+                    <div class="form-group">
+                      <label>Slider Image</label>
+                      <div class="input-group col-xs-12">
+                        <input
+                          type="file"
+                          name="packageImage"
+                          class="form-control file-upload-info"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Categories -->
+                    <div class="form-group">
+                      <label for="categories">Categories</label>
+                      <select
+                        class="form-control"
+                        id="categories"
+                        name="categories"
+                      >
+                        <option name="categories" value="domestic">
+                          Domestic
+                        </option>
+                        <option name="categories" value="international">
+                          International
+                        </option>
+                      </select>
+                    </div>
+
+                    <!-- Submit & Cancel -->
+                    <button type="submit" class="btn btn-primary mr-2">
+                      Submit
+                    </button>
+                    <a class="btn btn-dark" href="/admin/packages">Cancel</a>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

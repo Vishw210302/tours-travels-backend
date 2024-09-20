@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin/packages">Packages</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add SiteSeen
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add Siteseen</h4>
+                  <form
+                    class="forms-sample"
+                    action="/admin/update-site-seen/<%= data.siteSeenData._id %>"
+                    method="POST",
+                    enctype="multipart/form-data"
+                  >
+                    <div class="form-group">
+                      <label for="SiteseenName">Siteseen Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="SiteseenName"
+                        name="SiteseenName"
+                        placeholder="Enter Siteseen Name"
+                        value="<%= data.siteSeenData.SiteseenName %>"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="SiteseenDescription"
+                        >Siteseen Description</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="SiteseenDescription"
+                        name="SiteseenDescription"
+                        placeholder="Enter Siteseen Description"
+                        value="<%= data.siteSeenData?.SiteseenDescription %>"
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Siteseen Image</label>
+                      <div class="input-group col-xs-12">
+                        <input
+                          type="file"
+                          name="siteseen"
+                          class="form-control file-upload-info"
+                          value="<%= data.siteSeenData.siteseen %>"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="PackagesInclude">Packages include</label>
+                        <select class="form-control" id="PackagesInclude" name="PackagesInclude">
+                          <% data.packages.forEach(function(package) { %>
+                            <option value="<%= package.packageName %>" >
+                            >
+                              <%= package.packageName %>
+                            </option>
+                          <% }); %>
+                        </select>
+                      </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">
+                      Update
+                    </button>
+                    <a class="btn btn-dark" href="/admin/allSiteSeenListing"
+                      >Cancel</a
+                    >
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>
