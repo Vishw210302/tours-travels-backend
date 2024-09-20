@@ -13,7 +13,6 @@ const itenaryPriceDetails = require('../schema/itenaryShema/itenaryPriceDetails'
 const testimonial = require('../schema/testimonialSchema/testimonialSchema');
 const registerPage = require('../schema/registerPageSchema/registerPageSchema');
 const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
-const { param } = require('../allRoute/allRoute');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -312,11 +311,11 @@ adminController.addSiteSeenImage = async (req, res) => {
 
 adminController.updateSiteSeenPage = async (req, res) => {
     try {
-        const siteSeenData = await siteSeen.findOne({_id : req.params.id})
+        const siteSeenData = await siteSeen.findOne({ _id: req.params.id })
         const packages = await axios.get(`${process.env.baseUrl}/api/get-packages`);
-        const data = {siteSeenData, packages: packages.data.data}
+        const data = { siteSeenData, packages: packages.data.data }
 
-        res.render('admin-panel/all-siteseen/updateSiteSeenPage', {data})
+        res.render('admin-panel/all-siteseen/updateSiteSeenPage', { data })
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -325,21 +324,21 @@ adminController.updateSiteSeenPage = async (req, res) => {
 adminController.updateSiteSeen = async (req, res) => {
     try {
 
-        const {SiteseenName,SiteseenDescription, PackagesInclude} = req.body
+        const { SiteseenName, SiteseenDescription, PackagesInclude } = req.body
         let updatedFields = {
             SiteseenName,
             SiteseenDescription,
             PackagesInclude
         };
-        
+
         if (req.file) {
             updatedFields.siteseen = req.file.filename;
         }
 
         const updatedData = await siteSeen.findOneAndUpdate(
-            { _id: req.params.id }, 
+            { _id: req.params.id },
             { $set: updatedFields },
-            { new: true } 
+            { new: true }
         );
 
         res.redirect('/admin/allSiteSeenListing')
@@ -593,7 +592,7 @@ adminController.addInclusionAndExclusion = async (req, res) => {
             exclusionPoints: exclusionPoints
         });
         await addInclusionExclusion.save();
-        res.status(200).json({ message: "Inclusion and exclusion added successfully" });
+        res.redirect('/admin/allInclusionAndExclusion')
     } catch (error) {
         console.log("error", error);
         res.status(500).json({ message: "An error occurred while adding inclusion and exclusion" });
