@@ -34,7 +34,7 @@ router.get('/allSiteSeenListing', adminController.allSiteSeenListing);
 router.get('/add-SiteSeen', adminController.addSiteSeen);
 router.post('/add-siteSeen-images', upload('/siteseen-image').single('siteseen'), adminController.addSiteSeenImage);
 router.get('/siteseen-update-page/:id', adminController.updateSiteSeenPage)
-router.post('/update-site-seen/:id',upload('/siteseen-image').single('siteseen'),  adminController.updateSiteSeen)
+router.post('/update-site-seen/:id', upload('/siteseen-image').single('siteseen'), adminController.updateSiteSeen)
 
 // Domestic Packages Routes
 router.get('/domesticPackagesListing', adminController.allDomesticPackagesListing);
