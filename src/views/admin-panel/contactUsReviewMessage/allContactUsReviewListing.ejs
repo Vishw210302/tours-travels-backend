@@ -39,6 +39,7 @@
                       <thead>
                         <tr>
                           <th>Index</th>
+                          <th>Name</th>
                           <th>Email</th>
                           <th>Mobile Number</th>
                           <th>Message</th>
@@ -49,15 +50,20 @@
                         <% for (var i = 0; i < data.length; i++) { %>
                         <tr>
                           <td class="py-1"><%= i + 1 %></td>
+                          <td><%= data[i].name %></td>
                           <td><%= data[i].email %></td>
                           <td><%= data[i].mobileNumber %></td>
                           <td><%= data[i].message %></td>
                           <td>
                             <a
                               href="/admin/admin-delete-review/<%= data[i]._id %>"
-                              class="badge badge-danger"
-                              >Delete</a
+                              style="text-decoration: none"
                             >
+                              <i
+                                class="fa-solid fa-trash text-danger"
+                                style="font-size: 18px"
+                              ></i
+                            ></a>
                           </td>
                         </tr>
                         <% } %>

@@ -13,6 +13,10 @@ const testimonialSchema = new mongoose.Schema({
         type: String,
         default: 'Inactive'
     },
+    numberOfReview: {
+        type: String,
+        default: 'Inactive'
+    },
     createdAt: {
         type: Date,
         default: null,

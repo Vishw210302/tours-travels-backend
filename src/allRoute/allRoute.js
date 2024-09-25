@@ -57,6 +57,7 @@ router.post('/add-inclusion-exclusion', adminController.addInclusionAndExclusion
 router.get('/allTestimonialListing', adminController.allTestimonialListing);
 router.post('/add-testimonial-review', adminController.addTestimonialReview);
 router.put('/testimonial/status/:id', adminController.updateTestimonialStatus);
+router.get('/delete-testimonial/:id', adminController.deleteTestimonial);
 
 // Contact us API
 router.get('/allContactUsListing', adminController.allContactUsListing);
@@ -64,6 +65,28 @@ router.get('/admin-delete-review/:id', adminController.reviewDeleteMessage);
 
 // Cities API
 router.get('/allCitiesListing', adminController.allCitiesListing);
+
+// Branch Name API
+router.get('/allBranchNameListing/:id', adminController.allBranchNameListing);
+router.get('/add-branch/:id', adminController.addBranchName);
+router.post('/add-branch-details', adminController.addBranchDetails);
+router.get('/delete-branch-details/:id', adminController.adminDeleteBranchDetails);
+router.get('/allBranchLocation', adminController.allBranchLocation);
+router.get('/add-branch-location', adminController.addBranchLocation);
+router.post('/post-branch-location', adminController.postBranchLocation);
+router.get('/delete-branch-location/:id', adminController.adminDeleteBranchLocation);
+router.get('/editBranchNameListing/:id', adminController.editBranchNameListing);
+router.post('/update-branch-name/:id', adminController.updateBranchName);
+
+// Blogs API
+router.get('/allBlogsListing', adminController.allBlogsListing);
+router.get('/addBlogs', adminController.addBlogs);
+router.post('/add-blog-listing', 
+    upload('/blogs-image').fields([
+        { name: 'blogImage', maxCount: 1 },  
+        { name: 'blogGallery', maxCount: 10 } 
+    ]), adminController.addBlogListing);
+router.get('/delete-blogs-listing/:id', adminController.adminDeleteBlogs);
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);

@@ -11,6 +11,12 @@ const storage = (location = '') => {
         }
     });
 }
-const upload = (location) => { return multer({ storage: storage(location) }) }
+const upload = (location) => { 
+try {
+    return multer({ storage: storage(location) }) 
+} catch (error) {
+    console.log(error,"ErrorError")
+}
+}
 
 module.exports = { upload };

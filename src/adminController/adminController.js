@@ -13,7 +13,11 @@ const itenaryPriceDetails = require('../schema/itenaryShema/itenaryPriceDetails'
 const testimonial = require('../schema/testimonialSchema/testimonialSchema');
 const registerPage = require('../schema/registerPageSchema/registerPageSchema');
 const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
-const cities = require('../schema/citiesSchema/citiesSchema');
+const branch = require('../schema/branchSchema/allBranchSchema');
+const locationBranch = require('../schema/branchSchema/branchLocationSchema');
+const sanitizeHtml = require('sanitize-html');
+const blogs = require('../schema/blogsSchema/blogsSchema');
+const airport_cities = require('../schema/airportCitiesSchema/airportCitiesSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -208,9 +212,7 @@ adminController.addPackagesListing = async (req, res) => {
         const payload = {
             categories, packageName, packageImage: req.file.filename
         }
-        console.log(payload, 'payload')
         const response = await axios.post(`${process.env.baseUrl}/api/add-packagessss`, payload);
-        console.log(response, 'res')
         if (response.data.status && response.data.status == true) {
             res.redirect("/admin/packages")
         } else {
@@ -404,25 +406,18 @@ const getSiteSeenByName = async (name) => {
 
 adminController.adddDayWiseItenary = async (req, res) => {
     try {
-
         let deFaultImage = null
         let { title, siteSeenId, itenaryId, description, meal } = req.body;
-
         const itenaries = await itenary.findOne({ _id: itenaryId })
         const mainPackage = await packages.findOne({ _id: itenaries.mainPackageId })
-
-        if (siteSeenId == '') {
+        if (siteSeenId == '' || siteSeenId == undefined) {
             deFaultImage = mainPackage?.packageImage
-            siteSeenId = null
+            siteSeenId = []
         }
-
         const addDayWiseItenary = await itenaryDetails.create({
             title, siteSeenId, deFaultImage, itenaryId, description, meal
         })
-
-
         res.status(200).json({ message: 'Successfully add day', data: addDayWiseItenary });
-
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -441,8 +436,7 @@ adminController.addPackagePricePage = async (req, res) => {
 adminController.getAllDetailsOfItenaty = async (req, res) => {
     const packageId = req.params.id
     try {
-        const response = await axios.get(`${process.env.baseUrl}/api/get-all-details-itenary/${packageId}`);
-        console.log("response of itenary details", response)
+        await axios.get(`${process.env.baseUrl}/api/get-all-details-itenary/${packageId}`);
     } catch (error) {
         console.log("error", error)
     }
@@ -479,12 +473,12 @@ adminController.allTestimonialListing = async (req, res) => {
 }
 
 adminController.addTestimonialReview = async (req, res) => {
-    console.log("request is very cool", req.body)
     try {
         const addTestimonialReviews = new testimonial({
             reviewPersonName: req.body.reviewPersonName,
             reviewDescription: req.body.reviewDescription,
-            status: req.body.status
+            status: req.body.status,
+            numberOfReview: req.body.numberOfReview
         });
         await addTestimonialReviews.save();
         res.status(200).json({ message: "Review added successfully" });
@@ -512,6 +506,19 @@ adminController.updateTestimonialStatus = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+adminController.deleteTestimonial = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-testimonial/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/allTestimonialListing")
+        } else {
+            console.log("Error add in testimonial")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 adminController.registerApi = async (req, res) => {
     try {
@@ -602,8 +609,7 @@ adminController.addInclusionAndExclusion = async (req, res) => {
 
 adminController.allCitiesListing = async (req, res) => {
     try {
-        const citiesList = await cities.find();
-
+        const citiesList = await airport_cities.find();
         res.status(200).json({
             success: true,
             data: citiesList
@@ -615,6 +621,192 @@ adminController.allCitiesListing = async (req, res) => {
             message: "An error occurred while fetching cities",
             error: error.message
         });
+    }
+}
+
+adminController.allBranchNameListing = async (req, res) => {
+    const branchId = req.params.id
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-branch-listing/${branchId}`)
+        if (response.data.status == true) {
+            res.render("admin-panel/branchName/AllBranchName", { data: response.data.data })
+        } else {
+            console.log("Error get in listing of Branch")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addBranchName = async (req, res) => {
+    try {
+        const branchId = req.params.id
+        res.render("admin-panel/branchName/AddBranchName", { branchId })
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addBranchDetails = async (req, res) => {
+    try {
+        const addAllBranchDetails = new branch({
+            branchId: req.body.branchId,
+            branchName: req.body.branchName,
+            branchNumber: req.body.branchNumber,
+            branchLocation: req.body.branchLocation,
+            mapUrl: req.body.mapUrl,
+        });
+        await addAllBranchDetails.save();
+        res.redirect(`/admin/allBranchNameListing/${req.body.branchId}`)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.adminDeleteBranchDetails = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-branch-details/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/allBranchNameListing")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.allBranchLocation = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-branch-location`);
+        if (response.data.status == true) {
+            res.render("admin-panel/branchName/branchLocationListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addBranchLocation = async (req, res) => {
+    try {
+        res.render("admin-panel/branchName/addBranchLocation")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postBranchLocation = async (req, res) => {
+    try {
+        const addAllBranchDetails = new locationBranch({
+            branchLocation: req.body.branchLocation,
+        });
+        await addAllBranchDetails.save();
+        res.redirect("/admin/allBranchLocation")
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.adminDeleteBranchLocation = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-branch-location/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/allBranchLocation")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.editBranchNameListing = async (req, res) => {
+    const branchId = req.params.id;
+    try {
+        const branch = await locationBranch.findOne({ _id: branchId });
+        if (!branch) {
+            return res.status(404).send("Branch not found");
+        }
+        res.render("admin-panel/branchName/editBranchName", { branch });
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).send("Server Error");
+    }
+}
+
+adminController.updateBranchName = async (req, res) => {
+    const branchId = req.params.id;
+    const { branchLocation } = req.body;
+    try {
+        await locationBranch.updateOne(
+            { _id: branchId },
+            { $set: { branchLocation } }
+        );
+        res.redirect("/admin/allBranchLocation");
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).send("Server Error");
+    }
+};
+
+adminController.allBlogsListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-blog-listing`)
+        if (response.data.status == true) {
+            res.render("admin-panel/blogsAndGallary/blogsAndGallary", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addBlogs = async (req, res) => {
+    try {
+        res.render("admin-panel/blogsAndGallary/addBlogs")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addBlogListing = async (req, res) => {
+    try {
+        const sanitizedDescription = sanitizeHtml(req.body.blogsDescription, {
+            allowedTags: [],
+            allowedAttributes: {}
+        });
+        const blogGallery = req.files?.blogGallery.map(item => item.filename)
+        const addBlogListingWithImage = new blogs({
+            blogsName: req.body.blogsName,
+            blogsDescription: sanitizedDescription,
+            blogImage: req.files ? req.files.blogImage[0].filename : null,
+            blogType: req.body.blogType,
+            blogAuthor: req.body.blogAuthor,
+            blogGallery
+        });
+
+        await addBlogListingWithImage.save();
+
+        res.status(201).json({ message: 'Blog created successfully' });
+    } catch (error) {
+        console.log(error, "Erororo")
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.adminDeleteBlogs = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-blogs/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/allBlogsListing")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 

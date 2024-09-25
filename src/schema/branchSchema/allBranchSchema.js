@@ -1,33 +1,30 @@
 const mongoose = require('mongoose');
 
-const allCitiesSchema = new mongoose.Schema({
-    name: {
+const branchSchema = new mongoose.Schema({
+    branchId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'locationBranch',
+        default: null
+    },
+    branchName: {
         type: String,
         required: true,
     },
-    lat: {
+    branchNumber: {
         type: String,
         required: true,
     },
-    lng: {
+    branchLocation: {
         type: String,
         required: true,
     },
-    country: {
-        type: String,
-        required: true,
-    },
-    admin1: {
-        type: String,
-        required: true,
-    },
-    admin2: {
+    mapUrl: {
         type: String,
         required: true,
     },
     createdAt: {
         type: Date,
-        default: new Date(),
+        default: null,
     },
     deletedAt: {
         type: Date,
@@ -35,6 +32,6 @@ const allCitiesSchema = new mongoose.Schema({
     }
 });
 
-const cities = mongoose.model('cities', allCitiesSchema);
+const branch = mongoose.model('branch', branchSchema);
 
-module.exports = cities;
+module.exports = branch;

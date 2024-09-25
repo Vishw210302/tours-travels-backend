@@ -7,7 +7,12 @@ const testimonial = require("../../schema/testimonialSchema/testimonialSchema");
 const { default: mongoose } = require("mongoose");
 const itenary = require("../../schema/itenaryShema/packagesDetailsItenary");
 const messageReview = require("../../schema/contactUsReview/contactUsReview");
-const cities = require("../../schema/citiesSchema/citiesSchema");
+const country = require("../../schema/countrySchema/countrySchema");
+const branch = require("../../schema/branchSchema/allBranchSchema");
+const locationBranch = require("../../schema/branchSchema/branchLocationSchema");
+const blogs = require("../../schema/blogsSchema/blogsSchema");
+const airport_cities = require("../../schema/airportCitiesSchema/airportCitiesSchema");
+const FlightsDetails = require("../../schema/flightsDetailsSchema/flightsDetailsSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -67,7 +72,6 @@ apicontroller.getSlider = async (req, res) => {
 apicontroller.deleteHomePageSlider = async (req, res) => {
   try {
     const allPackages = await slider.findById(req.params.id);
-    console.log(allPackages, "sdfsgsdfgsdfgs")
     await allPackages.remove();
     res.status(200).json({ status: true, message: 'Slider deleted successfully!' });
   } catch (error) {
@@ -111,6 +115,16 @@ apicontroller.getTestimonialListing = async (req, res) => {
   }
 }
 
+apicontroller.deleteTestimonial = async (req, res) => {
+  try {
+    const allTestimonial = await testimonial.findById(req.params.id);
+    await allTestimonial.remove();
+    res.status(200).json({ status: true, message: 'Testimonial Review deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 apicontroller.getParticularItenary = async (req, res) => {
   try {
     const packageId = new mongoose.Types.ObjectId(req.params.id);
@@ -141,6 +155,7 @@ apicontroller.getParticularItenary = async (req, res) => {
         $group: {
           _id: '$_id',
           packageName: { $first: '$packageName' },
+          packageImage: { $first: '$packageImage' },
           itenaries: { $push: '$itenaries' }
         }
       },
@@ -254,6 +269,7 @@ apicontroller.getContactUsReview = async (req, res) => {
 apicontroller.postContactUsAPI = async (req, res) => {
   try {
     const contactUsReview = new messageReview({
+      name: req.body.name,
       email: req.body.email,
       mobileNumber: req.body.mobileNumber,
       message: req.body.message,
@@ -279,19 +295,128 @@ apicontroller.deleteContactUsReview = async (req, res) => {
 
 apicontroller.getAllCitiesListing = async (req, res) => {
   try {
-    const getAllCities = await cities.find();
+    const city = req.query.city
+    let getAllCities;
+    if (!!city) {
+      getAllCities = await airport_cities.find({ city: { $regex: city, $options: 'i' } });
+    } else {
+      getAllCities = await airport_cities.find();
+    }
     res.status(200).json({ status: true, data: getAllCities });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
 
-apicontroller.searchAllCitiesListing = async (req, res) => {
+apicontroller.getAllCountryListing = async (req, res) => {
   try {
-    console.log("this is for testing search api")
+    let getAllCountry = await country.find();
+    res.status(200).json({ status: true, data: getAllCountry });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
+
+apicontroller.getAllBranchListing = async (req, res) => {
+  const branchId = req.params.id
+  try {
+    const data = await branch.find({ branchId: branchId });
+
+    return res.status(200).json({ status: true, data: data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteBranchDetails = async (req, res) => {
+  try {
+    const deleteBranchDetails = await branch.findById(req.params.id);
+    await deleteBranchDetails.remove();
+    res.status(200).json({ status: true, message: 'Branch Details deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getAllBranchLocation = async (req, res) => {
+  try {
+    const data = await locationBranch.find();
+    return res.status(200).json({ status: true, data: data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteBranchLocation = async (req, res) => {
+  try {
+    const deleteBranchLocation = await locationBranch.findById(req.params.id);
+    await deleteBranchLocation.remove();
+    res.status(200).json({ status: true, message: 'Branch Location deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getBlogListing = async (req, res) => {
+  try {
+    const getBlogListing = await blogs.find();
+    res.status(200).json({ status: true, data: getBlogListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteBlogs = async (req, res) => {
+  try {
+    const allBlogsListing = await blogs.findById(req.params.id);
+    await allBlogsListing.remove();
+    res.status(200).json({ status: true, message: 'Blogs deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.searchFligthsDetails = async (req, res) => {
+  try {
+
+    const { from, to, flightClass, departure_Date, adult, children, infant } = req.body
+
+    const query = {
+      'departure.city': { $regex: new RegExp(from, 'i') },
+      'arrival.city': { $regex: new RegExp(to, 'i') },
+      [`class_details.${flightClass}.seats_available`]: { $gt: 0 },
+    };
+
+    const results = await FlightsDetails.find(query);
+
+    const flights = results.filter((flight) => {
+
+      const dateTime = flight.departure.time
+      const dateObject = new Date(dateTime);
+      const formattedDate = formatDate(dateObject);
+
+      return departure_Date == formattedDate
+
+    })
+
+    function formatDate(date) {
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${month}/${day}/${year}`;
+    }
+
+    if (flights.length === 0) {
+      return res.status(404).json({ message: 'No flights found.' });
+    }
+
+    return res.status(200).json({ flights });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 
 module.exports = apicontroller;

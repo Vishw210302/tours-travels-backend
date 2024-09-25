@@ -10,6 +10,7 @@
       <div class="container-fluid page-body-wrapper">
         <%- include("../partials/_navbar.ejs") %>
         <div class="main-panel">
+          <%- console.log("datatatta",data) %>
           <div class="content-wrapper">
             <div class="page-header">
               <h3 class="page-title">Basic Tables</h3>
@@ -19,7 +20,7 @@
                     <a href="/admin">Dashboard</a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Packages
+                    Blogs
                   </li>
                 </ol>
               </nav>
@@ -31,11 +32,11 @@
                     class="d-flex justify-content-between align-items-center"
                   >
                     <div>
-                      <h4 class="card-title">All Packages Details</h4>
+                      <h4 class="card-title">All Blogs</h4>
                     </div>
                     <div>
-                      <a class="btn btn-primary" href="/admin/add-packages"
-                        >Add Packages</a
+                      <a class="btn btn-primary" href="/admin/addBlogs"
+                        >Add Blogs</a
                       >
                     </div>
                   </div>
@@ -44,21 +45,26 @@
                       <thead>
                         <tr>
                           <th>Index</th>
-                          <th>Packages Name</th>
-                          <th>Packages Image</th>
-                          <th>Categories</th>
+                          <th>Blogs Name</th>
+                          <th>Blogs Image</th>
+                          <th>Blogs Description</th>
+                          <th>Blog Date</th>
+                          <th>Blog Type</th>
+                          <th>Blog Author</th>
                           <th>Action</th>
-                          <th>Add</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% for (var i = 0; i < data.length; i++) { %>
+                        <% for (var i = 0; i < data.length; i++) { var
+                        createdAtDate = new Date(data[i].createdAt); var
+                        formattedDate
+                        =createdAtDate.toLocaleDateString("en-GB"); %>
                         <tr>
                           <td class="py-1"><%= i + 1 %></td>
-                          <td><%= data[i].packageName %></td>
+                          <td><%= data[i].blogsName %></td>
                           <td style="width: 30%" class="py-1">
                             <img
-                              src="/uploads/packages-Image/<%= data[i].packageImage %>"
+                              src="/uploads/blogs-image/<%= data[i].blogImage %>"
                               alt="image"
                               style="
                                 width: 85%;
@@ -68,7 +74,14 @@
                               "
                             />
                           </td>
-                          <td><%= data[i].categories %></td>
+                          <td style="width: 30%; text-wrap: wrap">
+                            <%= data[i].blogsDescription %>
+                          </td>
+
+                          <td><%= formattedDate %></td>
+                          <td><%= data[i].blogType %></td>
+                          <td><%= data[i].blogAuthor %></td>
+
                           <td>
                             <a
                               href=""
@@ -84,21 +97,13 @@
                               ></i>
                             </a>
                             <a
-                              href="/admin/admin-delete-package/<%= data[i]._id %>"
+                              href="/admin/delete-blogs-listing/<%= data[i]._id %>"
                               style="text-decoration: none"
                             >
                               <i
                                 class="fa-solid fa-trash text-danger"
                                 style="font-size: 18px"
                               ></i>
-                            </a>
-                          </td>
-                          <td>
-                            <a
-                              href="/admin/particularDomesticItenary/<%= data[i]._id %>"
-                              class="border rounded-circle p-1"
-                            >
-                              <i class="fa-sharp fa-solid fa-plus"></i>
                             </a>
                           </td>
                         </tr>

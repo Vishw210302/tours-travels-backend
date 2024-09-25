@@ -1,20 +1,28 @@
 const mongoose = require('mongoose');
 
-const contactUsReviewSchema = new mongoose.Schema({
-    name: {
+const blogsSchema = new mongoose.Schema({
+    blogsName: {
         type: String,
         required: true,
     },
-    email: {
+    blogsDescription: {
         type: String,
         required: true,
     },
-    mobileNumber: {
+    blogImage: {
         type: String,
         required: true,
     },
-    message: {
+    blogType: {
         type: String,
+        required: true,
+    },
+    blogAuthor: {
+        type: String,
+        required: true,
+    },
+    blogGallery: {
+        type: [String],
         required: true,
     },
     createdAt: {
@@ -27,6 +35,6 @@ const contactUsReviewSchema = new mongoose.Schema({
     }
 });
 
-const messageReview = mongoose.model('messageReview', contactUsReviewSchema);
+const blogs = mongoose.model('blogs', blogsSchema);
 
-module.exports = messageReview;
+module.exports = blogs;

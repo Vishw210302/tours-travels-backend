@@ -27,14 +27,28 @@ apiRoute.get('/get-all-details-itenary/:id', apiController.allDetailsOfItenaty)
 
 // Testimonial API
 apiRoute.get('/get-testimonial', apiController.getTestimonialListing);
+apiRoute.delete('/delete-testimonial/:id', apiController.deleteTestimonial);
 
 // Cities Listing API
 apiRoute.get('/get-all-cities', apiController.getAllCitiesListing);
-apiRoute.get('/search-all-cities', apiController.searchAllCitiesListing);
+apiRoute.get('/get-all-country', apiController.getAllCountryListing);
 
 // Contact Us API
 apiRoute.post('/contact-us-post', apiController.postContactUsAPI)
 apiRoute.get('/get-contact-us-review', apiController.getContactUsReview);
 apiRoute.delete('/delete-contact-us-review/:id', apiController.deleteContactUsReview);
+
+// Branch Listing API
+apiRoute.get('/get-branch-listing/:id', apiController.getAllBranchListing);
+apiRoute.get('/get-branch-location', apiController.getAllBranchLocation);
+apiRoute.delete('/delete-branch-details/:id', apiController.deleteBranchDetails);
+apiRoute.delete('/delete-branch-location/:id', apiController.deleteBranchLocation);
+
+// Blogs Listing API
+apiRoute.get('/get-blog-listing', apiController.getBlogListing);
+apiRoute.delete('/delete-blogs/:id', apiController.deleteBlogs);
+
+// Search Flights API 
+apiRoute.post('/search-flights-details', apiController.searchFligthsDetails);
 
 module.exports = apiRoute;

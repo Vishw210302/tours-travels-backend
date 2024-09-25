@@ -19,7 +19,7 @@
                     <a href="/admin">Dashboard</a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Packages
+                    Branch Location
                   </li>
                 </ol>
               </nav>
@@ -31,11 +31,13 @@
                     class="d-flex justify-content-between align-items-center"
                   >
                     <div>
-                      <h4 class="card-title">All Packages Details</h4>
+                      <h4 class="card-title">All Branch Location</h4>
                     </div>
                     <div>
-                      <a class="btn btn-primary" href="/admin/add-packages"
-                        >Add Packages</a
+                      <a
+                        class="btn btn-primary"
+                        href="/admin/add-branch-location"
+                        >Add Branch Location</a
                       >
                     </div>
                   </div>
@@ -44,10 +46,8 @@
                       <thead>
                         <tr>
                           <th>Index</th>
-                          <th>Packages Name</th>
-                          <th>Packages Image</th>
-                          <th>Categories</th>
-                          <th>Action</th>
+                          <th>Branch Name</th>
+                          <th>Status</th>
                           <th>Add</th>
                         </tr>
                       </thead>
@@ -55,23 +55,19 @@
                         <% for (var i = 0; i < data.length; i++) { %>
                         <tr>
                           <td class="py-1"><%= i + 1 %></td>
-                          <td><%= data[i].packageName %></td>
-                          <td style="width: 30%" class="py-1">
-                            <img
-                              src="/uploads/packages-Image/<%= data[i].packageImage %>"
-                              alt="image"
-                              style="
-                                width: 85%;
-                                height: 200px;
-                                border-radius: 0;
-                                object-fit: fill;
-                              "
-                            />
-                          </td>
-                          <td><%= data[i].categories %></td>
+                          <td><%= data[i].branchLocation %></td>
                           <td>
                             <a
-                              href=""
+                              href="/admin/delete-branch-location/<%= data[i]._id %>"
+                              style="text-decoration: none"
+                            >
+                              <i
+                                class="fa-solid fa-trash text-danger"
+                                style="font-size: 18px"
+                              ></i
+                            ></a>
+                            <a
+                              href="/admin/allBranchNameListing/<%= data[i]._id %>"
                               style="
                                 margin-right: 1rem;
                                 margin-left: 1rem;
@@ -79,27 +75,26 @@
                               "
                             >
                               <i
-                                class="fa-solid fa-pen-to-square text-primary"
-                                style="font-size: 18px"
-                              ></i>
-                            </a>
+                                class="fa-solid fa-eye"
+                                style="font-size: 15px"
+                              ></i
+                            ></a>
                             <a
-                              href="/admin/admin-delete-package/<%= data[i]._id %>"
-                              style="text-decoration: none"
+                              href="/admin/editBranchNameListing/<%= data[i]._id %>"
+                              style="margin-right: 1rem; text-decoration: none"
                             >
                               <i
-                                class="fa-solid fa-trash text-danger"
+                                class="fa-solid fa-pen-to-square text-primary"
                                 style="font-size: 18px"
                               ></i>
                             </a>
                           </td>
                           <td>
                             <a
-                              href="/admin/particularDomesticItenary/<%= data[i]._id %>"
-                              class="border rounded-circle p-1"
-                            >
-                              <i class="fa-sharp fa-solid fa-plus"></i>
-                            </a>
+                              href="/admin/add-branch/<%= data[i]._id %>"
+                              class="badge badge-success"
+                              ><i class="fa-sharp fa-solid fa-plus"></i
+                            ></a>
                           </td>
                         </tr>
                         <% } %>
@@ -109,8 +104,8 @@
                 </div>
               </div>
             </div>
+            <%- include("../partials/_footer.ejs") %>
           </div>
-          <%- include("../partials/_footer.ejs") %>
         </div>
       </div>
     </div>

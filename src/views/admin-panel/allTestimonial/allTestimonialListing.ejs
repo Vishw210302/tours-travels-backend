@@ -68,7 +68,9 @@
                           <th class="name">Review Person Name</th>
                           <th class="description">Review Description</th>
                           <th class="description">Status</th>
+                          <th class="description">Number Of Review</th>
                           <th class="action">Action</th>
+                          <th class="action">Status</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -82,20 +84,13 @@
                           </td>
                           <td class="description">
                             <div
-                              style="
-                                  width: 20%; 
-                                  display: flex;
-                                  justify-content: center;
-                                  align-items: center;
-                                  padding: 5px; 
-                                  border-radius: 18px; 
-                                  color: white; 
-                                  border: 2px solid <%= data[i].status === 'Active' ? 'green' : 'red' %>; 
-                                  background-color: <%= data[i].status === 'Active' ? 'green' : 'red' %>;
-                                "
+                              class="<%= data[i].status === 'Active' ? 'badge badge-outline-success' : 'badge badge-outline-danger' %>"
                             >
                               <%= data[i].status %>
                             </div>
+                          </td>
+                          <td class="description">
+                            <%= data[i].numberOfReview %>
                           </td>
                           <td class="action">
                             <div class="form-check form-check-primary">
@@ -104,6 +99,17 @@
                               === 'Active' ? 'checked' : '' %>
                               onchange="toggleStatus(this)" />
                             </div>
+                          </td>
+                          <td>
+                            <a
+                              href="/admin/delete-testimonial/<%= data[i]._id %>"
+                              style="text-decoration: none"
+                            >
+                              <i
+                                class="fa-solid fa-trash text-danger"
+                                style="font-size: 18px"
+                              ></i>
+                            </a>
                           </td>
                         </tr>
                         <% } %> <% } else { %>
