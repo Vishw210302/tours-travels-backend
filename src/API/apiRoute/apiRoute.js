@@ -50,5 +50,15 @@ apiRoute.delete('/delete-blogs/:id', apiController.deleteBlogs);
 
 // Search Flights API 
 apiRoute.post('/search-flights-details', apiController.searchFligthsDetails);
+// apiRoute.get('/get-flights-logo', apiController.getDefaultFlightsLogo);
+apiRoute.get('/get-special-flight-data_V_P_D', apiController.getSpecialFlightsData);
+
+// Youtube Videos API
+apiRoute.get('/get-youtube-videos', apiController.getYoutubeVideos);
+apiRoute.delete('/delete-youtube-URL/:id', apiController.deleteYoutubeURL);
+
+// Team Members Details API
+apiRoute.get('/get-all-members-details', apiController.getAllMembersDetails);
+apiRoute.delete('/delete-team-members/:id', apiController.deleteTeamMembers);
 
 module.exports = apiRoute;

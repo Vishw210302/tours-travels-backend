@@ -13,6 +13,9 @@ const locationBranch = require("../../schema/branchSchema/branchLocationSchema")
 const blogs = require("../../schema/blogsSchema/blogsSchema");
 const airport_cities = require("../../schema/airportCitiesSchema/airportCitiesSchema");
 const FlightsDetails = require("../../schema/flightsDetailsSchema/flightsDetailsSchema");
+const specialFlights = require("../../schema/specialFlightsSchema/specialFlightsSchema");
+const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema");
+const teamMemberDetails = require("../../schema/teamMemberSchema/teamMemberSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -378,25 +381,24 @@ apicontroller.deleteBlogs = async (req, res) => {
 
 apicontroller.searchFligthsDetails = async (req, res) => {
   try {
-
-    const { from, to, flightClass, departure_Date, adult, children, infant } = req.body
-
+    const { from, to, flightClass, departure_Date, oneWay, adult, children, infant } = req.body
     const query = {
       'departure.city': { $regex: new RegExp(from, 'i') },
       'arrival.city': { $regex: new RegExp(to, 'i') },
       [`class_details.${flightClass}.seats_available`]: { $gt: 0 },
     };
 
+    if (oneWay === true) {
+      query.hold = 'direct';
+    }
+
     const results = await FlightsDetails.find(query);
 
     const flights = results.filter((flight) => {
-
       const dateTime = flight.departure.time
       const dateObject = new Date(dateTime);
       const formattedDate = formatDate(dateObject);
-
       return departure_Date == formattedDate
-
     })
 
     function formatDate(date) {
@@ -405,7 +407,6 @@ apicontroller.searchFligthsDetails = async (req, res) => {
       const year = date.getFullYear();
       return `${month}/${day}/${year}`;
     }
-
     if (flights.length === 0) {
       return res.status(404).json({ message: 'No flights found.' });
     }
@@ -417,6 +418,69 @@ apicontroller.searchFligthsDetails = async (req, res) => {
   }
 };
 
+apicontroller.getSpecialFlightsData = async (req, res) => {
+  try {
+    const specialFlightsDetails = await specialFlights.find();
+    res.status(200).json({ status: true, data: specialFlightsDetails });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
+apicontroller.getDefaultFlightsLogo = async (req, res) => {
+  try {
+    await FlightsDetails.updateMany({ airline: 'Air India' }, { airlineLogo: 'Air-India.png' });
+    await FlightsDetails.updateMany({ airline: 'Go First' }, { airlineLogo: 'go-first.png' });
+    await FlightsDetails.updateMany({ airline: 'Indigo' }, { airlineLogo: 'indigo_main.png' });
+    await FlightsDetails.updateMany({ airline: 'Vistara' }, { airlineLogo: 'vistara.png' });
+    await FlightsDetails.updateMany({ airline: 'spicejet' }, { airlineLogo: 'spicejet.png' });
+
+    const uniqueAirlines = await FlightsDetails.find();
+
+    res.status(200).json({ uniqueAirlines });
+
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: 'Error retrieving unique airlines', error: error.message });
+  }
+};
+
+apicontroller.getYoutubeVideos = async (req, res) => {
+  try {
+    const getYoutubeURL = await youtubeURL.find();
+    res.status(200).json({ status: true, data: getYoutubeURL });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteYoutubeURL = async (req, res) => {
+  try {
+    const allYoutubeVideos = await youtubeURL.findById(req.params.id);
+    await allYoutubeVideos.remove();
+    res.status(200).json({ status: true, message: 'Youtube Videos deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getAllMembersDetails = async (req, res) => {
+  try {
+    const getAllMembersData = await teamMemberDetails.find();
+    res.status(200).json({ status: true, data: getAllMembersData });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteTeamMembers = async (req, res) => {
+  try {
+    const teamMembersDetails = await teamMemberDetails.findById(req.params.id);
+    await teamMembersDetails.remove();
+    res.status(200).json({ status: true, message: 'Team Member deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
 module.exports = apicontroller;

@@ -5,13 +5,12 @@ const uploads = multer();
 const adminController = require('../adminController/adminController');
 const { upload } = require('../utils/multer');
 
-// Register and Login Routes
+// Register and Login and Dashboard Routes
 router.post('/register-data', adminController.registerApi);
+router.get('/', adminController.index);
 
 // Flights Routes
-router.get('/', adminController.index);
-router.get('/all-flights', adminController.getAllFlights);
-router.get('/add-flights', adminController.addFlights);
+router.post('/add-flights-details', upload('/special-flight-image').single('flightsImage'), adminController.addFlightDetails);
 
 // Sliders  Routes
 router.get('/allSliderListing', adminController.allSliderListing);
@@ -81,12 +80,20 @@ router.post('/update-branch-name/:id', adminController.updateBranchName);
 // Blogs API
 router.get('/allBlogsListing', adminController.allBlogsListing);
 router.get('/addBlogs', adminController.addBlogs);
-router.post('/add-blog-listing', 
-    upload('/blogs-image').fields([
-        { name: 'blogImage', maxCount: 1 },  
-        { name: 'blogGallery', maxCount: 10 } 
-    ]), adminController.addBlogListing);
+router.post('/add-blog-listing', upload('/blogs-image').fields([{ name: 'blogImage', maxCount: 1 }, { name: 'blogGallery', maxCount: 10 }]), adminController.addBlogListing);
 router.get('/delete-blogs-listing/:id', adminController.adminDeleteBlogs);
+
+// Youtube API
+router.get('/allYoutubeVideos', adminController.allYoutubeVideos);
+router.get('/add-youtube-videos', adminController.addYoutubeVideos);
+router.post('/add-youtube-URL', adminController.addYoutubeURL);
+router.get('/delete-youtube-URL/:id', adminController.deleteYoutubeURL);
+
+// Team Members API
+router.get('/allTeamMembersImage', adminController.allTeamMembersImage);
+router.get('/add-team-members', adminController.addTeamMembers);
+router.post('/add-team-members-details', upload('/team-member').single('teamMemberImage'), adminController.addTeamMemberDetails);
+router.get('/delete-team-members/:id', adminController.deleteTeamMembers);
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);

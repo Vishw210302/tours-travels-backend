@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
 
-
-
 const flightDetailsSchema = new mongoose.Schema({
     id: {
         type: String,
         required: true,
     },
     airline: {
+        type: String,
+        required: true,
+    },
+    airlineLogo: {
         type: String,
         required: true,
     },
@@ -55,10 +57,19 @@ const flightDetailsSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    hold_details: {
-        type: [String],
-        default: [],
-    },
+    hold_details: [
+        {
+            airport: {
+                type: String,
+            },
+            city: {
+                type: String
+            },
+            time: {
+                type: Date,
+            }
+        }
+    ],
     class_details: {
         economy: {
             price: {
@@ -72,15 +83,15 @@ const flightDetailsSchema = new mongoose.Schema({
             prices: {
                 adult: {
                     type: Number,
-                    required: true,  // Optional: Add 'required' if necessary
+                    required: true,
                 },
                 children: {
                     type: Number,
-                    required: false, // Change to 'true' if mandatory
+                    required: false,
                 },
                 infant: {
                     type: Number,
-                    required: false, // Change to 'true' if mandatory
+                    required: false,
                 }
             }
         },
@@ -96,15 +107,15 @@ const flightDetailsSchema = new mongoose.Schema({
             prices: {
                 adult: {
                     type: Number,
-                    required: true,  // Optional: Add 'required' if necessary
+                    required: true,
                 },
                 children: {
                     type: Number,
-                    required: false, // Change to 'true' if mandatory
+                    required: false,
                 },
                 infant: {
                     type: Number,
-                    required: false, // Change to 'true' if mandatory
+                    required: false,
                 }
             }
         },
@@ -120,22 +131,21 @@ const flightDetailsSchema = new mongoose.Schema({
             prices: {
                 adult: {
                     type: Number,
-                    required: true,  // Optional: Add 'required' if necessary
+                    required: true,
                 },
                 children: {
                     type: Number,
-                    required: false, // Change to 'true' if mandatory
+                    required: false,
                 },
                 infant: {
                     type: Number,
-                    required: false, // Change to 'true' if mandatory
+                    required: false,
                 }
             }
         }
     },
 });
 
-// Capitalized model name
 const FlightsDetails = mongoose.model('FlightsDetails', flightDetailsSchema);
 
 module.exports = FlightsDetails;

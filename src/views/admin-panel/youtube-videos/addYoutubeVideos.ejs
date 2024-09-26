@@ -11,14 +11,14 @@
         <div class="main-panel">
           <div class="content-wrapper">
             <div class="page-header">
-              <h3 class="page-title">Basic Tables</h3>
+              <h3 class="page-title">Add Blog</h3>
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item">
-                    <a href="/admin/all-flights">Flights</a>
+                    <a href="">Blogs</a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Add Flights
+                    Add blog
                   </li>
                 </ol>
               </nav>
@@ -26,32 +26,29 @@
             <div>
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Add Flights</h4>
-                  <form class="forms-sample">
+                  <h4 class="card-title">Add Blog</h4>
+                  <form
+                    class="forms-sample py-3"
+                    method="POST"
+                    action="/admin/add-youtube-URL"
+                  >
                     <div class="form-group">
-                      <label for="exampleInputUsername1">Flight Name</label>
+                      <label for="youtubeURL">Youtube URL</label>
                       <input
-                        type="text"
+                        type="url"
                         class="form-control"
-                        id="exampleInputUsername1"
-                        placeholder="Flight Name"
-                      />
-                    </div>
-
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Flights Details</label>
-                      <input
-                        type="email"
-                        class="form-control"
-                        id="exampleInputEmail1"
-                        placeholder="Flight Details"
+                        id="youtubeURL"
+                        name="youtubeURL"
+                        placeholder="Map URL"
                       />
                     </div>
 
                     <button type="submit" class="btn btn-primary mr-2">
                       Submit
                     </button>
-                    <a class="btn btn-dark" href="/admin/all-flights">Cancel</a>
+                    <a class="btn btn-dark" href="/admin/allBlogsListing">
+                      Cancel
+                    </a>
                   </form>
                 </div>
               </div>
@@ -63,5 +60,12 @@
       </div>
     </div>
     <%- include("../partials/_script.ejs") %>
+
+    <!-- Include CKEditor Script -->
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script>
+      // Initialize CKEditor on the textarea
+      CKEDITOR.replace("blogsDescription");
+    </script>
   </body>
 </html>

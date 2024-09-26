@@ -18,6 +18,9 @@ const locationBranch = require('../schema/branchSchema/branchLocationSchema');
 const sanitizeHtml = require('sanitize-html');
 const blogs = require('../schema/blogsSchema/blogsSchema');
 const airport_cities = require('../schema/airportCitiesSchema/airportCitiesSchema');
+const specialFlights = require('../schema/specialFlightsSchema/specialFlightsSchema');
+const youtubeURL = require('../schema/youtubeVideosSchema/youtubeVideosSchema');
+const teamMemberDetails = require('../schema/teamMemberSchema/teamMemberSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -44,9 +47,25 @@ adminController.registerPage = async (req, res) => {
     }
 }
 
-adminController.getAllFlights = async (req, res) => {
+adminController.addFlightDetails = async (req, res) => {
     try {
-        res.render("admin-panel/flightsPage/allFlights")
+        const addFlightsDetails = new specialFlights({
+            flightsImage: req.file.filename,
+            flightsFrom: req.body.flightsFrom,
+            flightsTo: req.body.flightsTo,
+            departureTime: req.body.departureTime,
+            arrivalTime: req.body.arrivalTime,
+            totalTime: req.body.totalTime,
+            hold: req.body.hold,
+            fromAirportCode: req.body.fromAirportCode,
+            toAirportCode: req.body.toAirportCode,
+            fromAirportName: req.body.fromAirportName,
+            toAirportName: req.body.toAirportName,
+            pnrNumber: req.body.pnrNumber,
+            flightsType: req.body.flightsType,
+        });
+        await addFlightsDetails.save();
+        res.status(200).json({ message: "Special Flights added successfully" });
     } catch (error) {
         console.log("error", error)
     }
@@ -110,14 +129,6 @@ adminController.sliderDelete = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
-    }
-}
-
-adminController.addFlights = async (req, res) => {
-    try {
-        res.render("admin-panel/flightsPage/addFlights")
-    } catch (error) {
-        console.log("error", error)
     }
 }
 
@@ -789,8 +800,7 @@ adminController.addBlogListing = async (req, res) => {
         });
 
         await addBlogListingWithImage.save();
-
-        res.status(201).json({ message: 'Blog created successfully' });
+        res.redirect("/admin/allBlogsListing")
     } catch (error) {
         console.log(error, "Erororo")
         res.status(400).json({ message: error.message });
@@ -804,6 +814,100 @@ adminController.adminDeleteBlogs = async (req, res) => {
             res.redirect("/admin/allBlogsListing")
         } else {
             console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.allYoutubeVideos = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-youtube-videos`)
+        if (response.data.status == true) {
+            res.render("admin-panel/youtube-videos/allYoutubeVideosListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addYoutubeVideos = async (req, res) => {
+    try {
+        res.render("admin-panel/youtube-videos/addYoutubeVideos")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addYoutubeURL = async (req, res) => {
+    try {
+        const addYoutubeURL = new youtubeURL({
+            youtubeURL: req.body.youtubeURL,
+        });
+        await addYoutubeURL.save();
+        res.redirect("/admin/allYoutubeVideos")
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.deleteYoutubeURL = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-youtube-URL/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/allYoutubeVideos")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.allTeamMembersImage = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-members-details`)
+        if (response.data.status == true) {
+            res.render("admin-panel/teamMembersDetails/teamMembersDetails", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addTeamMembers = async (req, res) => {
+    try {
+        res.render("admin-panel/teamMembersDetails/addTeamMembersDetails")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addTeamMemberDetails = async (req, res) => {
+    try {
+        const addTeamMember = new teamMemberDetails({
+            teamMemberName: req.body.teamMemberName,
+            teamMemberRole: req.body.teamMemberRole,
+            teamMemberImage: req.file.filename
+        });
+        await addTeamMember.save();
+        res.redirect("/admin/allTeamMembersImage")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.deleteTeamMembers = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-team-members/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/allTeamMembersImage")
+        } else {
+            console.log("Error add in Team members")
         }
     } catch (error) {
         res.status(500).json({ message: error.message });
