@@ -95,6 +95,16 @@ router.get('/add-team-members', adminController.addTeamMembers);
 router.post('/add-team-members-details', upload('/team-member').single('teamMemberImage'), adminController.addTeamMemberDetails);
 router.get('/delete-team-members/:id', adminController.deleteTeamMembers);
 
+// About Us Content API
+router.get('/aboutUsPageContent', adminController.aboutUsPageContent);
+router.get('/addAboutUsContent', adminController.addAboutUsContent);
+router.post('/addAboutUsImage', adminController.addAboutUsImage);
+router.get('/delete-about-us-content/:id', adminController.deleteAboutUsContent);
+
+// All Inquery API
+router.get('/inqueriesListing', adminController.inqueriesListing);
+router.get('/delete-inqueries/:id', adminController.deleteInqueries);
+
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);

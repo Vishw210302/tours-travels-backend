@@ -61,4 +61,13 @@ apiRoute.delete('/delete-youtube-URL/:id', apiController.deleteYoutubeURL);
 apiRoute.get('/get-all-members-details', apiController.getAllMembersDetails);
 apiRoute.delete('/delete-team-members/:id', apiController.deleteTeamMembers);
 
+// About Us Contetnt API
+apiRoute.get('/get-about-us-content', apiController.getAllAboutUsContent);
+apiRoute.delete('/delete-about-us-content/:id', apiController.deleteAboutUsContent);
+
+// Inquery API
+apiRoute.post('/inquery-post', apiController.postInqueryAPI)
+apiRoute.get('/get-inqueries-details', apiController.getInqueriesDetails);
+apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
+
 module.exports = apiRoute;

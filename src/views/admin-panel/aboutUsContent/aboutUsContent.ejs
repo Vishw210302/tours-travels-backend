@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+    <style>
+      .swiper {
+        width: 200px;
+        height: 150px;
+        margin: 0 auto;
+      }
+      .swiper-slide img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin">Dashboard</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    About Us Content
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <h4 class="card-title">About Us Content Listing</h4>
+                    </div>
+                    <div>
+                      <a class="btn btn-primary" href="/admin/addAboutUsContent"
+                        >Add About Us Content</a
+                      >
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Index</th>
+                          <th>About Us Title</th>
+                          <th>About Us Content</th>
+                          <th>About Us Images</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for (var i = 0; i < data.length; i++) { var
+                        createdAtDate = new Date(data[i].createdAt); var
+                        formattedDate =
+                        createdAtDate.toLocaleDateString("en-GB"); %>
+                        <tr>
+                          <td class="py-1"><%= i + 1 %></td>
+                          <td><%= data[i].aboutUsTitle %></td>
+                          <td><%= data[i].aboutUsContent %></td>
+                          <td style="width: 30%" class="py-1">
+                            <div class="swiper mySwiper<%= i %>">
+                              <div class="swiper-wrapper">
+                                <% for (var j = 0; j <
+                                data[i].aboutUsContentImages.length; j++) { %>
+                                <div class="swiper-slide">
+                                  <img
+                                    src="<%= data[i].aboutUsContentImages[j] %>"
+                                    alt="About Us Image"
+                                    style="width: 150px; height: 150px"
+                                  />
+                                </div>
+                                <% } %>
+                              </div>
+                              <div class="swiper-button-next"></div>
+                              <div class="swiper-button-prev"></div>
+                            </div>
+                          </td>
+                          <td>
+                            <a class="mr-3" style="font-size: 18px" href="">
+                              <i
+                                class="fa-solid fa-pen-to-square text-primary"
+                              ></i>
+                            </a>
+                            <a
+                              href="/admin/delete-about-us-content/<%= data[i]._id %>"
+                              style="text-decoration: none"
+                            >
+                              <i
+                                class="fa-solid fa-trash text-danger"
+                                style="font-size: 18px"
+                              ></i>
+                            </a>
+                          </td>
+                        </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../partials/_script.ejs") %>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script>
+      <% for (var i = 0; i < data.length; i++) { %>
+      var swiper = new Swiper('.mySwiper<%= i %>', {
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        loop: true,
+        slidesPerView: 1,
+      });
+      <% } %>
+    </script>
+  </body>
+</html>

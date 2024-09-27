@@ -16,6 +16,8 @@ const FlightsDetails = require("../../schema/flightsDetailsSchema/flightsDetails
 const specialFlights = require("../../schema/specialFlightsSchema/specialFlightsSchema");
 const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema");
 const teamMemberDetails = require("../../schema/teamMemberSchema/teamMemberSchema");
+const aboutUsContentImage = require("../../schema/aboutUsSchema/aboutUsSchema");
+const querySend = require("../../schema/querySendSchema/querySendSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -482,5 +484,64 @@ apicontroller.deleteTeamMembers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+apicontroller.getAllAboutUsContent = async (req, res) => {
+  try {
+    const getAllAboutUsContentImage = await aboutUsContentImage.find();
+    res.status(200).json({ status: true, data: getAllAboutUsContentImage });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteAboutUsContent = async (req, res) => {
+  try {
+    const aboutUsContent = await aboutUsContentImage.findById(req.params.id);
+    await aboutUsContent.remove();
+    res.status(200).json({ status: true, message: 'Team Member deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.postInqueryAPI = async (req, res) => {
+  try {
+    const inqueryPostAPI = new querySend({
+      customerName: req.body.customerName,
+      mobileNumber: req.body.mobileNumber,
+      customerEmail: req.body.customerEmail,
+      travelDate: req.body.travelDate,
+      numberOfAdult: req.body.numberOfAdult,
+      numberOfChildWithBed: req.body.numberOfChildWithBed,
+      numberOfChildWithoutBed: req.body.numberOfChildWithoutBed,
+    });
+
+    await inqueryPostAPI.save();
+    return res.status(200).json({ status: true, message: 'Review message send successfully!' });
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.getInqueriesDetails = async (req, res) => {
+  try {
+    const data = await querySend.find();
+    return res.status(200).json({ status: true, data: data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteInqueries = async (req, res) => {
+  try {
+    const deleteInqueriesData = await querySend.findById(req.params.id);
+    await deleteInqueriesData.remove();
+    res.status(200).json({ status: true, message: 'Inqueries deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 
 module.exports = apicontroller;

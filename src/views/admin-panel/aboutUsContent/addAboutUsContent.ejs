@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Add About Us</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin/allBlogsListing">About Us</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add About Us Content
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add About Us Content</h4>
+                  <form
+                    class="forms-sample py-3"
+                    method="POST"
+                    action="/admin/addAboutUsImage"
+                    enctype="multipart/form-data"
+                  >
+                    <div class="form-group">
+                      <label for="aboutUsTitle">About Us title</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="aboutUsTitle"
+                        name="aboutUsTitle"
+                        placeholder="Enter About us title"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="aboutUsContent">About Us Content</label>
+                      <textarea
+                        class="form-control"
+                        id="aboutUsContent"
+                        name="aboutUsContent"
+                        placeholder="Enter Blog Description"
+                        required
+                      ></textarea>
+                    </div>
+
+                    <div class="form-group mt-5">
+                      <label for="aboutUsContentImages">content Images</label>
+                      <input
+                        type="file"
+                        name="aboutUsContentImages"
+                        class="form-control"
+                        id="aboutUsContentImages"
+                        placeholder="Upload Images"
+                        multiple
+                        required
+                      />
+                      <small class="form-text text-muted">
+                        Hold down the Ctrl (Windows) or Command (Mac) button to
+                        select multiple files.
+                      </small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">
+                      Submit
+                    </button>
+                    <a class="btn btn-dark" href="/admin/aboutUsPageContent">
+                      Cancel
+                    </a>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+
+    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+    <script>
+      CKEDITOR.replace("aboutUsContent");
+    </script>
+  </body>
+</html>

@@ -21,6 +21,8 @@ const airport_cities = require('../schema/airportCitiesSchema/airportCitiesSchem
 const specialFlights = require('../schema/specialFlightsSchema/specialFlightsSchema');
 const youtubeURL = require('../schema/youtubeVideosSchema/youtubeVideosSchema');
 const teamMemberDetails = require('../schema/teamMemberSchema/teamMemberSchema');
+const aboutUsContentImage = require('../schema/aboutUsSchema/aboutUsSchema');
+const { upload } = require('../utils/multer');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -906,6 +908,93 @@ adminController.deleteTeamMembers = async (req, res) => {
         const response = await axios.delete(`${process.env.baseUrl}/api/delete-team-members/${req.params.id}`);
         if (response.data.status && response.data.status == true) {
             res.redirect("/admin/allTeamMembersImage")
+        } else {
+            console.log("Error add in Team members")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.aboutUsPageContent = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-about-us-content`)
+        if (response.data.status == true) {
+            res.render("admin-panel/aboutUsContent/aboutUsContent", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addAboutUsContent = async (req, res) => {
+    try {
+        res.render("admin-panel/aboutUsContent/addAboutUsContent")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addAboutUsImage = async (req, res) => {
+    try {
+        const uploadImages = upload('/about-us-image').array('aboutUsContentImages', 10);
+        uploadImages(req, res, async (err) => {
+            if (err) {
+                return res.status(400).send({ message: err.message });
+            }
+            let { aboutUsTitle, aboutUsContent } = req.body;
+            aboutUsContent = sanitizeHtml(aboutUsContent, {
+                allowedTags: [],
+                allowedAttributes: {},
+            });
+            const aboutUsContentImages = req.files.map(file => `/uploads/about-us-image/${file.filename}`);
+            const newAboutUsContent = new aboutUsContentImage({
+                aboutUsTitle,
+                aboutUsContent,
+                aboutUsContentImages
+            });
+            await newAboutUsContent.save();
+            res.redirect('/admin/aboutUsPageContent');
+        });
+    } catch (error) {
+        console.log("Error:", error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+adminController.deleteAboutUsContent = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-about-us-content/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/aboutUsPageContent")
+        } else {
+            console.log("Error add in Team members")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.inqueriesListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-inqueries-details`);
+        if (response.data.status == true) {
+            res.render("admin-panel/allInqueries/allInqueriesListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.deleteInqueries = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-inqueries/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/inqueriesListing")
         } else {
             console.log("Error add in Team members")
         }
