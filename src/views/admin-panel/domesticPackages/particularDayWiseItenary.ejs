@@ -1,338 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include("../partials/head.ejs") %>
-  </head>
 
-  <style>
-    .date-picker-container {
-      max-width: 300px;
-    }
+<head>
+  <%- include("../partials/head.ejs") %>
+</head>
 
-    .selected-dates {
-      margin-top: 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
+<style>
+  .date-picker-container {
+    max-width: 300px;
+  }
 
-    .date-tag {
-      background-color: #e0e0e0;
-      padding: 5px 10px;
-      border-radius: 5px;
-      display: flex;
-      align-items: center;
-    }
+  .selected-dates {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
 
-    .date-tag button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      margin-left: 5px;
-      font-weight: bold;
-    }
+  .date-tag {
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+  }
 
-    .buttons {
-      margin-top: 20px;
-    }
+  .date-tag button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 5px;
+    font-weight: bold;
+  }
 
-    .select-container {
-      position: relative;
-      display: inline-block;
-      width: 100%;
-    }
+  .buttons {
+    margin-top: 20px;
+  }
 
-    .select-container .form-control {
-      cursor: pointer;
-    }
+  .select-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
 
-    .form-control {
-      background-color: #191c24 !important;
-      color: white;
-    }
+  .select-container .form-control {
+    cursor: pointer;
+  }
 
-    .select-container .options {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      border: 1px solid #ddd;
-      background: white;
-      display: none;
-      z-index: 1000;
-      max-height: 150px;
-      overflow-y: auto;
-    }
+  .form-control {
+    background-color: #191c24 !important;
+    color: white;
+  }
 
-    .select-container .options div {
-      padding: 10px;
-      cursor: pointer;
-    }
+  .select-container .options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #ddd;
+    background: white;
+    display: none;
+    z-index: 1000;
+    max-height: 150px;
+    overflow-y: auto;
+  }
 
-    .select-container .options div.selected {
-      background: #007bff;
-      color: white;
-    }
+  .select-container .options div {
+    padding: 10px;
+    cursor: pointer;
+  }
 
-    .day-count {
-      font-size: 20px;
-      margin-bottom: 10px;
-    }
+  .select-container .options div.selected {
+    background: #007bff;
+    color: white;
+  }
 
-    .add-day {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+  .day-count {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
 
-    .main-box {
-      padding: 20px;
-      border: 2px solid black;
-      margin-bottom: 20px;
-    }
+  .add-day {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .js-example-basic-multiple {
-      width: 100%;
-      background-color: white;
-      color: black;
-    }
-  </style>
+  .main-box {
+    padding: 20px;
+    border: 2px solid black;
+    margin-bottom: 20px;
+  }
 
-  <body>
-    <div class="container-scroller">
-      <%- include("../partials/_sidebar.ejs") %>
+  .js-example-basic-multiple {
+    width: 100%;
+    background-color: white;
+    color: black;
+  }
+</style>
+
+<body>
+  <div class="container-scroller">
+    <%- include("../partials/_sidebar.ejs") %>
       <div class="container-fluid page-body-wrapper">
         <%- include("../partials/_navbar.ejs") %>
 
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title">Add Package</h3>
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item">
-                    <a href="/admin/packages">Packages</a>
-                  </li>
-                  <li class="breadcrumb-item active" aria-current="page">
-                    Add Package
-                  </li>
-                </ol>
-              </nav>
-            </div>
-            <div>
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Add Package</h4>
-                  <form id="packageForm" enctype="multipart/form-data">
-                    <input
-                      type="hidden"
-                      name="itenaryId"
-                      value="<%= itenaryId %>"
-                      data-day="1"
-                    />
-                    <div class="step active">
-                      <div class="border-bottom add-day">
-                        <div class="my-4">
-                          <h3>Create Day</h3>
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="page-header">
+                <h3 class="page-title">Add Package</h3>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="/admin/packages">Packages</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Add Package
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+              <div>
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Add Package</h4>
+                    <form id="packageForm" enctype="multipart/form-data">
+                      <input type="hidden" name="itenaryId" value="<%= itenaryId %>" data-day="1" />
+                      <div class="step active">
+                        <div class="border-bottom add-day">
+                          <div class="my-4">
+                            <h3>Create Day</h3>
+                          </div>
+                          <button type="button" disabled id="addDayButton" class="btn btn-primary">
+                            Add Day
+                          </button>
                         </div>
-                        <button
-                          type="submit"
-                          id="addDayButton"
-                          class="btn btn-primary"
-                        >
-                          Add Day
-                        </button>
-                      </div>
-                      <div id="daysContainer">
-                        <div class="main-box">
-                          <div class="day-count">Day 1</div>
-                          <div class="form-group row">
-                            <div class="col-md-6 mb-4">
-                              <label for="title1">Title</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="title1"
-                                name="title"
-                                data-day="1"
-                              />
-                            </div>
-
-                            <div class="form-group col-md-6 mb-4">
-                              <label for="siteSeenId1">SiteSeen</label>
-                              <select
-                                class="js-example-basic-multiple form-control"
-                                id="siteSeenId1"
-                                name="siteSeenId[]"
-                                data-day="1"
-                                multiple="multiple"
-                                data-placeholder="Select SiteSeen"
-                              >
-                                <option></option>
-                                <% siteSeenData.forEach(function(site) { %>
-                                <option value="<%= site._id %>">
-                                  <%= site.SiteseenName %>
-                                </option>
-                                <% }) %>
-                              </select>
-                            </div>
-
-                            <div class="col-md-6">
-                              <label for="description1">Description</label>
-                              <input
-                                type="text"
-                                class="form-control"
-                                id="description1"
-                                name="description"
-                                data-day="1"
-                              />
-                            </div>
-
-                            <div class="form-group">
-                              <label>Meal</label>
-                              <div class="d-flex">
-                                <div class="form-check mr-2">
-                                  <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    id="breakfastMeal"
-                                    name="meal[]"
-                                    value="Breakfast"
-                                    data-day="1"
-                                  />
-                                  <label
-                                    class="form-check-label m-0 p-0"
-                                    for="breakfastMeal"
-                                  >
-                                    Breakfast
-                                  </label>
-                                </div>
-                                <div class="form-check mr-2">
-                                  <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    id="lunchMeal"
-                                    name="meal[]"
-                                    value="Lunch"
-                                    data-day="1"
-                                  />
-                                  <label
-                                    class="form-check-label m-0 p-0"
-                                    for="lunchMeal"
-                                  >
-                                    Lunch
-                                  </label>
-                                </div>
-                                <div class="form-check mr-2">
-                                  <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    id="dinnerMeal"
-                                    name="meal[]"
-                                    value="Dinner"
-                                    data-day="1"
-                                  />
-                                  <label
-                                    class="form-check-label m-0 p-0"
-                                    for="dinnerMeal"
-                                  >
-                                    Dinner
-                                  </label>
-                                </div>
+                        <div id="daysContainer">
+                          <div class="main-box">
+                            <div class="day-count">Day 1</div>
+                            <input type="hidden" id="interyDetailId1" name="interyDetailId">
+                            <div class="form-group row">
+                              <div class="col-md-6 mb-4">
+                                <label for="title1">Title</label>
+                                <input type="text" class="form-control" id="title1" name="title" data-day="1" />
+                                <div class="validation1" style="color: red; font-size: 13px; margin-top: 5px;"
+                                  id="titleValidation1"></div>
                               </div>
+
+                              <div class="form-group col-md-6 mb-4">
+                                <label for="siteSeenId1">SiteSeen</label>
+                                <select class="js-example-basic-multiple form-control" id="siteSeenId1"
+                                  name="siteSeenId[]" data-day="1" multiple="multiple"
+                                  data-placeholder="Select SiteSeen">
+                                  <option></option>
+                                  <% siteSeenData.forEach(function(site) { %>
+                                    <option value="<%= site._id %>">
+                                      <%= site.SiteseenName %>
+                                    </option>
+                                    <% }) %>
+                                </select>
+                              </div>
+
+                              <div class="col-md-6">
+                                <label for="description1">Description</label>
+                                <input type="text" class="form-control" id="description1" name="description"
+                                  data-day="1" />
+                                <div class="validation1" style="color: red; font-size: 13px; margin-top: 5px;"
+                                  id="description1Validation1"></div>
+                              </div>
+
+                              <div class="form-group">
+                                <label>Meal</label>
+                                <div class="d-flex">
+                                  <div class="form-check mr-2">
+                                    <input class="form-check-input" type="checkbox" id="breakfastMeal" name="meal[]"
+                                      value="Breakfast" data-day="1" />
+                                    <label class="form-check-label m-0 p-0" for="breakfastMeal">
+                                      Breakfast
+                                    </label>
+                                  </div>
+                                  <div class="form-check mr-2">
+                                    <input class="form-check-input" type="checkbox" id="lunchMeal" name="meal[]"
+                                      value="Lunch" data-day="1" />
+                                    <label class="form-check-label m-0 p-0" for="lunchMeal">
+                                      Lunch
+                                    </label>
+                                  </div>
+                                  <div class="form-check mr-2">
+                                    <input class="form-check-input" type="checkbox" id="dinnerMeal" name="meal[]"
+                                      value="Dinner" data-day="1" />
+                                    <label class="form-check-label m-0 p-0" for="dinnerMeal">
+                                      Dinner
+                                    </label>
+                                  </div>
+                                </div>
+                                <div class="validation1" style="color: red; font-size: 13px; margin-top: 5px;"
+                                  id="mealValidation1"></div>
+                              </div>
+                            </div>
+
+                            <div class="buttons">
+                              <button type="button" id="saveBtn" class="btn btn-primary">
+                                Save
+                              </button>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div class="buttons">
-                      <button
-                        type="button"
-                        id="nextBtn"
-                        class="btn btn-primary"
-                      >
-                        Next
-                      </button>
-                    </div>
-                  </form>
+                      <div class="buttons">
+                        <button type="button" disabled id="nextBtn" class="btn btn-primary">
+                          Next
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
       </div>
-    </div>
+  </div>
 
-    <%- include("../partials/_script.ejs") %>
+  <%- include("../partials/_script.ejs") %>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const addDayButton = document.getElementById("addDayButton");
-        const daysContainer = document.getElementById("daysContainer");
-        const nextBtn = document.getElementById("nextBtn");
-        initializeSelect2();
-        let dayCount = 1;
+ var siteSeenData = <%- JSON.stringify(siteSeenData) %>;
+ var itenaryId = <%- JSON.stringify(itenaryId) %>;
+ 
+        document.addEventListener("DOMContentLoaded", function () {
+          let dayCount = 1;
+          const addDayButton = document.getElementById("addDayButton");
+          const daysContainer = document.getElementById("daysContainer");
+          const nextBtn = document.getElementById("nextBtn");
+          const saveBtn = document.getElementById(`saveBtn`);
+          initializeSelect2();
 
-        addDayButton.addEventListener("click", function (event) {
-          formSubmit(0);
-        });
+          nextBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            window.location.href = `/admin/package-price-page/${itenaryId}`;
+          });
 
-        nextBtn.addEventListener("click", function (event) {
-          formSubmit(1);
-        });
+          addDayButton.addEventListener("click", function (event) {
+            // console.log('asas')
+            createDays();
+          });
 
-        const formSubmit = (value) => {
-          event.preventDefault();
-          const currentDayInputs = document.querySelectorAll(
-            `[data-day="${dayCount}"]`
-          );
-          const formData = new FormData();
-
-          currentDayInputs.forEach((input) => {
-            if (input.type !== "checkbox" && input.type !== "select-multiple") {
-              formData.append(input.name, input.value);
+          daysContainer.addEventListener("click", function (event) {
+            if (event.target && event.target.id === `saveBtn`) {
+              formSubmit(event.target);
             }
           });
 
-          const siteSeenSelect = document.getElementById(
-            `siteSeenId${dayCount}`
-          );
-          const selectedOptions = Array.from(
-            siteSeenSelect.selectedOptions
-          ).map((opt) => opt.value);
-          selectedOptions.forEach((value) => {
-            formData.append("siteSeenId[]", value);
-          });
+          const createDays = () => {
+            console.log(siteSeenData, 'siteSeenData')
+            const newDayBox = document.createElement("div");
+            newDayBox.classList.add("main-box");
+            dayCount++;
 
-          const meals = document.querySelectorAll(
-            `input[name="meal[]"][data-day="${dayCount}"]:checked`
-          );
-          meals.forEach((meal) => {
-            formData.append("meal[]", meal.value);
-          });
-
-          console.log([...formData.entries()], "asas");
-
-          fetch("/admin/add-day-itenary", {
-            method: "POST",
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              dayCount++;
-
-              if (value == 0) {
-                const newDayBox = document.createElement("div");
-                newDayBox.classList.add("main-box");
-
-                newDayBox.innerHTML = `
+            newDayBox.innerHTML = `
                       <div class="day-count">Day ${dayCount}</div>
+                      <input type="hidden" id="interyDetailId${dayCount}" name="interyDetailId">
                          <input type="hidden" class="form-control l" id="itenaryId${dayCount}"  name="itenaryId" value="<%= itenaryId %>" data-day="${dayCount}" />
                       <div class="form-group row">
                         <div class="col-md-6 mb-4">
                           <label for="title${dayCount}">Title</label>
                           <input type="text" class="form-control l" id="title${dayCount}" name="title" data-day="${dayCount}" />
+                           <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="titleValidation${dayCount}"></div>
                         </div>
                         <div class="col-md-6 mb-4">
                           <label for="siteSeenId${dayCount}">SiteSeen</label>
@@ -348,6 +282,7 @@
                         <div class="col-md-6">
                           <label for="description${dayCount}">Description</label>
                           <input type="text" class="form-control" id="description${dayCount}" name="description" data-day="${dayCount}" />
+                          <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="description1Validation${dayCount}"></div>
                         </div>
                             <div class="form-group">
                               <label for="${dayCount}">Meal</label>
@@ -400,29 +335,140 @@
                                     Dinner
                                   </label>
                                 </div>
+
                               </div>
+                               <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="mealValidation${dayCount}"></div>
                             </div>
                       </div>
+                      <div class="buttons">
+                              <button type="button" id="saveBtn" class="btn btn-primary">
+                                Save
+                              </button>
+                            </div>
                       `;
-                daysContainer.appendChild(newDayBox);
+            daysContainer.appendChild(newDayBox);
+            addDayButton.disabled = true;
+            nextBtn.disabled = true;
 
-                initializeSelect2();
-              } else {
-                window.location.href = `/admin/package-price-page/${data.data.itenaryId}`;
+            initializeSelect2();
+          }
+
+          const formSubmit = (saveButton) => {
+            event.preventDefault();
+
+            const currentDay = saveButton.closest('.main-box').querySelector('.day-count').textContent.split(' ')[1];
+            
+            const currentDayInputs = document.querySelectorAll(`[data-day="${currentDay}"]`);
+            const formData = new FormData();
+
+            currentDayInputs.forEach((input) => {
+              if (input.type !== "checkbox" && input.type !== "select-multiple") {
+                formData.append(input.name, input.value);
               }
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-              alert("There was an error creating the package.");
             });
-        };
-        function initializeSelect2() {
-          $(".js-example-basic-multiple").select2({
-            placeholder: "Select SiteSeen",
-            allowClear: true,
-          });
-        }
-      });
+
+            const siteSeenSelect = document.getElementById(`siteSeenId${currentDay}`);
+            const selectedOptions = Array.from(siteSeenSelect.selectedOptions).map((opt) => opt.value);
+            selectedOptions.forEach((value) => {
+              formData.append("siteSeenId[]", value);
+            });
+
+
+            const meals = document.querySelectorAll(`input[name="meal[]"][data-day="${currentDay}"]:checked`);
+            meals.forEach((meal) => {
+              formData.append("meal[]", meal.value);
+            });
+
+            const itenaryDetailId = document.getElementById(`interyDetailId${currentDay}`).value
+
+            if(itenaryDetailId == ''){
+  
+             fetch("/admin/add-day-itenary", {
+              method: "POST",
+              body: formData,
+             })
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((error) => {
+
+                    const validationMessages = document.getElementsByClassName(`validation${currentDay}`);
+                    for (let i = 0; i < validationMessages.length; i++) {
+                      validationMessages[i].textContent = "";
+                    }
+
+                    const title = document.getElementById(`titleValidation${currentDay}`);
+                    const description = document.getElementById(`description1Validation${currentDay}`);
+                    const meal = document.getElementById(`mealValidation${currentDay}`);
+
+                    const err = error.errors;
+                    if (err?.title && title) {
+                      title.textContent = err.title;
+                    }
+                    if (err?.description && description) {
+                      description.textContent = err.description;
+                    }
+                    if (err?.meal && meal) {
+                      meal.textContent = err.meal;
+                    }
+                  });
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data) {
+                  const validationMessages = document.getElementsByClassName(`validation${currentDay}`);
+                  for (let i = 0; i < validationMessages.length; i++) {
+                    validationMessages[i].textContent = "";
+                  }
+                  console.log(data.data)
+                  document.getElementById(`interyDetailId${currentDay}`).value = data.data._id; 
+                  addDayButton.disabled = false;
+                  nextBtn.disabled = false;
+                  alert('Saved Data successfully');
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("There was an error creating the package.");
+              });
+            }
+            else{
+               
+              fetch(`/admin/edit-day-itenary/${itenaryDetailId}`, {
+              method: "POST",
+              body: formData,
+              })
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((error) => {
+
+                   console.log(error, 'updated Code')
+                  });
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data) {
+                  alert('Update Data successfully');
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("There was an error updating the package.");
+              });
+
+            }
+
+
+           }
+          function initializeSelect2() {
+            $(".js-example-basic-multiple").select2({
+              placeholder: "Select SiteSeen",
+              allowClear: true
+            });
+          }
+        });
     </script>
-  </body>
+</body>
+
 </html>
