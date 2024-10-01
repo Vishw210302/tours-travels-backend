@@ -120,6 +120,22 @@ apicontroller.getTestimonialListing = async (req, res) => {
   }
 }
 
+apicontroller.postTestimonialReview = async (req, res) => {
+  try {
+    const testimonialReview = new testimonial({
+      reviewPersonName: req.body.reviewPersonName,
+      reviewDescription: req.body.reviewDescription,
+      numberOfReview: req.body.numberOfReview,
+    });
+
+    await testimonialReview.save();
+    return res.status(200).json({ status: true, message: 'Testimonial Review added successfully!' });
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 apicontroller.deleteTestimonial = async (req, res) => {
   try {
     const allTestimonial = await testimonial.findById(req.params.id);

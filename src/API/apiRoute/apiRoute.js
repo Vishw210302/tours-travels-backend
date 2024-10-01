@@ -27,6 +27,7 @@ apiRoute.get('/get-all-details-itenary/:id', apiController.allDetailsOfItenaty)
 
 // Testimonial API
 apiRoute.get('/get-testimonial', apiController.getTestimonialListing);
+apiRoute.post('/add-testimonial-review', apiController.postTestimonialReview)
 apiRoute.delete('/delete-testimonial/:id', apiController.deleteTestimonial);
 
 // Cities Listing API

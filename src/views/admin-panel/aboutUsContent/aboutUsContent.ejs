@@ -74,10 +74,12 @@
                         <tr>
                           <td class="py-1"><%= i + 1 %></td>
                           <td><%= data[i].aboutUsTitle %></td>
-                          <td><%= data[i].aboutUsContent %></td>
-                          <td style="width: 30%" class="py-1">
+                          <td style="width: 30%; text-wrap: wrap">
+                            <%= data[i].aboutUsContent %>
+                          </td>
+                          <td class="py-1">
                             <div class="swiper mySwiper<%= i %>">
-                              <div class="swiper-wrapper">
+                              <div class="swiper-wrapper" style="width: 30%">
                                 <% for (var j = 0; j <
                                 data[i].aboutUsContentImages.length; j++) { %>
                                 <div class="swiper-slide">
