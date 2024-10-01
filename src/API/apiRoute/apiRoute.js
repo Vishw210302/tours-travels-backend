@@ -37,7 +37,7 @@ apiRoute.get('/get-all-cities', apiController.getAllCitiesListing);
 apiRoute.get('/get-all-country', apiController.getAllCountryListing);
 
 // Contact Us API
-apiRoute.post('/contact-us-post', apiController.postContactUsAPI)
+apiRoute.post('/contact-us-post', apiController.postContactUsAPI);
 apiRoute.get('/get-contact-us-review', apiController.getContactUsReview);
 apiRoute.delete('/delete-contact-us-review/:id', apiController.deleteContactUsReview);
 
@@ -67,6 +67,17 @@ apiRoute.delete('/delete-team-members/:id', apiController.deleteTeamMembers);
 // About Us Contetnt API
 apiRoute.get('/get-about-us-content', apiController.getAllAboutUsContent);
 apiRoute.delete('/delete-about-us-content/:id', apiController.deleteAboutUsContent);
+
+//  Promo Code API
+apiRoute.get('/get-all-promocode-lisitng', apiController.getAllPromoCodeListing);
+apiRoute.delete('/delete-promoCode/:id', apiController.deletePromoCode);
+
+// Discount Coupon API
+apiRoute.get('/get-all-discount-coupon', apiController.getAllDiscountCoupon);
+apiRoute.delete('/delete-discount-coupon/:id', apiController.deleteDiscountCoupon);
+
+// Tickets Booking (Passanger Details) API
+apiRoute.post('/tickets-booking', apiController.postTicketsBooking)
 
 // Inquery API
 apiRoute.post('/inquery-post', apiController.postInqueryAPI)

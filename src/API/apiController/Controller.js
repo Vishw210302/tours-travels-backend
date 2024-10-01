@@ -18,6 +18,9 @@ const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema
 const teamMemberDetails = require("../../schema/teamMemberSchema/teamMemberSchema");
 const aboutUsContentImage = require("../../schema/aboutUsSchema/aboutUsSchema");
 const querySend = require("../../schema/querySendSchema/querySendSchema");
+const allPromoCodes = require("../../schema/promocodesSchema/promoCodesSchema");
+const discountCoupon = require("../../schema/discountCouponSchema/discountCouponSchema");
+const ticketsBooking = require("../../schema/ticketsBookingSchema/addTicketsBookingSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -559,5 +562,61 @@ apicontroller.deleteInqueries = async (req, res) => {
   }
 }
 
+apicontroller.getAllPromoCodeListing = async (req, res) => {
+  try {
+    const getAllPromoCode = await allPromoCodes.find();
+    res.status(200).json({ status: true, data: getAllPromoCode });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deletePromoCode = async (req, res) => {
+  try {
+    const promoCode = await allPromoCodes.findById(req.params.id);
+    await promoCode.remove();
+    res.status(200).json({ status: true, message: 'Promo Code deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getAllDiscountCoupon = async (req, res) => {
+  try {
+    const discountCouponListing = await discountCoupon.find();
+    res.status(200).json({ status: true, data: discountCouponListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteDiscountCoupon = async (req, res) => {
+  try {
+    const disocuntCoupons = await discountCoupon.findById(req.params.id);
+    await disocuntCoupons.remove();
+    res.status(200).json({ status: true, message: 'Discount Coupon deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.postTicketsBooking = async (req, res) => {
+  try {
+    console.log(req.body, 'req.body of booking')
+    const ticketsBookingDetails = new ticketsBooking({
+      title: req.body.title,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      dob: req.body.dob,
+      contactId: req.body.contactId,
+    });
+
+    await ticketsBookingDetails.save();
+    return res.status(200).json({ status: true, message: 'Tickets Booking add successfully!' });
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
 
 module.exports = apicontroller;

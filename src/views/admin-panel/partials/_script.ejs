@@ -42,3 +42,53 @@
       });
   }
 </script>
+
+<script>
+  function toggleStatus(checkbox) {
+    const promoCodeId = checkbox.getAttribute("data-id");
+    const status = checkbox.checked ? "Active" : "Inactive";
+
+    fetch(`/admin/promoCodes/status/${promoCodeId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Failed to update status.");
+      });
+  }
+</script>
+
+<script>
+  function toggleStatus(checkbox) {
+    const discountCodesId = checkbox.getAttribute("data-id");
+    const status = checkbox.checked ? "Active" : "Inactive";
+
+    fetch(`/admin/discountCodes/status/${discountCodesId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Failed to update status.");
+      });
+  }
+</script>

@@ -9,16 +9,18 @@ const bodyParser = require('body-parser')
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors()); 
-app.use(bodyParser.json()); 
+app.use(cors());
+app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 
 // Require your routes and use them here
 const apiRoute = require('./API/apiRoute/apiRoute')
 const allRoute = require('../src/allRoute/allRoute');
 const adminController = require('./adminController/adminController');
+const router = require('./API/apiRoute/payments.routes');
 app.use('/api', apiRoute);
 app.use('/admin', allRoute);
+app.use('/razorpay', router);
 
 app.get('/', adminController.loginPage);
 app.post('/post-login', adminController.login);

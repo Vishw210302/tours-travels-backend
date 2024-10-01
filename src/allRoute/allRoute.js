@@ -106,6 +106,19 @@ router.get('/delete-about-us-content/:id', adminController.deleteAboutUsContent)
 router.get('/inqueriesListing', adminController.inqueriesListing);
 router.get('/delete-inqueries/:id', adminController.deleteInqueries);
 
+// Promo codes API
+router.get('/promoListing', adminController.promoListing);
+router.get('/add-promoCodes', adminController.addPromoCodesListing);
+router.put('/promoCodes/status/:id', adminController.updatePromoCodesStatus);
+router.post('/post-promoCodes', adminController.postPromoCodes);
+router.get('/delete-promoCode/:id', adminController.deletePromoCode);
+
+// Discount Coupon API
+router.get('/discountCouponListing', adminController.discountCouponListing);
+router.get('/add-discount-Coupon', adminController.addDiscountCoupon);
+router.put('/discountCodes/status/:id', adminController.updateDiscountCouponCode);
+router.get('/delete-discount-coupon/:id', adminController.deleteDiscountCoupon);
+
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);

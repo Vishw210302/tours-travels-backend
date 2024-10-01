@@ -23,6 +23,8 @@ const youtubeURL = require('../schema/youtubeVideosSchema/youtubeVideosSchema');
 const teamMemberDetails = require('../schema/teamMemberSchema/teamMemberSchema');
 const aboutUsContentImage = require('../schema/aboutUsSchema/aboutUsSchema');
 const { upload } = require('../utils/multer');
+const allPromoCodes = require('../schema/promocodesSchema/promoCodesSchema');
+const discountCoupon = require('../schema/discountCouponSchema/discountCouponSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -468,7 +470,7 @@ adminController.adddDayWiseItenary = async (req, res) => {
 
 adminController.updateDayItenary = async (req, res) => {
     try {
-        
+
         let deFaultImage = null;
         let { title, siteSeenId, itenaryId, description, meal } = req.body;
 
@@ -486,24 +488,24 @@ adminController.updateDayItenary = async (req, res) => {
         }
 
         const updateItenary = await itenaryDetails.findOneAndUpdate(
-            { _id: req.params.id }, 
+            { _id: req.params.id },
             {
-              $set: {
-                itenaryId:itenaryId,
-                title: title,
-                siteSeenId: siteSeenId,
-                deFaultImage: deFaultImage,
-                description: description,
-                meal: meal,
-              },
+                $set: {
+                    itenaryId: itenaryId,
+                    title: title,
+                    siteSeenId: siteSeenId,
+                    deFaultImage: deFaultImage,
+                    description: description,
+                    meal: meal,
+                },
             },
-            { new: true } 
-          );
-      
-          if (!updateItenary) {
+            { new: true }
+        );
+
+        if (!updateItenary) {
             console.log('Document not found');
             return null;
-          }
+        }
 
         res.status(200).json({ message: 'Successfully added day', data: updateItenary });
     } catch (error) {
@@ -1077,5 +1079,139 @@ adminController.deleteInqueries = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+adminController.promoListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-promocode-lisitng`);
+        if (response.data.status == true) {
+            res.render("admin-panel/PromoAndCoupons/promoCodesListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addPromoCodesListing = async (req, res) => {
+    try {
+        res.render("admin-panel/PromoAndCoupons/addPromoCodes")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postPromoCodes = async (req, res) => {
+    try {
+        const promoCodesAdd = new allPromoCodes({
+            promoCode: req.body.promoCode,
+            discountAmount: req.body.discountAmount,
+        });
+        await promoCodesAdd.save();
+        res.redirect('/admin/promoListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.updatePromoCodesStatus = async (req, res) => {
+    try {
+        const promoCodeId = req.params.id;
+        const { status } = req.body;
+        const promoCodes = await allPromoCodes.findById(promoCodeId);
+
+        if (!promoCodes) {
+            return res.status(404).json({ message: "Promo Code not found" });
+        }
+
+        promoCodes.status = status;
+        await promoCodes.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.deletePromoCode = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-promoCode/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/promoListing")
+        } else {
+            console.log("Error add in Team members")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.discountCouponListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-discount-coupon`);
+        if (response.data.status == true) {
+            res.render("admin-panel/discountCoupon/discountCouponListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addDiscountCoupon = async (req, res) => {
+    try {
+        res.render("admin-panel/discountCoupon/addDiscountCoupon")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postDiscountCoupon = async (req, res) => {
+    try {
+        const discountCouponCode = new discountCoupon({
+            discountCouponName: req.body.discountCouponName,
+            promoCodeDescription: req.body.promoCodeDescription,
+            discountAmount: req.body.discountAmount,
+        });
+        await discountCouponCode.save();
+        res.redirect('/admin/discountCouponListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.updateDiscountCouponCode = async (req, res) => {
+    try {
+        const discountCodesId = req.params.id;
+        const { status } = req.body;
+        const discountCodes = await discountCoupon.findById(discountCodesId);
+
+        if (!discountCodes) {
+            return res.status(404).json({ message: "Discount Coupon not found" });
+        }
+
+        discountCodes.status = status;
+        await discountCodes.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.deleteDiscountCoupon = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-discount-coupon/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/discountCouponListing")
+        } else {
+            console.log("Error add in Discount Coupons")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 
 module.exports = adminController;
