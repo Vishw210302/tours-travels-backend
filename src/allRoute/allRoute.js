@@ -46,6 +46,7 @@ router.get('/allDetailsItenaryDetails', adminController.allDetailsItenaryDetails
 router.post('/add-itenary-create-package', upload('/itenary-package').single('bannerImage'), adminController.addItenaryPackageImage);
 router.get('/add-day-itenary-page/:firstId/:secondId', adminController.adddDayWiseItenaryPage);
 router.post('/add-day-itenary', uploads.none(), adminController.adddDayWiseItenary);
+router.post('/edit-day-itenary/:id', uploads.none(), adminController.updateDayItenary);
 router.get('/package-price-page/:id', adminController.addPackagePricePage);
 router.post('/add-price-details', adminController.addPriceDetails);
 router.get("/all-itenaries-packagesvise/:id", adminController.getAllDetailsOfItenaty)
