@@ -419,22 +419,97 @@ const getSiteSeenByName = async (name) => {
 
 adminController.adddDayWiseItenary = async (req, res) => {
     try {
-        let deFaultImage = null
+
+        let deFaultImage = null;
         let { title, siteSeenId, itenaryId, description, meal } = req.body;
-        const itenaries = await itenary.findOne({ _id: itenaryId })
-        const mainPackage = await packages.findOne({ _id: itenaries.mainPackageId })
-        if (siteSeenId == '' || siteSeenId == undefined) {
-            deFaultImage = mainPackage?.packageImage
-            siteSeenId = []
+
+        let errors = {};
+        if (!title || title.trim() === '') {
+            errors.title = 'Title is required.';
         }
+
+        if (!description || description.trim() === '') {
+            errors.description = 'Description is required.';
+        }
+
+        if (!meal || meal.length === 0) {
+            errors.meal = 'At least one meal selection is required.';
+        }
+
+        if (Object.keys(errors).length > 0) {
+            return res.status(400).json({ errors });
+        }
+        const itenaries = await itenary.findOne({ _id: itenaryId });
+        if (!itenaries) {
+            return res.status(404).json({ message: 'Itenary not found.' });
+        }
+
+        const mainPackage = await packages.findOne({ _id: itenaries.mainPackageId });
+
+        if (!siteSeenId || siteSeenId.length === 0) {
+            deFaultImage = mainPackage?.packageImage;
+            siteSeenId = [];
+        }
+
         const addDayWiseItenary = await itenaryDetails.create({
-            title, siteSeenId, deFaultImage, itenaryId, description, meal
-        })
-        res.status(200).json({ message: 'Successfully add day', data: addDayWiseItenary });
+            title,
+            siteSeenId,
+            deFaultImage,
+            itenaryId,
+            description,
+            meal
+        });
+
+        res.status(200).json({ message: 'Successfully added day', data: addDayWiseItenary });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
-}
+};
+
+adminController.updateDayItenary = async (req, res) => {
+    try {
+        
+        let deFaultImage = null;
+        let { title, siteSeenId, itenaryId, description, meal } = req.body;
+
+        const itenaries = await itenary.findOne({ _id: itenaryId });
+
+        if (!itenaries) {
+            return res.status(404).json({ message: 'Itenary not found.' });
+        }
+
+        const mainPackage = await packages.findOne({ _id: itenaries.mainPackageId });
+
+        if (!siteSeenId || siteSeenId.length === 0) {
+            deFaultImage = mainPackage?.packageImage;
+            siteSeenId = [];
+        }
+
+        const updateItenary = await itenaryDetails.findOneAndUpdate(
+            { _id: req.params.id }, 
+            {
+              $set: {
+                itenaryId:itenaryId,
+                title: title,
+                siteSeenId: siteSeenId,
+                deFaultImage: deFaultImage,
+                description: description,
+                meal: meal,
+              },
+            },
+            { new: true } 
+          );
+      
+          if (!updateItenary) {
+            console.log('Document not found');
+            return null;
+          }
+
+        res.status(200).json({ message: 'Successfully added day', data: updateItenary });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
 adminController.addPackagePricePage = async (req, res) => {
     try {
