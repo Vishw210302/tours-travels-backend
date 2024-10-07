@@ -55,7 +55,10 @@
                           <td class="py-1"><%= i + 1 %></td>
                           <td><%= data[i].mealCategories %></td>
                           <td>
-                            <a href="/admin/" style="text-decoration: none">
+                            <a
+                              href="/admin/delete-flight-meal/<%= data[i]._id %>"
+                              style="text-decoration: none"
+                            >
                               <i
                                 class="fa-solid fa-trash text-danger"
                                 style="font-size: 18px"

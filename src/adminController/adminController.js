@@ -1287,6 +1287,34 @@ adminController.getParticulrMealListing = async (req, res) => {
     }
 }
 
+adminController.deleteFlightMeal = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-flight-meal/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/mealListing")
+        } else {
+            console.log("Error add in Discount Coupons")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.deleteParticularFlightMeal = async (req, res) => {
+    console.log(req.params.id, 'all route')
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-particular-flight-meal/${req.params.id}`);
+        console.log(response?.data, 'response')
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/mealListing")
+        } else {
+            console.log("Error add in Discount Coupons")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 adminController.testRoute = async (req, res) => {
     const seatData = [
         { "seat_number": "1A", "class": "First", "available": true, "price": 1200.0 },
@@ -1337,11 +1365,11 @@ adminController.testRoute = async (req, res) => {
         { "seat_number": "8D", "class": "Economy", "available": true, "price": 400.0 },
         { "seat_number": "8E", "class": "Economy", "available": true, "price": 400.0 },
         { "seat_number": "8F", "class": "Economy", "available": true, "price": 400.0 }
-      ];
+    ];
 
-      const flight = await FlightsDetails.find();
-      
-      for( let i = 0; i < flight.length ; i++){
+    const flight = await FlightsDetails.find();
+
+    for (let i = 0; i < flight.length; i++) {
 
         const economy = [];
         const business = [];
@@ -1349,35 +1377,43 @@ adminController.testRoute = async (req, res) => {
 
         seatData.forEach(seat => {
             const { seat_number, class: seatClass, available, price } = seat;
-      
-            switch (seatClass) {
-              case 'Economy':
-                economy.push({ seat_number, available, price });
-                break;
-              case 'Business':
-                business.push({ seat_number, available, price });
-                break;
-              case 'First':
-                firstClass.push({ seat_number, available, price });
-                break;
-              default:
-                console.warn(`Unknown class: ${seatClass} for seat: ${seat_number}`);
-            }
-          });
 
-          const flightSeatData = new flightSeat({
-            flightId : flight[i]._id,
+            switch (seatClass) {
+                case 'Economy':
+                    economy.push({ seat_number, available, price });
+                    break;
+                case 'Business':
+                    business.push({ seat_number, available, price });
+                    break;
+                case 'First':
+                    firstClass.push({ seat_number, available, price });
+                    break;
+                default:
+                    console.warn(`Unknown class: ${seatClass} for seat: ${seat_number}`);
+            }
+        });
+
+        const flightSeatData = new flightSeat({
+            flightId: flight[i]._id,
             economy,
             business,
             first_class: firstClass
-          });
-          await flightSeatData.save();
-      }
+        });
+        await flightSeatData.save();
+    }
 
-      const data = await flightSeat.find();
+    const data = await flightSeat.find();
 
-      res.json(data)
-    
+    res.json(data)
+
+}
+
+adminController.ticketsMailDetails = async (req, res) => {
+    try {
+        res.render("admin-panel/flightTicketsDetailsMail/ticketsBookingMail")
+    } catch (error) {
+        console.log("error", error)
+    }
 }
 
 module.exports = adminController;

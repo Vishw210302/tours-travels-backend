@@ -17,7 +17,6 @@
       <div class="container-fluid page-body-wrapper">
         <%- include("../partials/_navbar.ejs") %>
         <div class="main-panel">
-          <%- console.log("datattta",data) %>
           <div class="content-wrapper">
             <div class="page-header">
               <h3 class="page-title">Basic Tables</h3>
@@ -75,9 +74,15 @@
                           <td><%= data[i].mealItems %></td>
                           <td><%= data[i].mealPrice %></td>
                           <td>
-                            <a href="/admin/" class="badge badge-danger"
-                              >Delete</a
+                            <a
+                              href="/admin/delete-particular-flight-meal/<%= data[i]._id %>"
+                              style="text-decoration: none"
                             >
+                              <i
+                                class="fa-solid fa-trash text-danger"
+                                style="font-size: 18px"
+                              ></i
+                            ></a>
                           </td>
                         </tr>
                         <% } %>

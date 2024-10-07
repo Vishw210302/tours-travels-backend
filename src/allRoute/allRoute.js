@@ -126,6 +126,11 @@ router.post('/post-meal-categories', adminController.postMealCategories);
 router.get('/mealCategoriesItemListing/:id', adminController.mealCategoriesItemListing);
 router.post('/post-meal-items-categories', upload('/meal-items-image').single('mealItemsImage'), adminController.postMealItemsDetails);
 router.get('/get-particular-meal-listing/:id', adminController.getParticulrMealListing);
+router.get('/delete-flight-meal/:id', adminController.deleteFlightMeal);
+router.get('/delete-particular-flight-meal/:id', adminController.deleteParticularFlightMeal);
+
+// Flight tickets mail template API
+router.get("/ticketsDetailsMail", adminController.ticketsMailDetails)
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);

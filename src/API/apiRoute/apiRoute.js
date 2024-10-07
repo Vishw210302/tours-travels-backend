@@ -2,6 +2,12 @@ const express = require('express');
 const apiRoute = express.Router();
 const apiController = require('../apiController/Controller');
 
+// razorpay API
+
+const { createOrder, veryFyPayment } = require("../apiController/payments.controller");
+apiRoute.post("/createOrder", createOrder);
+apiRoute.post("/verifyPayment", veryFyPayment);
+
 // Package API
 apiRoute.post('/add-packagessss', apiController.addPackages);
 apiRoute.get('/get-packages', apiController.getPackages);
@@ -83,6 +89,8 @@ apiRoute.post('/tickets-booking', apiController.postTicketsBooking)
 // Flight Meal Details API 
 apiRoute.get('/get-flight-meals', apiController.getFlightMealListing);
 apiRoute.get('/get-particular-meal-listing/:id', apiController.getParticularMealListing);
+apiRoute.delete('/delete-flight-meal/:id', apiController.deleteFlightMeal);
+apiRoute.delete('/delete-particular-flight-meal/:id', apiController.deletParticularFlightMeal);
 
 // Flight Seat API
 apiRoute.get('/get-flights-seats/:id', apiController.getFlightSeatsListing)

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Premium Flight Ticket Confirmation</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #3a0ca3;
+        --secondary-color: #4361ee;
+        --accent-color: #4cc9f0;
+        --text-color: #2b2d42;
+        --light-color: #f8f9fa;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background: linear-gradient(135deg, #f6f6f6 0%, #e9e9e9 100%);
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .ticket-container {
+        max-width: 850px;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+      }
+      .ticket-header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: #fff;
+        padding: 20px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .ticket-header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        /* background: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 10px,
+          rgba(255, 255, 255, 0.1) 10px,
+          rgba(255, 255, 255, 0.1) 20px
+        ); */
+        background: #f87171;
+        /* animation: move-background 20s linear infinite; */
+        z-index: 1;
+      }
+      @keyframes move-background {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(50%, 50%);
+        }
+      }
+      .ticket-header h2 {
+        margin: 0;
+        font-size: 28px;
+        position: relative;
+        z-index: 2;
+      }
+      .company-logo {
+        position: relative;
+        z-index: 2;
+      }
+      .company-logo img {
+        height: 100px;
+        width: 150px;
+      }
+      .ticket-body {
+        padding: 30px;
+        /* display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; */
+      }
+      .flight-info,
+      .passenger-info {
+        flex-basis: calc(50% - 15px);
+        background-color: var(--light-color);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .flight-info:hover,
+      .passenger-info:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        align-items: center;
+      }
+      .info-label {
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+      .barcode {
+        text-align: center;
+        margin-top: 20px;
+        width: 100%;
+      }
+      .barcode img {
+        max-width: 300px;
+        height: auto;
+      }
+      .additional-info {
+        background-color: var(--light-color);
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 20px;
+        font-size: 14px;
+        width: 100%;
+      }
+      .ticket-footer {
+        background-color: #f87171;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+        font-size: 14px;
+      }
+      .icon {
+        margin-right: 8px;
+        color: var(--accent-color);
+      }
+      .flight-path {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px 0;
+      }
+      .airport {
+        text-align: center;
+        flex: 1;
+      }
+      .airport-code {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--primary-color);
+      }
+      .airport-name {
+        font-size: 12px;
+        color: #666;
+      }
+      .flight-line {
+        flex: 2;
+        height: 2px;
+        background-color: var(--accent-color);
+        position: relative;
+      }
+      .flight-line::before {
+        content: "✈️";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+      }
+      .collapsible {
+        background-color: #f87171;
+        color: white;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        border-radius: 18px;
+        text-align: left;
+        outline: none;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ticket-container">
+      <div class="ticket-header">
+        <div class="company-logo">
+          <img
+            src="/images/auth/asgard-travels-logo.jpg"
+            alt="Asgard Tours and Travels"
+          />
+        </div>
+        <h2><i class="fas fa-plane"></i> Premium Flight Ticket</h2>
+      </div>
+      <div class="ticket-body">
+        <div class="flight-info">
+          <h3>Flight Details</h3>
+          <div class="info-row">
+            <span
+              ><i class="fas fa-plane-departure icon"></i>
+              <span class="info-label">Flight:</span> BA123</span
+            >
+            <span
+              ><i class="fas fa-clock icon"></i>
+              <span class="info-label">Duration:</span> 12h</span
+            >
+          </div>
+          <div class="flight-path">
+            <div class="airport">
+              <div class="airport-code">JFK</div>
+              <div class="airport-name">New York</div>
+            </div>
+            <div class="flight-line"></div>
+            <div class="airport">
+              <div class="airport-code">LHR</div>
+              <div class="airport-name">London</div>
+            </div>
+          </div>
+          <div class="info-row">
+            <span
+              ><i class="fas fa-calendar-alt icon"></i>
+              <span class="info-label">Date:</span> 2024-10-10</span
+            >
+            <span
+              ><i class="fas fa-clock icon"></i>
+              <span class="info-label">Time:</span> 10:00 AM</span
+            >
+          </div>
+        </div>
+        <div class="passenger-info">
+          <h3>Passenger Details</h3>
+          <div class="info-row">
+            <span
+              ><i class="fas fa-user icon"></i>
+              <span class="info-label">Name:</span> John Doe</span
+            >
+          </div>
+          <div class="info-row">
+            <span
+              ><i class="fas fa-envelope icon"></i>
+              <span class="info-label">Email:</span> johndoe@example.com</span
+            >
+          </div>
+          <div class="info-row">
+            <span
+              ><i class="fas fa-couch icon"></i>
+              <span class="info-label">Seat:</span> 12A</span
+            >
+            <span
+              ><i class="fas fa-ticket-alt icon"></i>
+              <span class="info-label">Class:</span> Business</span
+            >
+          </div>
+        </div>
+        <div class="barcode">
+          <img src="/api/placeholder/300/100" alt="Barcode" />
+          <p>Scan this barcode at the airport for quick check-in</p>
+        </div>
+        <div class="additional-info">
+          <button class="collapsible">
+            <i class="fas fa-info-circle icon"></i> Important Information
+          </button>
+          <div class="content">
+            <ul>
+              <li>
+                Please arrive at the airport at least 2 hours before your
+                flight.
+              </li>
+              <li>Don't forget to bring a valid ID or passport.</li>
+              <li>
+                Check the latest travel restrictions and requirements for your
+                destination.
+              </li>
+              <li>
+                Baggage allowance: 1 carry-on and 1 checked bag up to 23kg.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ticket-footer">
+        <p>
+          Thank you for choosing <strong>Travells Agency</strong>. We wish you a
+          pleasant flight!
+        </p>
+        <p>
+          For any queries, contact us at support@travellsagency.com or call +1
+          (800) 123-4567
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

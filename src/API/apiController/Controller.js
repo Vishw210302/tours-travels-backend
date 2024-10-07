@@ -24,7 +24,6 @@ const ticketsBooking = require("../../schema/ticketsBookingSchema/addTicketsBook
 const flightMeal = require("../../schema/flightMealSchema/flightMealSchema");
 const mealItemsImage = require("../../schema/flightMealSchema/allMealSchema");
 const flightSeat = require("../../schema/fligjhtSeatsSchema/flightSeatsSchema");
-const util = require('util');
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -454,7 +453,6 @@ apicontroller.getSpecialFlightsData = async (req, res) => {
 
 apicontroller.getParticularFlightById = async (req, res) => {
   const particularFlightId = req.params.id
-  console.log("this is my term", particularFlightId)
   try {
     let getParticularFlight;
     if (req.params.key == "1") {
@@ -462,7 +460,6 @@ apicontroller.getParticularFlightById = async (req, res) => {
     } else {
       getParticularFlight = await specialFlights.findById(particularFlightId);
     }
-    console.log("getParticularFlightgetParticularFlightgetParticularFlight", getParticularFlight)
     res.status(200).json({ status: true, data: getParticularFlight });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -623,7 +620,6 @@ apicontroller.deleteDiscountCoupon = async (req, res) => {
 
 apicontroller.postTicketsBooking = async (req, res) => {
   try {
-    console.log(req.body, 'req.body of booking')
     const ticketsBookingDetails = new ticketsBooking({
       title: req.body.title,
       firstName: req.body.firstName,
@@ -658,6 +654,33 @@ apicontroller.getParticularMealListing = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 }
+
+apicontroller.deleteFlightMeal = async (req, res) => {
+  try {
+    const deleteFlightsMeals = await flightMeal.findById(req.params.id);
+    if (!deleteFlightsMeals) {
+      return res.status(404).json({ status: false, message: "Meal not found" });
+    }
+    await deleteFlightsMeals.remove();
+    res.status(200).json({ status: true, message: 'flight meal deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+apicontroller.deletParticularFlightMeal = async (req, res) => {
+  const particularMealId = req.params.id
+  try {
+    const deleteFlightsMeals = await mealItemsImage.findById(particularMealId);
+    if (!deleteFlightsMeals) {
+      return res.status(404).json({ status: false, message: "Meal not found" });
+    }
+    await deleteFlightsMeals.remove();
+    res.status(200).json({ status: true, message: 'flight meal deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 apicontroller.getFlightSeatsListing = async (req, res) => {
   const flightId = req.params.id;

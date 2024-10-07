@@ -17,10 +17,8 @@ const PORT = process.env.PORT || 3000;
 const apiRoute = require('./API/apiRoute/apiRoute')
 const allRoute = require('../src/allRoute/allRoute');
 const adminController = require('./adminController/adminController');
-const router = require('./API/apiRoute/payments.routes');
 app.use('/api', apiRoute);
 app.use('/admin', allRoute);
-app.use('/razorpay', router);
 
 app.get('/', adminController.loginPage);
 app.post('/post-login', adminController.login);
