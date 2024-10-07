@@ -55,6 +55,7 @@ apiRoute.delete('/delete-blogs/:id', apiController.deleteBlogs);
 apiRoute.post('/search-flights-details', apiController.searchFligthsDetails);
 // apiRoute.get('/get-flights-logo', apiController.getDefaultFlightsLogo);
 apiRoute.get('/get-special-flight-data_V_P_D', apiController.getSpecialFlightsData);
+apiRoute.get('/get-particular-flight/:key/:id', apiController.getParticularFlightById);
 
 // Youtube Videos API
 apiRoute.get('/get-youtube-videos', apiController.getYoutubeVideos);
@@ -78,6 +79,13 @@ apiRoute.delete('/delete-discount-coupon/:id', apiController.deleteDiscountCoupo
 
 // Tickets Booking (Passanger Details) API
 apiRoute.post('/tickets-booking', apiController.postTicketsBooking)
+
+// Flight Meal Details API 
+apiRoute.get('/get-flight-meals', apiController.getFlightMealListing);
+apiRoute.get('/get-particular-meal-listing/:id', apiController.getParticularMealListing);
+
+// Flight Seat API
+apiRoute.get('/get-flights-seats/:id', apiController.getFlightSeatsListing)
 
 // Inquery API
 apiRoute.post('/inquery-post', apiController.postInqueryAPI)

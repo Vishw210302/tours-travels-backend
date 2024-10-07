@@ -25,6 +25,10 @@ const aboutUsContentImage = require('../schema/aboutUsSchema/aboutUsSchema');
 const { upload } = require('../utils/multer');
 const allPromoCodes = require('../schema/promocodesSchema/promoCodesSchema');
 const discountCoupon = require('../schema/discountCouponSchema/discountCouponSchema');
+const flightMeal = require('../schema/flightMealSchema/flightMealSchema');
+const mealItemsImage = require('../schema/flightMealSchema/allMealSchema');
+const FlightsDetails = require("../schema/flightsDetailsSchema/flightsDetailsSchema");
+const flightSeat = require('../schema/fligjhtSeatsSchema/flightSeatsSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -1213,5 +1217,167 @@ adminController.deleteDiscountCoupon = async (req, res) => {
     }
 }
 
+adminController.mealListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-flight-meals`);
+        if (response.data.status == true) {
+            res.render("admin-panel/flightMealDetails/mealListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addMealListing = async (req, res) => {
+    try {
+        res.render("admin-panel/flightMealDetails/addFlightMeal")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postMealCategories = async (req, res) => {
+    try {
+        const addMealCategories = new flightMeal({
+            mealCategories: req.body.mealCategories,
+        });
+        await addMealCategories.save();
+        res.redirect('/admin/mealListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.mealCategoriesItemListing = async (req, res) => {
+    const mealId = req.params.id
+    try {
+        res.render("admin-panel/flightMealDetails/mealCategoriesItemListing", { mealId })
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postMealItemsDetails = async (req, res) => {
+    try {
+        const addMealItemsDetails = new mealItemsImage({
+            mealId: req.body.mealId,
+            mealItems: req.body.mealItems,
+            mealPrice: req.body.mealPrice,
+            mealItemsImage: req.file.filename
+        });
+        await addMealItemsDetails.save();
+        res.redirect(`/admin/mealListing`)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.getParticulrMealListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-particular-meal-listing/${req.params.id}`);
+        if (response.data.status == true) {
+            res.render("admin-panel/flightMealDetails/getParticularMealDetails", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.testRoute = async (req, res) => {
+    const seatData = [
+        { "seat_number": "1A", "class": "First", "available": true, "price": 1200.0 },
+        { "seat_number": "1B", "class": "First", "available": true, "price": 1200.0 },
+        { "seat_number": "1C", "class": "First", "available": true, "price": 1200.0 },
+        { "seat_number": "1D", "class": "First", "available": true, "price": 1200.0 },
+        { "seat_number": "1E", "class": "First", "available": true, "price": 1200.0 },
+        { "seat_number": "1F", "class": "First", "available": true, "price": 1200.0 },
+        { "seat_number": "2A", "class": "Business", "available": true, "price": 800.0 },
+        { "seat_number": "2B", "class": "Business", "available": true, "price": 800.0 },
+        { "seat_number": "2C", "class": "Business", "available": true, "price": 800.0 },
+        { "seat_number": "2D", "class": "Business", "available": true, "price": 800.0 },
+        { "seat_number": "2E", "class": "Business", "available": true, "price": 800.0 },
+        { "seat_number": "2F", "class": "Business", "available": true, "price": 800.0 },
+        { "seat_number": "3A", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "3B", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "3C", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "3D", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "3E", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "3F", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "4A", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "4B", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "4C", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "4D", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "4E", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "4F", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "5A", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "5B", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "5C", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "5D", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "5E", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "5F", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "6A", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "6B", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "6C", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "6D", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "6E", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "6F", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "7A", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "7B", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "7C", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "7D", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "7E", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "7F", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "8A", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "8B", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "8C", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "8D", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "8E", "class": "Economy", "available": true, "price": 400.0 },
+        { "seat_number": "8F", "class": "Economy", "available": true, "price": 400.0 }
+      ];
+
+      const flight = await FlightsDetails.find();
+      
+      for( let i = 0; i < flight.length ; i++){
+
+        const economy = [];
+        const business = [];
+        const firstClass = [];
+
+        seatData.forEach(seat => {
+            const { seat_number, class: seatClass, available, price } = seat;
+      
+            switch (seatClass) {
+              case 'Economy':
+                economy.push({ seat_number, available, price });
+                break;
+              case 'Business':
+                business.push({ seat_number, available, price });
+                break;
+              case 'First':
+                firstClass.push({ seat_number, available, price });
+                break;
+              default:
+                console.warn(`Unknown class: ${seatClass} for seat: ${seat_number}`);
+            }
+          });
+
+          const flightSeatData = new flightSeat({
+            flightId : flight[i]._id,
+            economy,
+            business,
+            first_class: firstClass
+          });
+          await flightSeatData.save();
+      }
+
+      const data = await flightSeat.find();
+
+      res.json(data)
+    
+}
 
 module.exports = adminController;

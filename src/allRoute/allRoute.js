@@ -119,8 +119,19 @@ router.get('/add-discount-Coupon', adminController.addDiscountCoupon);
 router.put('/discountCodes/status/:id', adminController.updateDiscountCouponCode);
 router.get('/delete-discount-coupon/:id', adminController.deleteDiscountCoupon);
 
+// Flight Meal Details API
+router.get('/mealListing', adminController.mealListing);
+router.get('/add-meal-listing', adminController.addMealListing);
+router.post('/post-meal-categories', adminController.postMealCategories);
+router.get('/mealCategoriesItemListing/:id', adminController.mealCategoriesItemListing);
+router.post('/post-meal-items-categories', upload('/meal-items-image').single('mealItemsImage'), adminController.postMealItemsDetails);
+router.get('/get-particular-meal-listing/:id', adminController.getParticulrMealListing);
+
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);
+
+
+// router.get('/testRoute', adminController.testRoute);
 
 module.exports = router;

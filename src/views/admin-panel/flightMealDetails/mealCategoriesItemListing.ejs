@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin/">Meal Listing</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add Meal Item
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add Meal Items</h4>
+                  <form
+                    class="forms-sample"
+                    method="POST"
+                    action="/admin/post-meal-items-categories"
+                    enctype="multipart/form-data"
+                  >
+                    <input
+                      type="hidden"
+                      class="form-control"
+                      id="mealId"
+                      name="mealId"
+                      placeholder="Meal Name"
+                      value="<%= mealId %>"
+                    />
+                    <div class="form-group">
+                      <label for="mealItems">Meal Items</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="mealItems"
+                        name="mealItems"
+                        placeholder="Meal Name"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="mealPrice">Meal Price</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="mealPrice"
+                        name="mealPrice"
+                        placeholder="Meal Price"
+                        required
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label for="mealItemsImage">Meal Image</label>
+                      <div class="input-group col-xs-12">
+                        <input
+                          type="file"
+                          name="mealItemsImage"
+                          class="form-control file-upload-info"
+                          id="mealItemsImage"
+                          placeholder="Upload Image"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">
+                      Submit
+                    </button>
+                    <a class="btn btn-dark" href="/admin/mealListing">
+                      Cancel
+                    </a>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>
