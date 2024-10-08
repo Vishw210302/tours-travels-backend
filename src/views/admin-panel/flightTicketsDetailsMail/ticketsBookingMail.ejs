@@ -18,6 +18,7 @@
         --accent-color: #4cc9f0;
         --text-color: #2b2d42;
         --light-color: #f8f9fa;
+        --theme-color: #f87171;
       }
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -62,15 +63,7 @@
         left: -50%;
         width: 200%;
         height: 200%;
-        /* background: repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 10px,
-          rgba(255, 255, 255, 0.1) 10px,
-          rgba(255, 255, 255, 0.1) 20px
-        ); */
-        background: #f87171;
-        /* animation: move-background 20s linear infinite; */
+        background: var(--theme-color);
         z-index: 1;
       }
       @keyframes move-background {
@@ -97,9 +90,6 @@
       }
       .ticket-body {
         padding: 30px;
-        /* display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between; */
       }
       .flight-info,
       .passenger-info {
@@ -110,11 +100,6 @@
         margin-bottom: 20px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .flight-info:hover,
-      .passenger-info:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       }
       .info-row {
         display: flex;
@@ -138,13 +123,12 @@
       .additional-info {
         background-color: var(--light-color);
         border-radius: 15px;
-        padding: 20px;
         margin-top: 20px;
         font-size: 14px;
         width: 100%;
       }
       .ticket-footer {
-        background-color: #f87171;
+        background-color: var(--theme-color);
         color: #fff;
         text-align: center;
         padding: 20px;
@@ -188,7 +172,7 @@
         font-size: 24px;
       }
       .collapsible {
-        background-color: #f87171;
+        background-color: var(--theme-color);
         color: white;
         padding: 18px;
         width: 100%;

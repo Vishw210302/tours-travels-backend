@@ -4,8 +4,8 @@ const apiController = require('../apiController/Controller');
 
 // razorpay API
 
-const { createOrder, veryFyPayment } = require("../apiController/payments.controller");
-apiRoute.post("/createOrder", createOrder);
+const { createPaymentIntent, veryFyPayment } = require("../apiController/payments.controller");
+apiRoute.post("/create-payment-intent", createPaymentIntent);
 apiRoute.post("/verifyPayment", veryFyPayment);
 
 // Package API
@@ -99,5 +99,8 @@ apiRoute.get('/get-flights-seats/:id', apiController.getFlightSeatsListing)
 apiRoute.post('/inquery-post', apiController.postInqueryAPI)
 apiRoute.get('/get-inqueries-details', apiController.getInqueriesDetails);
 apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
+
+// Flight Tickets Get API
+apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
 
 module.exports = apiRoute;

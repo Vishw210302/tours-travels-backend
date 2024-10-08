@@ -136,7 +136,6 @@ router.get("/ticketsDetailsMail", adminController.ticketsMailDetails)
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);
 
-
 // router.get('/testRoute', adminController.testRoute);
 
 module.exports = router;

@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const mealOrderCountSchema = new mongoose.Schema({
+    particularMealId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'mealItemsImage',
+        required: true,
+    },
+    mealCount: {
+        type: String,
+        require: true,
+    }
+})
+
 const contactUsTicketsSchema = new mongoose.Schema({
     passengerId: [
         {
@@ -8,6 +20,11 @@ const contactUsTicketsSchema = new mongoose.Schema({
             required: true,
         },
     ],
+    mealOrder: [mealOrderCountSchema],
+    paymentId: {
+        type: String,
+        required: true,
+    },
     fullName: {
         type: String,
         required: true,

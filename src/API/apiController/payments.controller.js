@@ -1,35 +1,25 @@
-const { createRazorpayInstance } = require("../../../config/razorpay.config");
-const crypto = require("crypto");
-require("dotenv").config();
+const Stripe = require('stripe');
 
-const razorpayInstance = createRazorpayInstance()
+const stripe = Stripe('sk_test_51ON98CSEV9soa2c8ornQ7rhaG0uSJiJjw3iLoDDGf2LIsJOy6h12tGmlhSoePrcwqFaJgx3jfnTuy30LZzPVdx4u00H0gZYoxx');
 
-exports.createOrder = async (req, res) => {
+exports.createPaymentIntent = async (req, res) => {
 
-    const { flightId, amount } = req.body
-
-    const options = {
-        amount: amount * 100,
-        currency: "INR",
-        receipt: "receipt_order_1"
-    }
+    const { amount, currency, description } = req.body;
 
     try {
-        razorpayInstance.orders.create(options, (err, order) => {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: "Something went wrong"
-                });
-            }
-            return res.status(200).json(order);
-        })
 
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount,
+            currency,
+            description,
+        });
+
+        res.status(200).json({
+            paymentIntent,
+        });
     } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "Something went wrong",
-        })
+        console.error('Error creating PaymentIntent:', error);
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -38,7 +28,6 @@ exports.veryFyPayment = async (req, res) => {
 
     const secret = process.env.key_secret;
 
-    // Create hmac object
     const hmac = crypto.createHmac("sha256", secret)
 
     hmac.update(order_id + "|" + payment_id);

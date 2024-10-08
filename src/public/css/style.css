@@ -30095,7 +30095,6 @@ div.tagsinput span.tag a {
   transition-duration: 0.25s;
   transition-property: background;
   -webkit-transition-property: background;
-  padding-right: 20px;
 }
 
 .sidebar .nav .nav-item .collapse {
@@ -30107,7 +30106,6 @@ div.tagsinput span.tag a {
   display: flex;
   -webkit-align-items: center;
   align-items: center;
-  white-space: nowrap;
   padding: 0.8rem 10px 0.8rem 1.188rem;
   color: #6c7293;
   -webkit-transition-duration: 0.45s;
@@ -30409,7 +30407,7 @@ div.tagsinput span.tag a {
 .sidebar .nav.sub-menu {
   margin-bottom: 0;
   margin-top: 0;
-  padding: 0 0 0 3.25rem;
+  padding: 0 0 0 43px;
   list-style: none;
 }
 

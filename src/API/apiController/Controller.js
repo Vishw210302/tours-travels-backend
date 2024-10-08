@@ -24,6 +24,9 @@ const ticketsBooking = require("../../schema/ticketsBookingSchema/addTicketsBook
 const flightMeal = require("../../schema/flightMealSchema/flightMealSchema");
 const mealItemsImage = require("../../schema/flightMealSchema/allMealSchema");
 const flightSeat = require("../../schema/fligjhtSeatsSchema/flightSeatsSchema");
+const passengerDetails = require("../../schema/passengerDetailsSchema/passengerDetailsSchema");
+const flightContactUs = require("../../schema/passengerDetailsSchema/contactUsTicketsSchema");
+const { sendEmail } = require('../../utils/sendMail')
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -694,5 +697,87 @@ apicontroller.getFlightSeatsListing = async (req, res) => {
     res.status(500).json({ status: false, message: error.message });
   }
 };
+
+apicontroller.addFlightTicketsData = async (req, res) => {
+  console.log("reqqqqqq", req.body)
+  try {
+    const { flightId, passengerPersonalDetails, selectedMealData, flightSeatData, paymentId } = req.body
+
+    const passengerPersonalId = []
+
+    // for (let i = 0; i < passengerPersonalDetails?.passengerDetailsData.length; i++) {
+
+    //   const passengerDetail = passengerPersonalDetails?.passengerDetailsData[i];
+
+    //   const passengerTicketsDetails = await passengerDetails.create({
+    //     seatNumberId: flightSeatData[i]?.seat_id,
+    //     flightId,
+    //     fullName: passengerDetail?.fullName,
+    //     age: passengerDetail?.age,
+    //     gender: passengerDetail?.gender
+    //   })
+
+    //   passengerPersonalId.push(passengerTicketsDetails?._id)
+    // }
+
+    // const mealOrder = selectedMealData.map((meal) => ({
+    //   particularMealId: mongoose.Types.ObjectId(meal.meal_id), 
+    //   mealCount: meal.count.toString()  
+    // }));
+
+    // const passengerContactDetails = await flightContactUs.create({
+
+    //   paymentId,
+    //   passengerId: passengerPersonalId,
+    //   fullName: passengerPersonalDetails?.contactDetails?.fullName,
+    //   email: passengerPersonalDetails?.contactDetails?.email,
+    //   mobileNumber: passengerPersonalDetails?.contactDetails?.phoneNumber,
+    //   mealOrder
+
+    // })
+
+    // const updatedSeats = [];
+    // for (let seat of flightSeatData) {
+    //   const result = await flightSeat.updateOne(
+    //     {
+    //       flightId: mongoose.Types.ObjectId(flightId),
+    //       $or: [
+    //         { 'economy._id': mongoose.Types.ObjectId(seat.seat_id) },
+    //         { 'business._id': mongoose.Types.ObjectId(seat.seat_id) },
+    //         { 'first_class._id': mongoose.Types.ObjectId(seat.seat_id) }
+    //       ]
+    //     },
+    //     {
+    //       $set: {
+    //         'economy.$[elem].available': false,
+    //         'business.$[elem].available': false,
+    //         'first_class.$[elem].available': false
+    //       }
+    //     },
+    //     {
+    //       arrayFilters: [
+    //         { 'elem._id': mongoose.Types.ObjectId(seat.seat_id) }
+    //       ],
+    //       new: true
+    //     }
+    //   );
+    //   // console.log(result, 'result')
+    //   // if (result.modifiedCount > 0) {
+    //   //   updatedSeats.push(seat.seat_name);  
+    //   // }
+    // }
+    // console.log('Updated Seats:', updatedSeats);
+
+    const to =  "varmaajay182@gmail.com"
+    const subject = "Tours and travel"
+    
+    sendEmail(to, subject)
+
+    // console.log(passengerContactDetails, 'passengerContactDetails')
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
 
 module.exports = apicontroller;
