@@ -19,6 +19,7 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.0",
+    "puppeteer": "^23.5.1",
     "razorpay": "^2.9.4",
     "sanitize-html": "^2.13.0",
     "stripe": "^17.1.0"

@@ -26,7 +26,8 @@ const mealItemsImage = require("../../schema/flightMealSchema/allMealSchema");
 const flightSeat = require("../../schema/fligjhtSeatsSchema/flightSeatsSchema");
 const passengerDetails = require("../../schema/passengerDetailsSchema/passengerDetailsSchema");
 const flightContactUs = require("../../schema/passengerDetailsSchema/contactUsTicketsSchema");
-const { sendEmail } = require('../../utils/sendMail')
+const { sendEmail } = require('../../utils/sendMail');
+const { pdfGenerator } = require("../../utils/pdfGenerator");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -699,7 +700,6 @@ apicontroller.getFlightSeatsListing = async (req, res) => {
 };
 
 apicontroller.addFlightTicketsData = async (req, res) => {
-  console.log("reqqqqqq", req.body)
   try {
     const { flightId, passengerPersonalDetails, selectedMealData, flightSeatData, paymentId } = req.body
 
@@ -767,13 +767,11 @@ apicontroller.addFlightTicketsData = async (req, res) => {
     //   // }
     // }
     // console.log('Updated Seats:', updatedSeats);
+    const htmlFilePath = "/admin-panel/flightTicketsDetailsMail/ticketsBookingMail.ejs"
+    const tickectName = "ticket.pdf"
+    const pdfResponse = await pdfGenerator(htmlFilePath, tickectName)
 
-    const to =  "varmaajay182@gmail.com"
-    const subject = "Tours and travel"
-    
-    sendEmail(to, subject)
-
-    // console.log(passengerContactDetails, 'passengerContactDetails')
+    return res.send(pdfResponse)
 
   } catch (error) {
     res.status(400).json({ message: error.message });
