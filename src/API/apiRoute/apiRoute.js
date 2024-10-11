@@ -83,8 +83,14 @@ apiRoute.delete('/delete-promoCode/:id', apiController.deletePromoCode);
 apiRoute.get('/get-all-discount-coupon', apiController.getAllDiscountCoupon);
 apiRoute.delete('/delete-discount-coupon/:id', apiController.deleteDiscountCoupon);
 
+// Inquery API
+apiRoute.post('/inquery-post', apiController.postInqueryAPI)
+apiRoute.get('/get-inqueries-details', apiController.getInqueriesDetails);
+apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
+
 // Tickets Booking (Passanger Details) API
-apiRoute.post('/tickets-booking', apiController.postTicketsBooking)
+// apiRoute.post('/tickets-booking', apiController.postTicketsBooking)
+apiRoute.post('/add-passenger-details', apiController.addPassengerDetails)
 
 // Flight Meal Details API 
 apiRoute.get('/get-flight-meals', apiController.getFlightMealListing);
@@ -95,12 +101,7 @@ apiRoute.delete('/delete-particular-flight-meal/:id', apiController.deletParticu
 // Flight Seat API
 apiRoute.get('/get-flights-seats/:id', apiController.getFlightSeatsListing)
 
-// Inquery API
-apiRoute.post('/inquery-post', apiController.postInqueryAPI)
-apiRoute.get('/get-inqueries-details', apiController.getInqueriesDetails);
-apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
-
-// Flight Tickets Get API
+// Flight Tickets API
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
 
 module.exports = apiRoute;
