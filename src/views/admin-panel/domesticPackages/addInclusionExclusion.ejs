@@ -70,6 +70,10 @@
       .bulleted-list .list-item button {
         font-size: 1rem;
       }
+
+      .textColor{
+        color: white;
+      }
     </style>
   </head>
   <body>
@@ -103,6 +107,7 @@
                     action="/admin/add-inclusion-exclusion"
                     method="POST"
                   >
+                  <input type="hidden" value="<%- itenaryId %>">
                     <div>
                       <div class="d-flex w-100 flex-wrap" style="gap: 10%">
                         <div class="form-group flex-grow-1" style="width: 40%">
@@ -119,11 +124,7 @@
                             </button>
                           </div>
                           <div id="inclusionList" class="bulleted-list"></div>
-                          <input
-                            type="hidden"
-                            name="inclusionPoints"
-                            id="inclusionPoints"
-                          />
+                        
                         </div>
 
                         <div
@@ -178,7 +179,7 @@
         const listItem = document.createElement("div");
         listItem.className = "list-item";
         listItem.innerHTML = `
-          <input type="text" class="form-control" placeholder="Enter an inclusion point">
+          <input type="text" name="inclusion" class="form-control textColor" placeholder="Enter an inclusion point">
           <button type="button" class="btn btn-danger" onclick="removeItem(this)">×</button>`;
         inclusionList.appendChild(listItem);
       }
@@ -188,7 +189,7 @@
         const listItem = document.createElement("div");
         listItem.className = "list-item";
         listItem.innerHTML = `
-          <input type="text" class="form-control" placeholder="Enter an exclusion point">
+          <input type="text" name="exclusion" class="form-control textColor" placeholder="Enter an exclusion point">
           <button type="button" class="btn btn-danger" onclick="removeItem(this)">×</button>`;
         exclusionList.appendChild(listItem);
       }

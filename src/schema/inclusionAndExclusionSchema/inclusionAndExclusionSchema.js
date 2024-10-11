@@ -1,17 +1,29 @@
 const mongoose = require('mongoose');
 
+const inclusionSchema = new mongoose.Schema({
+    points: {
+        type: [String],
+        required: true
+    }
+});
+
+const exclusionSchema = new mongoose.Schema({
+    points: {
+        type: [String],
+        required: true
+    }
+});
+
 const inclusionAndExclusionSchema = new mongoose.Schema({
-    inclusionPoints: {
-        type: [String],
-        required: true,
+    itenaryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'itenary',
     },
-    exclusionPoints: {
-        type: [String],
-        required: true,
-    },
+    inclusion: inclusionSchema,
+    exclusion: exclusionSchema,
     createdAt: {
         type: Date,
-        default: new Date(),
+        default: Date.now,
     },
     deletedAt: {
         type: Date,
