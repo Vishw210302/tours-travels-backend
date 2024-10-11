@@ -4,7 +4,7 @@ const passengerDetailsSchema = new mongoose.Schema({
     seatNumberId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'flightSeat',
-        required: true,
+        default : null
     },
     flightId: {
         type: mongoose.Schema.Types.ObjectId,

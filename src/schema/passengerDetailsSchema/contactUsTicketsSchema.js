@@ -4,11 +4,9 @@ const mealOrderCountSchema = new mongoose.Schema({
     particularMealId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'mealItemsImage',
-        required: true,
     },
     mealCount: {
         type: String,
-        require: true,
     }
 })
 
@@ -20,11 +18,20 @@ const contactUsTicketsSchema = new mongoose.Schema({
             required: true,
         },
     ],
-    mealOrder: [mealOrderCountSchema],
+    mealOrder: {
+        type: [mealOrderCountSchema],
+        default: null
+    },
     paymentId: {
         type: String,
-        required: true,
+        default: null
     },
+
+    paymentStatus: {
+        type: Boolean,
+        default: false
+    },
+
     fullName: {
         type: String,
         required: true,

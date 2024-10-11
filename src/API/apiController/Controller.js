@@ -702,6 +702,46 @@ apicontroller.getFlightSeatsListing = async (req, res) => {
   }
 };
 
+apicontroller.addPassengerDetails = async (req, res) => {
+  try {
+
+
+    const { details,  flightId} = req.body
+
+    const passengerPersonalId = []
+
+    for (let i = 0; i < details?.passengerDetailsData.length; i++) {
+
+      const passengerDetail = details?.passengerDetailsData[i];
+
+      const passengerTicketsDetails = await passengerDetails.create({
+        flightId,
+        fullName: passengerDetail?.fullName,
+        age: passengerDetail?.age,
+        gender: passengerDetail?.gender
+      })
+
+      passengerPersonalId.push(passengerTicketsDetails?._id)
+    }
+
+     await flightContactUs.create({
+
+      passengerId: passengerPersonalId,
+      fullName: details?.contactDetails?.fullName,
+      email: details?.contactDetails?.email,
+      mobileNumber: details?.contactDetails?.phoneNumber,
+
+    })
+
+    res.status(200).json({
+      message : "Saved details suceessfully"
+    })
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 apicontroller.addFlightTicketsData = async (req, res) => {
   try {
     const { flightId, passengerPersonalDetails, selectedMealData, flightSeatData, paymentId } = req.body
