@@ -29,6 +29,7 @@ const flightMeal = require('../schema/flightMealSchema/flightMealSchema');
 const mealItemsImage = require('../schema/flightMealSchema/allMealSchema');
 const FlightsDetails = require("../schema/flightsDetailsSchema/flightsDetailsSchema");
 const flightSeat = require('../schema/fligjhtSeatsSchema/flightSeatsSchema');
+const packageThemeImage = require('../schema/packageThemeSchema/packageThemeSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -1408,6 +1409,41 @@ adminController.ticketsMailDetails = async (req, res) => {
         res.render("admin-panel/flightTicketsDetailsMail/ticketsBookingMail")
     } catch (error) {
         console.log("error", error)
+    }
+}
+
+adminController.popularPackagesThemeListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-package-theme`);
+        if (response.data.status == true) {
+            res.render("admin-panel/packagesTheme/packagesThemeListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addPackageTheme = async (req, res) => {
+    try {
+        res.render("admin-panel/packagesTheme/addPackageTheme")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postPackageTheme = async (req, res) => {
+    try {
+        const packageTheme = new packageThemeImage({
+            packageName: req.body.packageName,
+            packageThemeImage: req.file.filename,
+        });
+        await packageTheme.save();
+        console.log(packageTheme, 'package')
+        res.redirect('/admin/popularPackagesThemeListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
 }
 

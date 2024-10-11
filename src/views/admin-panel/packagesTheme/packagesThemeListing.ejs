@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <%- console.log("dattatattataaq",data) %>
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin">Dashboard</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Package Themes
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <h4 class="card-title">Package Themes</h4>
+                    </div>
+                    <div>
+                      <a class="btn btn-primary" href="/admin/add-package-theme"
+                        >Add Package Themes</a
+                      >
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>Index</th>
+                          <th>Package Themes Name</th>
+                          <th>Package Themes Images</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% for (var i = 0; i < data.length; i++) { %>
+                        <tr>
+                          <td style="width: 5%"><%= i + 1 %></td>
+                          <td style="width: 30%" class="py-1">
+                            <img
+                              src="/uploads/package-theme/<%= data[i].packageThemeImage %>"
+                              alt="image"
+                              style="
+                                width: 85%;
+                                height: 200px;
+                                border-radius: 0;
+                                object-fit: fill;
+                              "
+                            />
+                          </td>
+                          <td><%= data[i].packageName %></td>
+                          <td>
+                            <a
+                              class="mr-3"
+                              style="font-size: 18px"
+                              href="/admin/get-edit-slider"
+                            >
+                              <i class="fa-solid fa-pen-to-square text-primary">
+                              </i>
+                            </a>
+                            <a
+                              class="mr-2"
+                              style="font-size: 18px"
+                              href="/admin/slider-delete"
+                            >
+                              <i class="fa-solid fa-trash text-danger"></i>
+                            </a>
+                          </td>
+                          <% } %>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include("../partials/_footer.ejs") %>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

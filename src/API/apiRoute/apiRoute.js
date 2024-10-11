@@ -100,6 +100,9 @@ apiRoute.post('/inquery-post', apiController.postInqueryAPI)
 apiRoute.get('/get-inqueries-details', apiController.getInqueriesDetails);
 apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
 
+// Packages Theme API
+apiRoute.get('/get-package-theme', apiController.getPackageTheme);
+
 // Flight Tickets Get API
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
 

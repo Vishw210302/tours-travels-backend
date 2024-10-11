@@ -30,6 +30,7 @@ const { sendEmail } = require('../../utils/sendMail');
 const { pdfGenerator } = require("../../utils/pdfGenerator");
 const path = require("path");
 const fs = require("fs");
+const packageThemeImage = require("../../schema/packageThemeSchema/packageThemeSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -788,6 +789,15 @@ apicontroller.addFlightTicketsData = async (req, res) => {
   } catch (error) {
     console.log(error, "error")
     res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.getPackageTheme = async (req, res) => {
+  try {
+    const packageThemeListing = await packageThemeImage.find();
+    res.status(200).json({ status: true, data: packageThemeListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 }
 
