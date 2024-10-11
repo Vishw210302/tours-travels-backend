@@ -50,7 +50,7 @@ router.post('/edit-day-itenary/:id', uploads.none(), adminController.updateDayIt
 router.get('/package-price-page/:id', adminController.addPackagePricePage);
 router.post('/add-price-details', adminController.addPriceDetails);
 router.get("/all-itenaries-packagesvise/:id", adminController.getAllDetailsOfItenaty)
-router.get('/allInclusionAndExclusion', adminController.allInclusionAndExclusion);
+router.get('/allInclusionAndExclusion/:id', adminController.allInclusionAndExclusion);
 router.post('/add-inclusion-exclusion', adminController.addInclusionAndExclusion);
 
 // All Testimonial API

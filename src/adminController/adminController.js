@@ -678,7 +678,8 @@ adminController.reviewDeleteMessage = async (req, res) => {
 
 adminController.allInclusionAndExclusion = async (req, res) => {
     try {
-        res.render("admin-panel/domesticPackages/addInclusionExclusion")
+        const itenaryId = req.params.id
+        res.render("admin-panel/domesticPackages/addInclusionExclusion", { itenaryId })
     } catch (error) {
         console.log("error", error)
     }
@@ -686,15 +687,9 @@ adminController.allInclusionAndExclusion = async (req, res) => {
 
 adminController.addInclusionAndExclusion = async (req, res) => {
     try {
-        const inclusionPoints = req.body.inclusionPoints;
-        const exclusionPoints = req.body.exclusionPoints;
-
-        const addInclusionExclusion = new InclusionAndExclusion({
-            inclusionPoints: inclusionPoints,
-            exclusionPoints: exclusionPoints
-        });
-        await addInclusionExclusion.save();
-        res.redirect('/admin/allInclusionAndExclusion')
+        const { inclusion, exclusion } = req.body
+        console.log(inclusion, 'in')
+        console.log(exclusion, 'ex')
     } catch (error) {
         console.log("error", error);
         res.status(500).json({ message: "An error occurred while adding inclusion and exclusion" });
