@@ -129,6 +129,11 @@ router.get('/get-particular-meal-listing/:id', adminController.getParticulrMealL
 router.get('/delete-flight-meal/:id', adminController.deleteFlightMeal);
 router.get('/delete-particular-flight-meal/:id', adminController.deleteParticularFlightMeal);
 
+// Popular Packages Theme
+router.get('/popularPackagesThemeListing', adminController.popularPackagesThemeListing);
+router.get('/add-package-theme', adminController.addPackageTheme);
+router.post('/post-package-theme', upload('/package-theme').single('packageThemeImage'), adminController.postPackageTheme);
+
 // Flight tickets mail template API
 router.get("/ticketsDetailsMail", adminController.ticketsMailDetails)
 

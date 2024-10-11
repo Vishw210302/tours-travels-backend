@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 
-const sliderSchema = new mongoose.Schema({
-    key: {
+const packageThemeSchema = new mongoose.Schema({
+    packageName: {
         type: String,
         required: true,
     },
-    slider: {
+    packageThemeImage: {
         type: String,
         required: true,
     },
     createdAt: {
         type: Date,
-        default: null,
+        default: new Date(),
     },
     deletedAt: {
         type: Date,
@@ -19,6 +19,6 @@ const sliderSchema = new mongoose.Schema({
     }
 });
 
-const slider = mongoose.model('slider', sliderSchema);
+const packageThemeImage = mongoose.model('packageThemeImage', packageThemeSchema);
 
-module.exports = slider;
+module.exports = packageThemeImage;
