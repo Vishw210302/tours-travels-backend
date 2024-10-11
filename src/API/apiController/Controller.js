@@ -28,6 +28,8 @@ const passengerDetails = require("../../schema/passengerDetailsSchema/passengerD
 const flightContactUs = require("../../schema/passengerDetailsSchema/contactUsTicketsSchema");
 const { sendEmail } = require('../../utils/sendMail');
 const { pdfGenerator } = require("../../utils/pdfGenerator");
+const path = require("path");
+const fs = require("fs");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -768,12 +770,23 @@ apicontroller.addFlightTicketsData = async (req, res) => {
     // }
     // console.log('Updated Seats:', updatedSeats);
     const htmlFilePath = "/admin-panel/flightTicketsDetailsMail/ticketsBookingMail.ejs"
-    const tickectName = "ticket.pdf"
-    const pdfResponse = await pdfGenerator(htmlFilePath, tickectName)
+    const ticketName = "ticket.pdf"
+    await pdfGenerator(htmlFilePath, ticketName);
 
-    return res.send(pdfResponse)
+    const pdfPath = path.join(__dirname, '../../public', `/ticketsPDF/${ticketName}`);
+    const pdfBuffer = fs.readFileSync(pdfPath);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${ticketName}"`,
+      'Content-Length': pdfBuffer.length
+    });
+
+    console.log(pdfBuffer, 'pdf')
+    res.send(pdfBuffer);
 
   } catch (error) {
+    console.log(error, "error")
     res.status(400).json({ message: error.message });
   }
 }
