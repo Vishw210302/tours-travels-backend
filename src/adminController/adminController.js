@@ -1447,4 +1447,18 @@ adminController.postPackageTheme = async (req, res) => {
     }
 }
 
+adminController.deletePackageTheme = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-package-theme/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/ticketsDetailsMail")
+        } else {
+            console.log("Error add in Package Delete")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
 module.exports = adminController;

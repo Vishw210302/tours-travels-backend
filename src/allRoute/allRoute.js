@@ -135,7 +135,8 @@ router.get('/add-package-theme', adminController.addPackageTheme);
 router.post('/post-package-theme', upload('/package-theme').single('packageThemeImage'), adminController.postPackageTheme);
 
 // Flight tickets mail template API
-router.get("/ticketsDetailsMail", adminController.ticketsMailDetails)
+router.get("/ticketsDetailsMail", adminController.ticketsMailDetails);
+router.get('/delete-package-theme/:id', adminController.deletePackageTheme);
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);

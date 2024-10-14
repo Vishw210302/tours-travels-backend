@@ -706,7 +706,7 @@ apicontroller.addPassengerDetails = async (req, res) => {
   try {
 
 
-    const { details,  flightId} = req.body
+    const { details, flightId } = req.body
 
     const passengerPersonalId = []
 
@@ -724,7 +724,7 @@ apicontroller.addPassengerDetails = async (req, res) => {
       passengerPersonalId.push(passengerTicketsDetails?._id)
     }
 
-     await flightContactUs.create({
+    await flightContactUs.create({
 
       passengerId: passengerPersonalId,
       fullName: details?.contactDetails?.fullName,
@@ -734,7 +734,7 @@ apicontroller.addPassengerDetails = async (req, res) => {
     })
 
     res.status(200).json({
-      message : "Saved details suceessfully"
+      message: "Saved details suceessfully"
     })
 
   } catch (error) {
@@ -836,6 +836,16 @@ apicontroller.getPackageTheme = async (req, res) => {
   try {
     const packageThemeListing = await packageThemeImage.find();
     res.status(200).json({ status: true, data: packageThemeListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deletePackageTheme = async (req, res) => {
+  try {
+    const deletePackageTheme = await packageThemeImage.findById(req.params.id);
+    await deletePackageTheme.remove();
+    res.status(200).json({ status: true, message: 'Package Theme deleted successfully!' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

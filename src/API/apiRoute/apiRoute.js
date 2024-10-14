@@ -108,9 +108,9 @@ apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
 
 // Packages Theme API
 apiRoute.get('/get-package-theme', apiController.getPackageTheme);
+apiRoute.delete('/delete-package-theme/:id', apiController.deletePackageTheme);
 
 // Flight Tickets Get API
-
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
 
 module.exports = apiRoute;
