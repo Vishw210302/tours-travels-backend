@@ -133,6 +133,15 @@ apicontroller.getTestimonialListing = async (req, res) => {
   }
 }
 
+apicontroller.getTestimonialListingActive = async (req, res) => {
+  try {
+    const getTestimimonial = await testimonial.find({ status: 'Active' });
+    res.status(200).json({ status: true, data: getTestimimonial });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 apicontroller.postTestimonialReview = async (req, res) => {
   try {
     const testimonialReview = new testimonial({
@@ -835,6 +844,15 @@ apicontroller.addFlightTicketsData = async (req, res) => {
 apicontroller.getPackageTheme = async (req, res) => {
   try {
     const packageThemeListing = await packageThemeImage.find();
+    res.status(200).json({ status: true, data: packageThemeListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getPackageThemeActive = async (req, res) => {
+  try {
+    const packageThemeListing = await packageThemeImage.find({ status: 'Active' });
     res.status(200).json({ status: true, data: packageThemeListing });
   } catch (error) {
     res.status(500).json({ message: error.message });

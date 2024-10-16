@@ -9,6 +9,10 @@ const packageThemeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    status: {
+        type: String,
+        default: 'Inactive'
+    },
     createdAt: {
         type: Date,
         default: new Date(),

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include("../partials/head.ejs") %>
+
+<head>
+  <%- include("../partials/head.ejs") %>
     <style>
       table th,
       table td {
@@ -9,125 +10,124 @@
         word-wrap: break-word;
         word-break: break-word;
       }
+
       table th.index,
       table td.index {
         width: 5%;
       }
+
       table th.name,
       table td.name {
         width: 20%;
       }
+
       table th.description,
       table td.description {
         width: 50%;
       }
+
       table th.action,
       table td.action {
         width: 10%;
         text-align: center;
       }
     </style>
-  </head>
+</head>
 
-  <body>
-    <div class="container-scroller">
-      <%- include("../partials/_sidebar.ejs") %>
+<body>
+  <div class="container-scroller">
+    <%- include("../partials/_sidebar.ejs") %>
       <div class="container-fluid page-body-wrapper">
         <%- include("../partials/_navbar.ejs") %>
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div class="page-header">
-              <h3 class="page-title">Basic Tables</h3>
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item">
-                    <a href="/admin">Dashboard</a>
-                  </li>
-                  <li class="breadcrumb-item active" aria-current="page">
-                    Testimonial
-                  </li>
-                </ol>
-              </nav>
-            </div>
-            <div class="col-lg-12 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
-                    <div>
-                      <h4 class="card-title">All Testimonial</h4>
+          <div class="main-panel">
+            <div class="content-wrapper">
+              <div class="page-header">
+                <h3 class="page-title">Basic Tables</h3>
+                <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="/admin">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Testimonial
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h4 class="card-title">All Testimonial</h4>
+                      </div>
+                      <div></div>
                     </div>
-                    <div></div>
-                  </div>
-                  <div class="table-responsive">
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th class="index">Index</th>
-                          <th class="name">Review Person Name</th>
-                          <th class="description">Review Description</th>
-                          <th class="description">Status</th>
-                          <th class="description">Number Of Review</th>
-                          <th class="action">Action</th>
-                          <th class="action">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% if (data && data.length > 0) { %> <% for (var i = 0;
-                        i < data.length; i++) { %>
-                        <tr>
-                          <td class="index py-1"><%= i + 1 %></td>
-                          <td class="name"><%= data[i].reviewPersonName %></td>
-                          <td class="description">
-                            <%= data[i].reviewDescription %>
-                          </td>
-                          <td class="description">
-                            <div
-                              class="<%= data[i].status === 'Active' ? 'badge badge-outline-success' : 'badge badge-outline-danger' %>"
-                            >
-                              <%= data[i].status %>
-                            </div>
-                          </td>
-                          <td class="description">
-                            <%= data[i].numberOfReview %>
-                          </td>
-                          <td class="action">
-                            <div class="form-check form-check-primary">
-                              <input class="checkbox" type="checkbox"
-                              data-id="<%= data[i]._id %>" <%= data[i].status
-                              === 'Active' ? 'checked' : '' %>
-                              onchange="toggleStatus(this)" />
-                            </div>
-                          </td>
-                          <td>
-                            <a
-                              href="/admin/delete-testimonial/<%= data[i]._id %>"
-                              style="text-decoration: none"
-                            >
-                              <i
-                                class="fa-solid fa-trash text-danger"
-                                style="font-size: 18px"
-                              ></i>
-                            </a>
-                          </td>
-                        </tr>
-                        <% } %> <% } else { %>
-                        <tr>
-                          <td colspan="7">No testimonials available.</td>
-                        </tr>
-                        <% } %>
-                      </tbody>
-                    </table>
+                    <div class="table-responsive">
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th class="index">Index</th>
+                            <th class="name">Review Person Name</th>
+                            <th class="description">Review Description</th>
+                            <th class="description">Status</th>
+                            <th class="description">Number Of Review</th>
+                            <th class="action">Action</th>
+                            <th class="action">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if (data && data.length> 0) { %> <% for (var i=0; i < data.length; i++) { %>
+                              <tr>
+                                <td class="index py-1">
+                                  <%= i + 1 %>
+                                </td>
+                                <td class="name">
+                                  <%= data[i].reviewPersonName %>
+                                </td>
+                                <td class="description">
+                                  <%= data[i].reviewDescription %>
+                                </td>
+                                <td class="description">
+                                  <div
+                                    class="<%= data[i].status === 'Active' ? 'badge badge-outline-success' : 'badge badge-outline-danger' %>">
+                                    <%= data[i].status %>
+                                  </div>
+                                </td>
+                                <td class="description">
+                                  <%= data[i].numberOfReview %>
+                                </td>
+                                <td class="action">
+                                  <div class="form-check form-check-primary">
+                                    <input class="checkbox" type="checkbox" data-id="<%= data[i]._id %>"
+                                      <%=data[i].status==='Active' ? 'checked' : '' %>
+                                    onchange="allTestimonialListingToggleStatus(this)" />
+                                  </div>
+                                </td>
+                                <td>
+                                  <a href="/admin/delete-testimonial/<%= data[i]._id %>" style="text-decoration: none">
+                                    <i class="fa-solid fa-trash text-danger" style="font-size: 18px"></i>
+                                  </a>
+                                </td>
+                              </tr>
+                              <% } %>
+                                <% } else { %>
+                                  <tr>
+                                    <td colspan="7">No testimonials available.</td>
+                                  </tr>
+                                  <% } %>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <%- include("../partials/_footer.ejs") %>
           </div>
-          <%- include("../partials/_footer.ejs") %>
-        </div>
       </div>
-    </div>
-    <%- include("../partials/_script.ejs") %>
-  </body>
+  </div>
+  <%- include("../partials/_script.ejs") %>
+</body>
+
 </html>

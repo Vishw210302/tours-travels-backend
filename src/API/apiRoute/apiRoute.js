@@ -35,6 +35,7 @@ apiRoute.get('/get-all-details-itenary/:id', apiController.allDetailsOfItenaty)
 
 // Testimonial API
 apiRoute.get('/get-testimonial', apiController.getTestimonialListing);
+apiRoute.get('/get-testimonial-active', apiController.getTestimonialListingActive);
 apiRoute.post('/add-testimonial-review', apiController.postTestimonialReview)
 apiRoute.delete('/delete-testimonial/:id', apiController.deleteTestimonial);
 
@@ -108,6 +109,7 @@ apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
 
 // Packages Theme API
 apiRoute.get('/get-package-theme', apiController.getPackageTheme);
+apiRoute.get('/get-package-theme-active', apiController.getPackageThemeActive);
 apiRoute.delete('/delete-package-theme/:id', apiController.deletePackageTheme);
 
 // Flight Tickets Get API

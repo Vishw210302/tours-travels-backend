@@ -12,7 +12,6 @@ const itenaryDetails = require('../schema/itenaryShema/dayWiseItenaryDetails');
 const itenaryPriceDetails = require('../schema/itenaryShema/itenaryPriceDetails');
 const testimonial = require('../schema/testimonialSchema/testimonialSchema');
 const registerPage = require('../schema/registerPageSchema/registerPageSchema');
-const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
 const branch = require('../schema/branchSchema/allBranchSchema');
 const locationBranch = require('../schema/branchSchema/branchLocationSchema');
 const sanitizeHtml = require('sanitize-html');
@@ -191,13 +190,9 @@ adminController.allInternatioanlPackagesListing = async (req, res) => {
 
 adminController.particularFilePackages = async (req, res) => {
     try {
-
         const response = await axios.get(`${process.env.baseUrl}/api/get-particular-itenary/${req.params.id}`);
-
-
         const packageData = response.data
         res.render("admin-panel/domesticPackages/particularFilePackages", { packageData: packageData[0] })
-
     } catch (error) {
         console.log("error", error)
     }
@@ -1438,6 +1433,7 @@ adminController.postPackageTheme = async (req, res) => {
         const packageTheme = new packageThemeImage({
             packageName: req.body.packageName,
             packageThemeImage: req.file.filename,
+            status: req.body.status,
         });
         await packageTheme.save();
         console.log(packageTheme, 'package')
@@ -1460,5 +1456,23 @@ adminController.deletePackageTheme = async (req, res) => {
     }
 }
 
+adminController.updatePackageTheme = async (req, res) => {
+    try {
+        const packageThemeId = req.params.id;
+        const { status } = req.body;
+        const packageTheme = await packageThemeImage.findById(packageThemeId);
+
+        if (!packageTheme) {
+            return res.status(404).json({ message: "Package Theme not found" });
+        }
+
+        packageTheme.status = status;
+        await packageTheme.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
 module.exports = adminController;
