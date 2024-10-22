@@ -139,6 +139,19 @@ router.put('/packageTheme/status/:id', adminController.updatePackageTheme);
 router.get("/ticketsDetailsMail", adminController.ticketsMailDetails);
 router.get('/delete-package-theme/:id', adminController.deletePackageTheme);
 
+// Social Media Link API
+router.get("/socialMediaLinkListing", adminController.socialMediaLinkList);
+router.get('/add-social-media-link', adminController.addSocialMediaLink);
+router.post('/post-social-Media-Link', adminController.postSocialMediaLink);
+router.get('/delete-social-media-link/:id', adminController.deleteSocialMediaLink);
+
+// Contact us Hotel API
+router.get("/hotelContactUs", adminController.hotelContactUs);
+router.get('/delete-contact-us-review-hotels/:id', adminController.deleteContactUsReviewHotels);
+
+// Hotel Testimonial API
+router.get("/hotelTestimonialGet", adminController.hoteltestimonialGet);
+
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);

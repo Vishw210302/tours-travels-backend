@@ -29,6 +29,7 @@ const mealItemsImage = require('../schema/flightMealSchema/allMealSchema');
 const FlightsDetails = require("../schema/flightsDetailsSchema/flightsDetailsSchema");
 const flightSeat = require('../schema/fligjhtSeatsSchema/flightSeatsSchema');
 const packageThemeImage = require('../schema/packageThemeSchema/packageThemeSchema');
+const socialMediaLink = require('../schema/socialMediaLinkSchema/socialMediaLinkSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -1474,5 +1475,92 @@ adminController.updatePackageTheme = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+adminController.socialMediaLinkList = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-social-media-link`);
+        if (response.data.status == true) {
+            res.render("admin-panel/socialMediaLink/socialMediaLinkListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addSocialMediaLink = async (req, res) => {
+    try {
+        res.render("admin-panel/socialMediaLink/addSocialMediaLink")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postSocialMediaLink = async (req, res) => {
+    try {
+        const addSocialMediaLink = new socialMediaLink({
+            socialMediaName: req.body.socialMediaName,
+            socialMediaLink: req.body.socialMediaLink,
+            order: req.body.order
+        });
+        await addSocialMediaLink.save();
+        res.redirect("/admin/socialMediaLinkListing")
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.deleteSocialMediaLink = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-social-media-link/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/socialMediaLinkListing")
+        } else {
+            console.log("Error add in social media link")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.hotelContactUs = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-contact-us-review-hotel`)
+        if (response.data.status == true) {
+            res.render("admin-panel/hotelContactUs/hotelContactUs", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.deleteContactUsReviewHotels = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-contact-us-review-hotels/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/hotelContactUs")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.hoteltestimonialGet = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-testimonial-hotel`)
+        if (response.data.status == true) {
+            res.render("admin-panel/hotelTestimonialReview/hotelTestimonialReview", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
 
 module.exports = adminController;

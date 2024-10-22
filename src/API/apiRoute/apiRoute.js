@@ -102,10 +102,24 @@ apiRoute.delete('/delete-particular-flight-meal/:id', apiController.deletParticu
 // Flight Seat API
 apiRoute.get('/get-flights-seats/:id', apiController.getFlightSeatsListing)
 
+// Social Media Link API
+apiRoute.get('/get-social-media-link', apiController.getSocialMediaLink);
+apiRoute.delete('/delete-social-media-link/:id', apiController.deleteSocialMediaLink);
+
 // Inquery API
 apiRoute.post('/inquery-post', apiController.postInqueryAPI)
 apiRoute.get('/get-inqueries-details', apiController.getInqueriesDetails);
 apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
+
+// Contact us Hotel API
+apiRoute.post('/contact-us-post-hotel', apiController.postContactUsHotelAPI);
+apiRoute.get('/get-contact-us-review-hotel', apiController.getContactUsReviewHotel);
+apiRoute.delete('/delete-contact-us-review-hotels/:id', apiController.deleteContactUsReviewHotels);
+
+// Hotel's Testimonial Review API
+apiRoute.post('/post-hotel-testimonial-review', apiController.postHotelTestimonialReview);
+apiRoute.get('/get-testimonial-hotel', apiController.getTestimonialHotelListing);
+apiRoute.get('/get-testimonial-active-hotel', apiController.getTestimonialListingActiveHotel);
 
 // Packages Theme API
 apiRoute.get('/get-package-theme', apiController.getPackageTheme);

@@ -26,11 +26,13 @@ const mealItemsImage = require("../../schema/flightMealSchema/allMealSchema");
 const flightSeat = require("../../schema/fligjhtSeatsSchema/flightSeatsSchema");
 const passengerDetails = require("../../schema/passengerDetailsSchema/passengerDetailsSchema");
 const flightContactUs = require("../../schema/passengerDetailsSchema/contactUsTicketsSchema");
-const { sendEmail } = require('../../utils/sendMail');
 const { pdfGenerator } = require("../../utils/pdfGenerator");
 const path = require("path");
 const fs = require("fs");
 const packageThemeImage = require("../../schema/packageThemeSchema/packageThemeSchema");
+const socialMediaLink = require("../../schema/socialMediaLinkSchema/socialMediaLinkSchema");
+const hotelContactUs = require("../../schema/hotelContactUsSchema/hotelContactUsSchema");
+const hotelTestimonial = require("../../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -868,5 +870,95 @@ apicontroller.deletePackageTheme = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+apicontroller.getSocialMediaLink = async (req, res) => {
+  try {
+    const socialMediaLinkListing = await socialMediaLink.find().sort({ order: 1 });
+    res.status(200).json({ status: true, data: socialMediaLinkListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteSocialMediaLink = async (req, res) => {
+  try {
+    const deleteSocialMediaLink = await socialMediaLink.findById(req.params.id);
+    await deleteSocialMediaLink.remove();
+    res.status(200).json({ status: true, message: 'social media link deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.postContactUsHotelAPI = async (req, res) => {
+  try {
+    const hotelContactUsMessage = new hotelContactUs({
+      name: req.body.name,
+      email: req.body.email,
+      mobileNumber: req.body.mobileNumber,
+      message: req.body.message,
+    });
+
+    await hotelContactUsMessage.save();
+    return res.status(200).json({ status: true, message: 'Review message send successfully!' });
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.getContactUsReviewHotel = async (req, res) => {
+  try {
+    const data = await hotelContactUs.find();
+    return res.status(200).json({ status: true, data: data });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteContactUsReviewHotels = async (req, res) => {
+  try {
+    const deleteContactUsHotel = await hotelContactUs.findById(req.params.id);
+    await deleteContactUsHotel.remove();
+    res.status(200).json({ status: true, message: 'Hotel Message deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.postHotelTestimonialReview = async (req, res) => {
+  try {
+    const testimonialHotelReview = new hotelTestimonial({
+      reviewPersonName: req.body.reviewPersonName,
+      reviewDescription: req.body.reviewDescription,
+      numberOfReview: req.body.numberOfReview,
+    });
+
+    await testimonialHotelReview.save();
+    return res.status(200).json({ status: true, message: `Hotel's Testimonial Review added successfully` });
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
+apicontroller.getTestimonialHotelListing = async (req, res) => {
+  try {
+    const getTestimimonialHotel = await hotelTestimonial.find();
+    res.status(200).json({ status: true, data: getTestimimonialHotel });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getTestimonialListingActiveHotel = async (req, res) => {
+  try {
+    const getTestimimonialHotel = await hotelTestimonial.find({ status: 'Active' });
+    res.status(200).json({ status: true, data: getTestimimonialHotel });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 
 module.exports = apicontroller;

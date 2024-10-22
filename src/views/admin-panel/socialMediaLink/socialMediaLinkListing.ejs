@@ -19,7 +19,7 @@
                     <a href="/admin">Dashboard</a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Youtube Videos
+                    Social Media Link
                   </li>
                 </ol>
               </nav>
@@ -29,13 +29,13 @@
                 <div class="card-body">
                   <div class="d-flex justify-content-between">
                     <div>
-                      <h4 class="card-title">Youtube Videos</h4>
+                      <h4 class="card-title">Social Media Link</h4>
                     </div>
                     <div>
                       <a
                         class="btn btn-primary"
-                        href="/admin/add-youtube-videos"
-                        >Add Youtube Videos</a
+                        href="/admin/add-social-media-link"
+                        >Add Social Media Link</a
                       >
                     </div>
                   </div>
@@ -44,15 +44,19 @@
                       <thead>
                         <tr>
                           <th>Index</th>
-                          <th>Youtube Videos URL</th>
+                          <th>Social Media Name</th>
+                          <th>Social Media Link</th>
+                          <th>Social Media Order</th>
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% for (var i=0; i < data.length; i++) { %>
+                        <% for (var i = 0; i < data.length; i++) { %>
                         <tr>
                           <td style="width: 5%"><%= i + 1 %></td>
-                          <td><%= data[i].youtubeURL %></td>
+                          <td><%= data[i].socialMediaName %></td>
+                          <td><%= data[i].socialMediaLink %></td>
+                          <td><%= data[i].order %></td>
                           <td>
                             <a class="mr-3" style="font-size: 18px" href="">
                               <i class="fa-solid fa-pen-to-square text-primary">
@@ -61,7 +65,7 @@
                             <a
                               class="mr-2"
                               style="font-size: 18px"
-                              href="/admin/delete-youtube-URL/<%= data[i]._id %>"
+                              href="/admin/delete-social-media-link/<%= data[i]._id %>"
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
