@@ -151,6 +151,7 @@ router.get('/delete-contact-us-review-hotels/:id', adminController.deleteContact
 
 // Hotel Testimonial API
 router.get("/hotelTestimonialGet", adminController.hoteltestimonialGet);
+router.put('/testimonial-hotel/status/:id', adminController.updateTestimonialHotelStatus);
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);

@@ -30,6 +30,7 @@ const FlightsDetails = require("../schema/flightsDetailsSchema/flightsDetailsSch
 const flightSeat = require('../schema/fligjhtSeatsSchema/flightSeatsSchema');
 const packageThemeImage = require('../schema/packageThemeSchema/packageThemeSchema');
 const socialMediaLink = require('../schema/socialMediaLinkSchema/socialMediaLinkSchema');
+const hotelTestimonial = require('../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -1562,5 +1563,26 @@ adminController.hoteltestimonialGet = async (req, res) => {
         console.log("error", error)
     }
 }
+
+adminController.updateTestimonialHotelStatus = async (req, res) => {
+    try {
+        const testimonialId = req.params.id;
+        const { status } = req.body;
+
+        const testimonialsHotels = await hotelTestimonial.findById(testimonialId);
+
+        if (!testimonialsHotels) {
+            return res.status(404).json({ message: `Hotel's testimonial not found` });
+        }
+
+        testimonialsHotels.status = status;
+        await testimonialsHotels.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
 
 module.exports = adminController;
