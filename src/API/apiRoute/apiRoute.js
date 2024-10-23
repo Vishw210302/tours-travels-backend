@@ -120,11 +120,17 @@ apiRoute.delete('/delete-contact-us-review-hotels/:id', apiController.deleteCont
 apiRoute.post('/post-hotel-testimonial-review', apiController.postHotelTestimonialReview);
 apiRoute.get('/get-testimonial-hotel', apiController.getTestimonialHotelListing);
 apiRoute.get('/get-testimonial-active-hotel', apiController.getTestimonialListingActiveHotel);
+apiRoute.delete('/delete-hotel-testimonial-review/:id', apiController.deletehotelTestimonialReview);
 
 // Packages Theme API
 apiRoute.get('/get-package-theme', apiController.getPackageTheme);
 apiRoute.get('/get-package-theme-active', apiController.getPackageThemeActive);
 apiRoute.delete('/delete-package-theme/:id', apiController.deletePackageTheme);
+
+// Hotel Coupon Code API
+apiRoute.get('/get-all-coupon-code', apiController.getAllCouponCodeListing);
+apiRoute.get('/get-all-coupon-code-active', apiController.getAllCouponCodeActiveListing);
+apiRoute.delete('/delete-coupon-code-hotel/:id', apiController.deleteCouponCodeHotel);
 
 // Flight Tickets Get API
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)

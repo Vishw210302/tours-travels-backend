@@ -31,6 +31,7 @@ const flightSeat = require('../schema/fligjhtSeatsSchema/flightSeatsSchema');
 const packageThemeImage = require('../schema/packageThemeSchema/packageThemeSchema');
 const socialMediaLink = require('../schema/socialMediaLinkSchema/socialMediaLinkSchema');
 const hotelTestimonial = require('../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema');
+const hotelCouponCode = require('../schema/hotelCouponCodeSchema/hotelCouponCodeSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -1584,5 +1585,83 @@ adminController.updateTestimonialHotelStatus = async (req, res) => {
     }
 };
 
+adminController.hotelCouponCodeListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-coupon-code`);
+        if (response.data.status == true) {
+            res.render("admin-panel/hotelCouponCode/hotelCouponCodeListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.deleteHotelTestimonialReview = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-hotel-testimonial-review/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/hotelTestimonialGet")
+        } else {
+            console.log("Error add in hotel testimonial")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.addHotelCouponCode = async (req, res) => {
+    try {
+        res.render("admin-panel/hotelCouponCode/addHotelCouponCode")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postHotelCouponCode = async (req, res) => {
+    try {
+        const hotelCouponCodes = new hotelCouponCode({
+            promoCode: req.body.promoCode,
+            discountAmount: req.body.discountAmount,
+        });
+        await hotelCouponCodes.save();
+        res.redirect('/admin/hotelCouponCodeListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.updateCouponCodeHotelStatus = async (req, res) => {
+    try {
+        const promoCodeId = req.params.id;
+        const { status } = req.body;
+        const promoCodes = await hotelCouponCode.findById(promoCodeId);
+
+        if (!promoCodes) {
+            return res.status(404).json({ message: `Hotel's Coupon Code not found` });
+        }
+
+        promoCodes.status = status;
+        await promoCodes.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.deleteCouponCodeHotel = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-coupon-code-hotel/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/hotelCouponCodeListing")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = adminController;

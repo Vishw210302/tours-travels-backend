@@ -9,22 +9,18 @@
         word-wrap: break-word;
         word-break: break-word;
       }
-
       table th.index,
       table td.index {
         width: 5%;
       }
-
       table th.name,
       table td.name {
         width: 20%;
       }
-
       table th.description,
       table td.description {
         width: 50%;
       }
-
       table th.action,
       table td.action {
         width: 10%;
@@ -48,7 +44,7 @@
                     <a href="/admin">Dashboard</a>
                   </li>
                   <li class="breadcrumb-item active" aria-current="page">
-                    Testimonial
+                    Hotel Coupon Codes
                   </li>
                 </ol>
               </nav>
@@ -57,35 +53,38 @@
               <div class="card">
                 <div class="card-body">
                   <div
-                    class="d-flex justify-content-between align-items-center"
+                    class="d-flex justify-content-between align-items-center mb-4"
                   >
                     <div>
-                      <h4 class="card-title">All Hotel's Testimonial</h4>
+                      <h4 style="margin: 0">All Hotel Coupon Codes</h4>
                     </div>
-                    <div></div>
+                    <div>
+                      <a
+                        class="btn btn-primary"
+                        href="/admin/add-hotel-coupon-code"
+                        >Add Promo Codes</a
+                      >
+                    </div>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
                       <thead>
                         <tr>
                           <th class="index">Index</th>
-                          <th class="name">Review Person Name</th>
-                          <th class="description">Review Description</th>
+                          <th class="name">Hotel Coupon Codes</th>
+                          <th class="name">Amount</th>
                           <th class="description">Status</th>
-                          <th class="description">Number Of Review</th>
                           <th class="action">Action</th>
                           <th class="action">Status</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (data && data.length> 0) { %> <% for (var i=0; i <
-                        data.length; i++) { %>
+                        <% if (data && data.length > 0) { %> <% for (var i = 0;
+                        i < data.length; i++) { %>
                         <tr>
                           <td class="index py-1"><%= i + 1 %></td>
-                          <td class="name"><%= data[i].reviewPersonName %></td>
-                          <td class="description">
-                            <%= data[i].reviewDescription %>
-                          </td>
+                          <td class="name"><%= data[i].promoCode %></td>
+                          <td class="name"><%= data[i].discountAmount %></td>
                           <td class="description">
                             <div
                               class="<%= data[i].status === 'Active' ? 'badge badge-outline-success' : 'badge badge-outline-danger' %>"
@@ -93,21 +92,17 @@
                               <%= data[i].status %>
                             </div>
                           </td>
-                          <td class="description">
-                            <%= data[i].numberOfReview %>
-                          </td>
                           <td class="action">
                             <div class="form-check form-check-primary">
                               <input class="checkbox" type="checkbox"
-                              data-id="<%= data[i]._id %>"
-                              <%=data[i].status==='Active' ? 'checked' : '' %>
-                              onchange="allTestimonialHotelListingToggleStatus(this)"
-                              />
+                              data-id="<%= data[i]._id %>" <%= data[i].status
+                              === 'Active' ? 'checked' : '' %>
+                              onchange="hotelCouponCodeToggleStatus(this)" />
                             </div>
                           </td>
                           <td>
                             <a
-                              href="/admin/delete-hotel-testimonial-review/<%= data[i]._id %>"
+                              href="/admin/delete-coupon-code-hotel/<%= data[i]._id %>"
                               style="text-decoration: none"
                             >
                               <i
@@ -118,8 +113,10 @@
                           </td>
                         </tr>
                         <% } %> <% } else { %>
-                        <tr>
-                          <td colspan="7">No testimonials available.</td>
+                        <tr style="width: 100%">
+                          <td style="text-align: center" colspan="6">
+                            No Coupon Codes Available.
+                          </td>
                         </tr>
                         <% } %>
                       </tbody>

@@ -17,14 +17,21 @@ const PORT = process.env.PORT || 3000;
 const apiRoute = require('./API/apiRoute/apiRoute')
 const allRoute = require('../src/allRoute/allRoute');
 const adminController = require('./adminController/adminController');
+const logger = require('morgan')
+
+app.use(logger('dev'));
 app.use('/api', apiRoute);
 app.use('/admin', allRoute);
 
-app.get('/', adminController.loginPage);
+app.get('/login', adminController.loginPage);
 app.post('/post-login', adminController.login);
 app.get('/register', adminController.registerPage);
 app.post('/register-post', adminController.registerApi);
 
+app.get('*', function (req, res) {
+  res.send(`<h1>${req.path.replace('/', '')} not found</h1>`)
+})
+
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}/login`);
 });

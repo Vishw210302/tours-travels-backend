@@ -33,6 +33,7 @@ const packageThemeImage = require("../../schema/packageThemeSchema/packageThemeS
 const socialMediaLink = require("../../schema/socialMediaLinkSchema/socialMediaLinkSchema");
 const hotelContactUs = require("../../schema/hotelContactUsSchema/hotelContactUsSchema");
 const hotelTestimonial = require("../../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema");
+const hotelCouponCode = require("../../schema/hotelCouponCodeSchema/hotelCouponCodeSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -960,5 +961,43 @@ apicontroller.getTestimonialListingActiveHotel = async (req, res) => {
   }
 }
 
+apicontroller.deletehotelTestimonialReview = async (req, res) => {
+  try {
+    const deleteHotelTestimonial = await hotelTestimonial.findById(req.params.id);
+    await deleteHotelTestimonial.remove();
+    res.status(200).json({ status: true, message: 'Hotel Testimonial deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+
+apicontroller.getAllCouponCodeListing = async (req, res) => {
+  try {
+    const hotelCouponCodes = await hotelCouponCode.find();
+    res.status(200).json({ status: true, data: hotelCouponCodes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteCouponCodeHotel = async (req, res) => {
+  try {
+    const deleteCouponCodeHotel = await hotelCouponCode.findById(req.params.id);
+    await deleteCouponCodeHotel.remove();
+    res.status(200).json({ status: true, message: 'Coupon Code Hotel deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getAllCouponCodeActiveListing = async (req, res) => {
+  try {
+    const getAllActiveCouponCodeListing = await hotelCouponCode.find({ status: 'Active' });
+    res.status(200).json({ status: true, data: getAllActiveCouponCodeListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
 module.exports = apicontroller;

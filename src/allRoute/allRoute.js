@@ -152,11 +152,18 @@ router.get('/delete-contact-us-review-hotels/:id', adminController.deleteContact
 // Hotel Testimonial API
 router.get("/hotelTestimonialGet", adminController.hoteltestimonialGet);
 router.put('/testimonial-hotel/status/:id', adminController.updateTestimonialHotelStatus);
+router.get('/delete-hotel-testimonial-review/:id', adminController.deleteHotelTestimonialReview);
+
+// Hotel Coupon Code API
+router.get("/hotelCouponCodeListing", adminController.hotelCouponCodeListing);
+router.get('/add-hotel-coupon-code', adminController.addHotelCouponCode);
+router.post('/post-hotel-coupon-code', adminController.postHotelCouponCode);
+router.put('/couponCodeHotel/status/:id', adminController.updateCouponCodeHotelStatus);
+router.get('/delete-coupon-code-hotel/:id', adminController.deleteCouponCodeHotel);
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);
-
 // router.get('/testRoute', adminController.testRoute);
 
 module.exports = router;
