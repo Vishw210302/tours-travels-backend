@@ -724,52 +724,197 @@ apicontroller.addPassengerDetails = async (req, res) => {
     for (let i = 0; i < details?.passengerDetailsData.length; i++) {
 
       const passengerDetail = details?.passengerDetailsData[i];
+      const passengerId = mongoose.Types.ObjectId.isValid(passengerDetail.id) ? mongoose.Types.ObjectId(passengerDetail.id) : null;
+      let passengerTicketsDetails;
 
-      const passengerTicketsDetails = await passengerDetails.create({
-        flightId,
-        fullName: passengerDetail?.fullName,
-        age: passengerDetail?.age,
-        gender: passengerDetail?.gender
-      })
+      if (passengerId) {
+        console.log("if passemger")
+        passengerTicketsDetails = await passengerDetails.findOneAndUpdate(
+          { _id: passengerId },
+          {
+            $set: {
+              fullName: passengerDetail.fullName,
+              age: passengerDetail.age,
+              gender: passengerDetail.gender,
+            }
+          },
+          { new: true, upsert: true }
+        );
 
+
+      } else {
+
+        console.log("else passemger")
+
+        passengerTicketsDetails = await passengerDetails.create({
+          flightId,
+          fullName: passengerDetail?.fullName,
+          age: passengerDetail?.age,
+          gender: passengerDetail?.gender
+        });
+
+      }
       passengerPersonalId.push(passengerTicketsDetails?._id)
     }
 
-    const contactus = await flightContactUs.create({
-
+    const contactData = {
       passengerId: passengerPersonalId,
       fullName: details?.contactDetails?.fullName,
       email: details?.contactDetails?.email,
       mobileNumber: details?.contactDetails?.phoneNumber,
+    };
 
-    })
+    const contactId = mongoose.Types.ObjectId.isValid(details?.contactDetails?.id) ? mongoose.Types.ObjectId(details?.contactDetails?.id) : null;
 
-    res.status(200).json({
-      email: contactus.email,
-      message: "Saved details suceessfully"
-    })
+    if (contactId) {
+      console.log("if contact")
+      const updatedContactUs = await flightContactUs.findOneAndUpdate(
+        { _id: contactId },
+        { $set: contactData },
+        { new: true }
+      );
+
+      if (!updatedContactUs) {
+        return res.status(404).json({ message: "Contact details not found" });
+      }
+
+      return res.status(200).json({
+        id: updatedContactUs._id,
+        message: "Updated contact details successfully"
+      });
+
+    } else {
+      console.log("else contact")
+      const newContactUs = await flightContactUs.create(contactData);
+
+      return res.status(200).json({
+        id: newContactUs._id,
+        message: "Saved contact details successfully"
+      });
+
+    }
 
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 }
 
-apicontroller.getPassengerDetailsByEmail = async (req, res) => {
+apicontroller.getPassengerDetailsByContactId = async (req, res) => {
   try {
 
-    const email = req.query.email;
+    const id = req.query.id;
 
-    const contactDetails = flightContactUs.findOne({
-      'email': email
-    });
+    const contactId = mongoose.Types.ObjectId.isValid(id) ? mongoose.Types.ObjectId(id) : null;
+    // const email = 'sandip@gmail.com';
+    const contactDetails = await flightContactUs.aggregate([
+      {
+        $match: { _id: contactId }
+      },
+      {
+        $lookup: {
+          from: 'passengerdetails',
+          localField: 'passengerId',
+          foreignField: '_id',
+          as: 'passengerDetails'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          fullName: 1,
+          email: 1,
+          mobileNumber: 1,
+          passengerDetails: 1
+        }
+      }
+    ]);
 
-    console.log(contactDetails, 'contactDetailscontactDetails')
+    const lastEntry = contactDetails[contactDetails.length - 1];
+
+    // console.log(lastEntry, 'lastEntrylastEntry')
+
+    if (lastEntry) {
+      res.status(200).json({ data: lastEntry });
+    } else {
+      res.send('No contact found for the given email.');
+      console.log("No contact found for the given email.");
+    }
+
 
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 }
 
+apicontroller.updateMealOrder = async (req, res) => {
+
+  const { selecteMealData, id } = req.body
+
+  const contactId = mongoose.Types.ObjectId.isValid(id) ? mongoose.Types.ObjectId(id) : null;
+
+  if (!contactId) {
+    return res.status(400).json({ message: 'Invalid contact ID' });
+  }
+
+  try {
+
+    const mealOrderData = selecteMealData.map(meal => ({
+      particularMealId: mongoose.Types.ObjectId(meal.meal_id),
+      mealCount: meal.count.toString(),
+    }));
+
+    const updatedContact = await flightContactUs.findByIdAndUpdate(
+      contactId,
+      { mealOrder: mealOrderData },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!updatedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    return res.status(200).json({ message: 'Meal order updated successfully', data: updatedContact });
+
+  } catch (error) {
+
+    return res.status(500).json({ message: 'Error updating meal order', error: error.message });
+  }
+}
+
+apicontroller.getUpdatedMealOrder = async (req, res) => {
+
+  const id = req.query.id
+
+  const contactId = mongoose.Types.ObjectId.isValid(id) ? mongoose.Types.ObjectId(id) : null;
+
+  if (!contactId) {
+    return res.status(400).json({ message: 'Invalid contact ID' });
+  }
+
+  try {
+
+    const mealOrderData = selecteMealData.map(meal => ({
+      particularMealId: mongoose.Types.ObjectId(meal.meal_id),
+      mealCount: meal.count.toString(),
+    }));
+
+    const updatedContact = await flightContactUs.findByIdAndUpdate(
+      contactId,
+      { mealOrder: mealOrderData },
+      { new: true, useFindAndModify: false }
+    );
+
+    if (!updatedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    return res.status(200).json({ message: 'Meal order updated successfully', data: updatedContact });
+
+  } catch (error) {
+
+    return res.status(500).json({ message: 'Error updating meal order', error: error.message });
+  }
+}
 
 apicontroller.addFlightTicketsData = async (req, res) => {
   try {
@@ -987,7 +1132,6 @@ apicontroller.deletehotelTestimonialReview = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
-
 
 apicontroller.getAllCouponCodeListing = async (req, res) => {
   try {

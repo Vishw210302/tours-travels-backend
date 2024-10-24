@@ -92,7 +92,9 @@ apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
 // Tickets Booking (Passanger Details) API
 // apiRoute.post('/tickets-booking', apiController.postTicketsBooking)
 apiRoute.post('/add-passenger-details', apiController.addPassengerDetails)
-apiRoute.get('/get-passengers-by-email', apiController.getPassengerDetailsByEmail)
+apiRoute.get('/get-passengers-by-contact-id', apiController.getPassengerDetailsByContactId)
+apiRoute.post('/update-meal-order', apiController.updateMealOrder)
+apiRoute.get('/get-updated-meal-order', apiController.getUpdatedMealOrder)
 
 // Flight Meal Details API 
 apiRoute.get('/get-flight-meals', apiController.getFlightMealListing);
