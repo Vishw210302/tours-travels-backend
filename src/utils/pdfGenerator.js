@@ -16,7 +16,7 @@ exports.pdfGenerator = async (htmlFilePath, tickectName) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(htmlContent);
-  
+
     await page.pdf({ path: pdfPath, format: 'A4' });
     await browser.close();
 

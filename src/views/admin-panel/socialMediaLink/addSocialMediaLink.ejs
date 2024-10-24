@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Add Social Media Link</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="">Social Media</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add Social Media Link
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add Social Media Link</h4>
+                  <form
+                    class="forms-sample py-3"
+                    method="POST"
+                    action="/admin/post-social-Media-Link"
+                  >
+                    <div class="form-group">
+                      <label for="socialMediaName">Social Media Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="socialMediaName"
+                        name="socialMediaName"
+                        placeholder="Enter Social Media Name"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="socialMediaLink">Social Media Link</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="socialMediaLink"
+                        name="socialMediaLink"
+                        placeholder="Enter Instagram, Facebook, LinkedIn link"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="order">Link Order</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="order"
+                        name="order"
+                        placeholder="Enter Social Media Name"
+                        required
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">
+                      Submit
+                    </button>
+                    <a
+                      class="btn btn-dark"
+                      href="/admin/socialMediaLinkListing"
+                    >
+                      Cancel
+                    </a>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

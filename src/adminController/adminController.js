@@ -12,7 +12,6 @@ const itenaryDetails = require('../schema/itenaryShema/dayWiseItenaryDetails');
 const itenaryPriceDetails = require('../schema/itenaryShema/itenaryPriceDetails');
 const testimonial = require('../schema/testimonialSchema/testimonialSchema');
 const registerPage = require('../schema/registerPageSchema/registerPageSchema');
-const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
 const branch = require('../schema/branchSchema/allBranchSchema');
 const locationBranch = require('../schema/branchSchema/branchLocationSchema');
 const sanitizeHtml = require('sanitize-html');
@@ -30,6 +29,9 @@ const mealItemsImage = require('../schema/flightMealSchema/allMealSchema');
 const FlightsDetails = require("../schema/flightsDetailsSchema/flightsDetailsSchema");
 const flightSeat = require('../schema/fligjhtSeatsSchema/flightSeatsSchema');
 const packageThemeImage = require('../schema/packageThemeSchema/packageThemeSchema');
+const socialMediaLink = require('../schema/socialMediaLinkSchema/socialMediaLinkSchema');
+const hotelTestimonial = require('../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema');
+const hotelCouponCode = require('../schema/hotelCouponCodeSchema/hotelCouponCodeSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -191,13 +193,9 @@ adminController.allInternatioanlPackagesListing = async (req, res) => {
 
 adminController.particularFilePackages = async (req, res) => {
     try {
-
         const response = await axios.get(`${process.env.baseUrl}/api/get-particular-itenary/${req.params.id}`);
-
-
         const packageData = response.data
         res.render("admin-panel/domesticPackages/particularFilePackages", { packageData: packageData[0] })
-
     } catch (error) {
         console.log("error", error)
     }
@@ -1438,12 +1436,231 @@ adminController.postPackageTheme = async (req, res) => {
         const packageTheme = new packageThemeImage({
             packageName: req.body.packageName,
             packageThemeImage: req.file.filename,
+            status: req.body.status,
         });
         await packageTheme.save();
         console.log(packageTheme, 'package')
         res.redirect('/admin/popularPackagesThemeListing');
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.deletePackageTheme = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-package-theme/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/ticketsDetailsMail")
+        } else {
+            console.log("Error add in Package Delete")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.updatePackageTheme = async (req, res) => {
+    try {
+        const packageThemeId = req.params.id;
+        const { status } = req.body;
+        const packageTheme = await packageThemeImage.findById(packageThemeId);
+
+        if (!packageTheme) {
+            return res.status(404).json({ message: "Package Theme not found" });
+        }
+
+        packageTheme.status = status;
+        await packageTheme.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.socialMediaLinkList = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-social-media-link`);
+        if (response.data.status == true) {
+            res.render("admin-panel/socialMediaLink/socialMediaLinkListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addSocialMediaLink = async (req, res) => {
+    try {
+        res.render("admin-panel/socialMediaLink/addSocialMediaLink")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postSocialMediaLink = async (req, res) => {
+    try {
+        const addSocialMediaLink = new socialMediaLink({
+            socialMediaName: req.body.socialMediaName,
+            socialMediaLink: req.body.socialMediaLink,
+            order: req.body.order
+        });
+        await addSocialMediaLink.save();
+        res.redirect("/admin/socialMediaLinkListing")
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.deleteSocialMediaLink = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-social-media-link/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/socialMediaLinkListing")
+        } else {
+            console.log("Error add in social media link")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.hotelContactUs = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-contact-us-review-hotel`)
+        if (response.data.status == true) {
+            res.render("admin-panel/hotelContactUs/hotelContactUs", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.deleteContactUsReviewHotels = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-contact-us-review-hotels/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/hotelContactUs")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.hoteltestimonialGet = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-testimonial-hotel`)
+        if (response.data.status == true) {
+            res.render("admin-panel/hotelTestimonialReview/hotelTestimonialReview", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.updateTestimonialHotelStatus = async (req, res) => {
+    try {
+        const testimonialId = req.params.id;
+        const { status } = req.body;
+
+        const testimonialsHotels = await hotelTestimonial.findById(testimonialId);
+
+        if (!testimonialsHotels) {
+            return res.status(404).json({ message: `Hotel's testimonial not found` });
+        }
+
+        testimonialsHotels.status = status;
+        await testimonialsHotels.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.hotelCouponCodeListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-coupon-code`);
+        if (response.data.status == true) {
+            res.render("admin-panel/hotelCouponCode/hotelCouponCodeListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.deleteHotelTestimonialReview = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-hotel-testimonial-review/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/hotelTestimonialGet")
+        } else {
+            console.log("Error add in hotel testimonial")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.addHotelCouponCode = async (req, res) => {
+    try {
+        res.render("admin-panel/hotelCouponCode/addHotelCouponCode")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postHotelCouponCode = async (req, res) => {
+    try {
+        const hotelCouponCodes = new hotelCouponCode({
+            promoCode: req.body.promoCode,
+            discountAmount: req.body.discountAmount,
+        });
+        await hotelCouponCodes.save();
+        res.redirect('/admin/hotelCouponCodeListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.updateCouponCodeHotelStatus = async (req, res) => {
+    try {
+        const promoCodeId = req.params.id;
+        const { status } = req.body;
+        const promoCodes = await hotelCouponCode.findById(promoCodeId);
+
+        if (!promoCodes) {
+            return res.status(404).json({ message: `Hotel's Coupon Code not found` });
+        }
+
+        promoCodes.status = status;
+        await promoCodes.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.deleteCouponCodeHotel = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-coupon-code-hotel/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/hotelCouponCodeListing")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }
 

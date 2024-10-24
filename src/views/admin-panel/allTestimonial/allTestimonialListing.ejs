@@ -9,18 +9,22 @@
         word-wrap: break-word;
         word-break: break-word;
       }
+
       table th.index,
       table td.index {
         width: 5%;
       }
+
       table th.name,
       table td.name {
         width: 20%;
       }
+
       table th.description,
       table td.description {
         width: 50%;
       }
+
       table th.action,
       table td.action {
         width: 10%;
@@ -74,8 +78,8 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <% if (data && data.length > 0) { %> <% for (var i = 0;
-                        i < data.length; i++) { %>
+                        <% if (data && data.length> 0) { %> <% for (var i=0; i <
+                        data.length; i++) { %>
                         <tr>
                           <td class="index py-1"><%= i + 1 %></td>
                           <td class="name"><%= data[i].reviewPersonName %></td>
@@ -95,9 +99,10 @@
                           <td class="action">
                             <div class="form-check form-check-primary">
                               <input class="checkbox" type="checkbox"
-                              data-id="<%= data[i]._id %>" <%= data[i].status
-                              === 'Active' ? 'checked' : '' %>
-                              onchange="toggleStatus(this)" />
+                              data-id="<%= data[i]._id %>"
+                              <%=data[i].status==='Active' ? 'checked' : '' %>
+                              onchange="allTestimonialListingToggleStatus(this)"
+                              />
                             </div>
                           </td>
                           <td>

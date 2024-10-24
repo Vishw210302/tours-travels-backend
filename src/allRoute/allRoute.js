@@ -133,14 +133,37 @@ router.get('/delete-particular-flight-meal/:id', adminController.deleteParticula
 router.get('/popularPackagesThemeListing', adminController.popularPackagesThemeListing);
 router.get('/add-package-theme', adminController.addPackageTheme);
 router.post('/post-package-theme', upload('/package-theme').single('packageThemeImage'), adminController.postPackageTheme);
+router.put('/packageTheme/status/:id', adminController.updatePackageTheme);
 
 // Flight tickets mail template API
-router.get("/ticketsDetailsMail", adminController.ticketsMailDetails)
+router.get("/ticketsDetailsMail", adminController.ticketsMailDetails);
+router.get('/delete-package-theme/:id', adminController.deletePackageTheme);
+
+// Social Media Link API
+router.get("/socialMediaLinkListing", adminController.socialMediaLinkList);
+router.get('/add-social-media-link', adminController.addSocialMediaLink);
+router.post('/post-social-Media-Link', adminController.postSocialMediaLink);
+router.get('/delete-social-media-link/:id', adminController.deleteSocialMediaLink);
+
+// Contact us Hotel API
+router.get("/hotelContactUs", adminController.hotelContactUs);
+router.get('/delete-contact-us-review-hotels/:id', adminController.deleteContactUsReviewHotels);
+
+// Hotel Testimonial API
+router.get("/hotelTestimonialGet", adminController.hoteltestimonialGet);
+router.put('/testimonial-hotel/status/:id', adminController.updateTestimonialHotelStatus);
+router.get('/delete-hotel-testimonial-review/:id', adminController.deleteHotelTestimonialReview);
+
+// Hotel Coupon Code API
+router.get("/hotelCouponCodeListing", adminController.hotelCouponCodeListing);
+router.get('/add-hotel-coupon-code', adminController.addHotelCouponCode);
+router.post('/post-hotel-coupon-code', adminController.postHotelCouponCode);
+router.put('/couponCodeHotel/status/:id', adminController.updateCouponCodeHotelStatus);
+router.get('/delete-coupon-code-hotel/:id', adminController.deleteCouponCodeHotel);
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);
-
 // router.get('/testRoute', adminController.testRoute);
 
 module.exports = router;

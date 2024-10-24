@@ -1,4 +1,4 @@
- <script src="/vendors/js/vendor.bundle.base.js"></script>
+<script src="/vendors/js/vendor.bundle.base.js"></script>
 <script src="/vendors/chart.js/Chart.min.js"></script>
 <script src="/vendors/progressbar.js/progressbar.min.js"></script>
 <script src="/vendors/jvectormap/jquery-jvectormap.min.js"></script>
@@ -14,10 +14,10 @@
 <script src="vendors/typeahead.js/typeahead.bundle.min.js"></script>
 <script src="/js/file-upload.js"></script>
 <script src="/js/typeahead.js"></script>
-<script src="/js/select2.js" defer></script> 
+<script src="/js/select2.js" defer></script>
 
 <script>
-  function toggleStatus(checkbox) {
+  function allTestimonialListingToggleStatus(checkbox) {
     const testimonialId = checkbox.getAttribute("data-id");
     const newStatus = checkbox.checked ? "Active" : "Inactive";
 
@@ -37,14 +37,41 @@
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("error", error);
         alert("Failed to update status");
       });
   }
 </script>
 
 <script>
-  function toggleStatus(checkbox) {
+  function allTestimonialHotelListingToggleStatus(checkbox) {
+    const testimonialId = checkbox.getAttribute("data-id");
+    const newStatus = checkbox.checked ? "Active" : "Inactive";
+
+    fetch(`/admin/testimonial-hotel/status/${testimonialId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: newStatus }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        } else {
+          alert("Something went wrong in hotel Testimonial");
+        }
+      })
+      .catch((error) => {
+        console.error("error", error);
+        alert("Failed to update status");
+      });
+  }
+</script>
+
+<script>
+  function promoCodeToggleStatus(checkbox) {
     const promoCodeId = checkbox.getAttribute("data-id");
     const status = checkbox.checked ? "Active" : "Inactive";
 
@@ -62,14 +89,39 @@
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("error", error);
         alert("Failed to update status.");
       });
   }
 </script>
 
 <script>
-  function toggleStatus(checkbox) {
+  function hotelCouponCodeToggleStatus(checkbox) {
+    const promoCodeId = checkbox.getAttribute("data-id");
+    const status = checkbox.checked ? "Active" : "Inactive";
+
+    fetch(`/admin/couponCodeHotel/status/${promoCodeId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("error", error);
+        alert("Failed to update status.");
+      });
+  }
+</script>
+
+<script>
+  function dicountCouponToggleStatus(checkbox) {
     const discountCodesId = checkbox.getAttribute("data-id");
     const status = checkbox.checked ? "Active" : "Inactive";
 
@@ -87,7 +139,32 @@
         }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("error", error);
+        alert("Failed to update status.");
+      });
+  }
+</script>
+
+<script>
+  function packageToggleStatus(checkbox) {
+    const packageThemeId = checkbox.getAttribute("data-id");
+    const status = checkbox.checked ? "Active" : "Inactive";
+
+    fetch(`/admin/packageTheme/status/${packageThemeId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("error", error);
         alert("Failed to update status.");
       });
   }
