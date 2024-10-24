@@ -717,7 +717,6 @@ apicontroller.getFlightSeatsListing = async (req, res) => {
 apicontroller.addPassengerDetails = async (req, res) => {
   try {
 
-
     const { details, flightId } = req.body
 
     const passengerPersonalId = []
@@ -736,7 +735,7 @@ apicontroller.addPassengerDetails = async (req, res) => {
       passengerPersonalId.push(passengerTicketsDetails?._id)
     }
 
-    await flightContactUs.create({
+    const contactus = await flightContactUs.create({
 
       passengerId: passengerPersonalId,
       fullName: details?.contactDetails?.fullName,
@@ -746,6 +745,7 @@ apicontroller.addPassengerDetails = async (req, res) => {
     })
 
     res.status(200).json({
+      email: contactus.email,
       message: "Saved details suceessfully"
     })
 
@@ -753,6 +753,23 @@ apicontroller.addPassengerDetails = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 }
+
+apicontroller.getPassengerDetailsByEmail = async (req, res) => {
+  try {
+
+    const email = req.query.email;
+
+    const contactDetails = flightContactUs.findOne({
+      'email': email
+    });
+
+    console.log(contactDetails, 'contactDetailscontactDetails')
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 
 apicontroller.addFlightTicketsData = async (req, res) => {
   try {
