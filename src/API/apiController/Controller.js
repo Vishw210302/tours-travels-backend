@@ -34,6 +34,7 @@ const socialMediaLink = require("../../schema/socialMediaLinkSchema/socialMediaL
 const hotelContactUs = require("../../schema/hotelContactUsSchema/hotelContactUsSchema");
 const hotelTestimonial = require("../../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema");
 const hotelCouponCode = require("../../schema/hotelCouponCodeSchema/hotelCouponCodeSchema");
+const hotelListing = require("../../schema/hotelListingSchema/hotelListingSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -770,7 +771,6 @@ apicontroller.getPassengerDetailsByEmail = async (req, res) => {
   }
 }
 
-
 apicontroller.addFlightTicketsData = async (req, res) => {
   try {
     const { flightId, passengerPersonalDetails, selectedMealData, flightSeatData, paymentId } = req.body
@@ -988,7 +988,6 @@ apicontroller.deletehotelTestimonialReview = async (req, res) => {
   }
 }
 
-
 apicontroller.getAllCouponCodeListing = async (req, res) => {
   try {
     const hotelCouponCodes = await hotelCouponCode.find();
@@ -1016,5 +1015,27 @@ apicontroller.getAllCouponCodeActiveListing = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+apicontroller.getAllHotelListing = async (req, res) => {
+  try {
+    const allHotelListing = await hotelListing.find();
+    res.status(200).json({ status: true, data: allHotelListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getParticularHotelListing = async (req, res) => {
+  const hotelCityName = req.params.city;
+  try {
+    const hotelsListing = await hotelListing.find({ city: hotelCityName });
+    if (!hotelsListing) {
+      return res.status(404).json({ status: false, message: 'No Hotel found into this city' });
+    }
+    res.status(200).json({ status: true, data: hotelsListing });
+  } catch (error) {
+    res.status(500).json({ status: false, message: error.message });
+  }
+};
 
 module.exports = apicontroller;
