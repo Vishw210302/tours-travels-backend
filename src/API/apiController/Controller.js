@@ -14,7 +14,7 @@ const blogs = require("../../schema/blogsSchema/blogsSchema");
 const airport_cities = require("../../schema/airportCitiesSchema/airportCitiesSchema");
 const FlightsDetails = require("../../schema/flightsDetailsSchema/flightsDetailsSchema");
 const specialFlights = require("../../schema/specialFlightsSchema/specialFlightsSchema");
-const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema");
+const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema"
 const teamMemberDetails = require("../../schema/teamMemberSchema/teamMemberSchema");
 const aboutUsContentImage = require("../../schema/aboutUsSchema/aboutUsSchema");
 const querySend = require("../../schema/querySendSchema/querySendSchema");
@@ -34,6 +34,7 @@ const socialMediaLink = require("../../schema/socialMediaLinkSchema/socialMediaL
 const hotelContactUs = require("../../schema/hotelContactUsSchema/hotelContactUsSchema");
 const hotelTestimonial = require("../../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema");
 const hotelCouponCode = require("../../schema/hotelCouponCodeSchema/hotelCouponCodeSchema");
+const hotelListing = require("../../schema/hotelListingSchema/hotelListingSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -846,6 +847,7 @@ apicontroller.getPassengerDetailsByContactId = async (req, res) => {
   }
 }
 
+
 apicontroller.updateMealOrder = async (req, res) => {
 
   const { selecteMealData, id } = req.body
@@ -1160,5 +1162,27 @@ apicontroller.getAllCouponCodeActiveListing = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+apicontroller.getAllHotelListing = async (req, res) => {
+  try {
+    const allHotelListing = await hotelListing.find();
+    res.status(200).json({ status: true, data: allHotelListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getParticularHotelListing = async (req, res) => {
+  const hotelCityName = req.params.city;
+  try {
+    const hotelsListing = await hotelListing.find({ city: hotelCityName });
+    if (!hotelsListing) {
+      return res.status(404).json({ status: false, message: 'No Hotel found into this city' });
+    }
+    res.status(200).json({ status: true, data: hotelsListing });
+  } catch (error) {
+    res.status(500).json({ status: false, message: error.message });
+  }
+};
 
 module.exports = apicontroller;

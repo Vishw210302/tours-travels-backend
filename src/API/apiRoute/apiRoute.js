@@ -5,6 +5,7 @@ const apiController = require('../apiController/Controller');
 // razorpay API
 
 const { createPaymentIntent, veryFyPayment } = require("../apiController/payments.controller");
+const apicontroller = require('../apiController/Controller');
 apiRoute.post("/create-payment-intent", createPaymentIntent);
 apiRoute.post("/verifyPayment", veryFyPayment);
 
@@ -134,6 +135,10 @@ apiRoute.delete('/delete-package-theme/:id', apiController.deletePackageTheme);
 apiRoute.get('/get-all-coupon-code', apiController.getAllCouponCodeListing);
 apiRoute.get('/get-all-coupon-code-active', apiController.getAllCouponCodeActiveListing);
 apiRoute.delete('/delete-coupon-code-hotel/:id', apiController.deleteCouponCodeHotel);
+
+// Hotel Listing API 
+apiRoute.get('/get-all-hotel-listing', apicontroller.getAllHotelListing)
+apiRoute.get('/get-particular-hotel-listing/:city', apicontroller.getParticularHotelListing)
 
 // Flight Tickets Get API
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
