@@ -715,6 +715,216 @@ apicontroller.getFlightSeatsListing = async (req, res) => {
   }
 };
 
+apicontroller.updateSeat = async (req, res) => {
+
+  const { selectedSeatId, id } = req.body
+
+  const contactId = mongoose.Types.ObjectId(id)
+
+  console.log(selectedSeatId, 'selectedSeatIdselectedSeatIdselectedSeatId')
+  try {
+
+    const contactDetailsArray = await flightContactUs.aggregate([
+      {
+        $match: { _id: contactId }
+      },
+      {
+        $lookup: {
+          from: 'passengerdetails',
+          localField: 'passengerId',
+          foreignField: '_id',
+          as: 'passengerDetails'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          fullName: 1,
+          email: 1,
+          mobileNumber: 1,
+          passengerDetails: 1
+        }
+      }
+    ]);
+
+    const contactDetails = contactDetailsArray[0];
+
+    if (contactDetails && contactDetails.passengerDetails) {
+      const updatePromises = contactDetails.passengerDetails.map((passenger, index) => {
+        if (selectedSeatId[index]) {
+          return passengerDetails.updateOne(
+            { _id: passenger._id },
+            { $set: { seatNumberId: selectedSeatId[index].seatId } }
+          );
+        }
+      });
+
+      await Promise.all(updatePromises);
+
+      console.log("Seat IDs updated successfully");
+      res.status(200).json({ status: true, message: "Seat IDs updated successfully" });
+
+    } else {
+      res.status(404).json({ status: false, message: "No passengers found for this contact" });
+    }
+
+  } catch (error) {
+    res.status(500).json({ status: false, message: error.message });
+  }
+};
+
+apicontroller.getFlightUpdatedSeat = async (req, res) => {
+  const id = req.query.id;
+  const contactId = mongoose.Types.ObjectId(id);
+
+  try {
+
+    const contactDetailsArray = await flightContactUs.aggregate([
+      {
+        $match: { _id: contactId }
+      },
+      {
+        $lookup: {
+          from: 'passengerdetails',
+          localField: 'passengerId',
+          foreignField: '_id',
+          as: 'passengerDetails'
+        }
+      },
+      {
+        $unwind: "$passengerDetails"
+      },
+      {
+        $lookup: {
+          from: 'flightseats',
+          let: { flightId: "$passengerDetails.flightId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$flightId", "$$flightId"] }
+              }
+            },
+            {
+              $project: {
+                seats: {
+                  $concatArrays: [
+                    {
+                      $map: {
+                        input: "$economy",
+                        as: "seat",
+                        in: {
+                          $mergeObjects: [
+                            "$$seat",
+                            {
+                              seatClass: "economy",
+                              seatId: "$$seat._id"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      $map: {
+                        input: "$business",
+                        as: "seat",
+                        in: {
+                          $mergeObjects: [
+                            "$$seat",
+                            {
+                              seatClass: "business",
+                              seatId: "$$seat._id"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      $map: {
+                        input: "$first_class",
+                        as: "seat",
+                        in: {
+                          $mergeObjects: [
+                            "$$seat",
+                            {
+                              seatClass: "first_class",
+                              seatId: "$$seat._id"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              $unwind: "$seats"
+            },
+            {
+              $replaceRoot: { newRoot: "$seats" }
+            }
+          ],
+          as: 'allSeats'
+        }
+      },
+      {
+        $addFields: {
+          "passengerDetails.seatInfo": {
+            $let: {
+              vars: {
+                matchedSeat: {
+                  $first: {
+                    $filter: {
+                      input: "$allSeats",
+                      as: "seat",
+                      cond: {
+                        $eq: [
+                          "$$seat.seatId",
+                          "$passengerDetails.seatNumberId"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              in: {
+                $cond: {
+                  if: { $ne: ["$$matchedSeat", null] },
+                  then: {
+                    _id: "$$matchedSeat._id",
+                    seat_number: "$$matchedSeat.seat_number",
+                    price: "$$matchedSeat.price",
+                    class: "$$matchedSeat.seatClass"
+                  },
+                  else: null
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id",
+          fullName: { $first: "$fullName" },
+          email: { $first: "$email" },
+          mobileNumber: { $first: "$mobileNumber" },
+          passengerDetails: { $push: "$passengerDetails" }
+        }
+      }
+    ]);
+
+    const contactDetails = contactDetailsArray[0] || {};
+
+    const selectedSeat = contactDetails.passengerDetails.map((passenger) => passenger.seatInfo);
+
+    res.status(200).json({ data: selectedSeat });
+
+  } catch (error) {
+    res.status(500).json({ status: false, message: error.message });
+  }
+};
+
 apicontroller.addPassengerDetails = async (req, res) => {
   try {
 
@@ -843,7 +1053,6 @@ apicontroller.getPassengerDetailsByContactId = async (req, res) => {
   }
 }
 
-
 apicontroller.updateMealOrder = async (req, res) => {
 
   const { selecteMealData, id } = req.body
@@ -891,26 +1100,252 @@ apicontroller.getUpdatedMealOrder = async (req, res) => {
 
   try {
 
-    const mealOrderData = selecteMealData.map(meal => ({
-      particularMealId: mongoose.Types.ObjectId(meal.meal_id),
-      mealCount: meal.count.toString(),
-    }));
+    const mealData = await flightContactUs.aggregate([
+      {
+        $match: { _id: contactId }
+      },
+      {
+        $unwind: '$mealOrder'
+      },
+      {
+        $lookup: {
+          from: 'mealitemsimages',
+          localField: 'mealOrder.particularMealId',
+          foreignField: '_id',
+          as: 'mealDetails'
+        }
+      },
+      {
+        $unwind: '$mealDetails'
+      },
+      {
+        $project: {
+          _id: 0,
+          mealCount: '$mealOrder.mealCount',
+          mealDetails: {
+            _id: '$mealDetails._id',
+            mealItems: '$mealDetails.mealItems',
+            mealPrice: '$mealDetails.mealPrice',
+            mealItemsImage: '$mealDetails.mealItemsImage'
+          }
+        }
+      }
+    ]);
 
-    const updatedContact = await flightContactUs.findByIdAndUpdate(
-      contactId,
-      { mealOrder: mealOrderData },
-      { new: true, useFindAndModify: false }
-    );
-
-    if (!updatedContact) {
-      return res.status(404).json({ message: 'Contact not found' });
-    }
-
-    return res.status(200).json({ message: 'Meal order updated successfully', data: updatedContact });
+    return res.status(200).json({ message: 'Get meal data', data: mealData });
 
   } catch (error) {
 
-    return res.status(500).json({ message: 'Error updating meal order', error: error.message });
+    return res.status(500).json({ message: 'Error get meal order', error: error.message });
+  }
+}
+
+apicontroller.getFlightAllBookingDetails = async (req, res) => {
+
+  const id = req.query.contactId
+
+  const contactId = mongoose.Types.ObjectId(id)
+
+  if (!contactId) {
+    return res.status(400).json({ message: 'Invalid contact ID' });
+  }
+
+  try {
+
+    const contactDetailsArray = await flightContactUs.aggregate([
+      {
+        $match: { _id: contactId }
+      },
+      {
+        $lookup: {
+          from: 'passengerdetails',
+          localField: 'passengerId',
+          foreignField: '_id',
+          as: 'passengerDetails'
+        }
+      },
+      {
+        $unwind: "$passengerDetails"
+      },
+      {
+        $lookup: {
+          from: 'flightseats',
+          let: { flightId: "$passengerDetails.flightId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$flightId", "$$flightId"] }
+              }
+            },
+            {
+              $project: {
+                seats: {
+                  $concatArrays: [
+                    {
+                      $map: {
+                        input: "$economy",
+                        as: "seat",
+                        in: {
+                          $mergeObjects: [
+                            "$$seat",
+                            {
+                              seatClass: "economy",
+                              seatId: "$$seat._id"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      $map: {
+                        input: "$business",
+                        as: "seat",
+                        in: {
+                          $mergeObjects: [
+                            "$$seat",
+                            {
+                              seatClass: "business",
+                              seatId: "$$seat._id"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      $map: {
+                        input: "$first_class",
+                        as: "seat",
+                        in: {
+                          $mergeObjects: [
+                            "$$seat",
+                            {
+                              seatClass: "first_class",
+                              seatId: "$$seat._id"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              $unwind: "$seats"
+            },
+            {
+              $replaceRoot: { newRoot: "$seats" }
+            }
+          ],
+          as: 'allSeats'
+        }
+      },
+      {
+        $addFields: {
+          "passengerDetails.seatInfo": {
+            $let: {
+              vars: {
+                matchedSeat: {
+                  $first: {
+                    $filter: {
+                      input: "$allSeats",
+                      as: "seat",
+                      cond: {
+                        $eq: [
+                          "$$seat.seatId",
+                          "$passengerDetails.seatNumberId"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              in: {
+                $cond: {
+                  if: { $ne: ["$$matchedSeat", null] },
+                  then: {
+                    _id: "$$matchedSeat._id",
+                    seat_number: "$$matchedSeat.seat_number",
+                    price: "$$matchedSeat.price",
+                    class: "$$matchedSeat.seatClass"
+                  },
+                  else: null
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'flightsdetails',
+          localField: 'passengerDetails.flightId',
+          foreignField: '_id',
+          as: 'flightDetails'
+        }
+      },
+      {
+        $unwind: {
+          path: "$flightDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $unwind: {
+          path: "$mealOrder",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'mealitemsimages',
+          localField: 'mealOrder.particularMealId',
+          foreignField: '_id',
+          as: 'mealDetails'
+        }
+      },
+      {
+        $unwind: {
+          path: "$mealDetails",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          mealDetails: {
+            _id: '$mealDetails._id',
+            mealItems: '$mealDetails.mealItems',
+            mealPrice: '$mealDetails.mealPrice',
+            mealCount: '$mealOrder.mealCount',
+          },
+          contactDetails:{
+            fullName: "$fullName",
+            email: "$email",
+            mobileNumber: "$mobileNumber",
+          },
+          passengerDetails: "$passengerDetails",
+          flightDetails: "$flightDetails"
+        }
+      },
+      {
+        $group: {
+          _id: contactId,
+          contactDetails: { $first: "$contactDetails" },
+          mealDetails: { $addToSet: "$mealDetails" },
+          passengerDetails: { $addToSet: "$passengerDetails" }, 
+          flightDetails: { $first: "$flightDetails" },
+        }
+      }
+    ]);
+
+    const contactDetails = contactDetailsArray[0] || {};
+
+    return res.status(200).json({ data: contactDetails });
+
+  } catch (error) {
+
+    return res.status(500).json({ message: 'Error get meal order', error: error.message });
   }
 }
 
