@@ -14,7 +14,7 @@ const blogs = require("../../schema/blogsSchema/blogsSchema");
 const airport_cities = require("../../schema/airportCitiesSchema/airportCitiesSchema");
 const FlightsDetails = require("../../schema/flightsDetailsSchema/flightsDetailsSchema");
 const specialFlights = require("../../schema/specialFlightsSchema/specialFlightsSchema");
-const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema"
+const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema");
 const teamMemberDetails = require("../../schema/teamMemberSchema/teamMemberSchema");
 const aboutUsContentImage = require("../../schema/aboutUsSchema/aboutUsSchema");
 const querySend = require("../../schema/querySendSchema/querySendSchema");
@@ -832,16 +832,12 @@ apicontroller.getPassengerDetailsByContactId = async (req, res) => {
 
     const lastEntry = contactDetails[contactDetails.length - 1];
 
-    // console.log(lastEntry, 'lastEntrylastEntry')
-
     if (lastEntry) {
       res.status(200).json({ data: lastEntry });
     } else {
       res.send('No contact found for the given email.');
       console.log("No contact found for the given email.");
     }
-
-
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
