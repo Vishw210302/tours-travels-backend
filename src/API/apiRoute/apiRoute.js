@@ -94,17 +94,22 @@ apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
 // apiRoute.post('/tickets-booking', apiController.postTicketsBooking)
 apiRoute.post('/add-passenger-details', apiController.addPassengerDetails)
 apiRoute.get('/get-passengers-by-contact-id', apiController.getPassengerDetailsByContactId)
-apiRoute.post('/update-meal-order', apiController.updateMealOrder)
-apiRoute.get('/get-updated-meal-order', apiController.getUpdatedMealOrder)
 
 // Flight Meal Details API 
 apiRoute.get('/get-flight-meals', apiController.getFlightMealListing);
 apiRoute.get('/get-particular-meal-listing/:id', apiController.getParticularMealListing);
 apiRoute.delete('/delete-flight-meal/:id', apiController.deleteFlightMeal);
 apiRoute.delete('/delete-particular-flight-meal/:id', apiController.deletParticularFlightMeal);
+apiRoute.post('/update-meal-order', apiController.updateMealOrder)
+apiRoute.get('/updated-meal-order', apiController.getUpdatedMealOrder)
 
 // Flight Seat API
 apiRoute.get('/get-flights-seats/:id', apiController.getFlightSeatsListing)
+apiRoute.post('/update-seat', apiController.updateSeat)
+apiRoute.get('/get-flights-updated-seat', apiController.getFlightUpdatedSeat)
+
+//get flight booking details
+apiRoute.get('/get-all-flight-booking-details', apiController.getFlightAllBookingDetails)
 
 // Social Media Link API
 apiRoute.get('/get-social-media-link', apiController.getSocialMediaLink);
