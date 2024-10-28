@@ -1042,16 +1042,12 @@ apicontroller.getPassengerDetailsByContactId = async (req, res) => {
 
     const lastEntry = contactDetails[contactDetails.length - 1];
 
-    // console.log(lastEntry, 'lastEntrylastEntry')
-
     if (lastEntry) {
       res.status(200).json({ data: lastEntry });
     } else {
       res.send('No contact found for the given email.');
       console.log("No contact found for the given email.");
     }
-
-
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
