@@ -1157,7 +1157,7 @@ adminController.discountCouponListing = async (req, res) => {
     }
 }
 
-adminController.addDiscountCoupon = async (req, res) => {
+adminController.addDiscountCouponPage = async (req, res) => {
     try {
         res.render("admin-panel/discountCoupon/addDiscountCoupon")
     } catch (error) {
@@ -1165,19 +1165,24 @@ adminController.addDiscountCoupon = async (req, res) => {
     }
 }
 
-adminController.postDiscountCoupon = async (req, res) => {
+adminController.addDiscountCoupon = async (req, res) => {
     try {
-        const discountCouponCode = new discountCoupon({
-            discountCouponName: req.body.discountCouponName,
-            promoCodeDescription: req.body.promoCodeDescription,
-            discountAmount: req.body.discountAmount,
-        });
-        await discountCouponCode.save();
-        res.redirect('/admin/discountCouponListing');
+        
+        const {discountCouponName, promoCodeDescription, discountAmount} = req.body
+
+        await discountCoupon.create({
+            discountCouponName,
+            promoCodeDescription,
+            discountAmount
+        })
+
+        res.redirect('/admin/discountCouponListing')
+
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.log("error", error)
     }
 }
+
 
 adminController.updateDiscountCouponCode = async (req, res) => {
     try {

@@ -115,9 +115,10 @@ router.get('/delete-promoCode/:id', adminController.deletePromoCode);
 
 // Discount Coupon API
 router.get('/discountCouponListing', adminController.discountCouponListing);
-router.get('/add-discount-Coupon', adminController.addDiscountCoupon);
+router.get('/add-discount-Coupon', adminController.addDiscountCouponPage);
 router.put('/discountCodes/status/:id', adminController.updateDiscountCouponCode);
 router.get('/delete-discount-coupon/:id', adminController.deleteDiscountCoupon);
+router.post('/post-discount-coupon', adminController.addDiscountCoupon);
 
 // Flight Meal Details API
 router.get('/mealListing', adminController.mealListing);
