@@ -870,10 +870,10 @@ apicontroller.getFlightUpdatedSeat = async (req, res) => {
         $addFields: {
           "passengerDetails": {
             $cond: {
-              if: { $and: [{ $ne: ["$passengerDetails.seatNumberId", null] }, { $ne: ["$passengerDetails.seatNumberId", ""] }] }, 
+              if: { $and: [{ $ne: ["$passengerDetails.seatNumberId", null] }, { $ne: ["$passengerDetails.seatNumberId", ""] }] },
               then: {
                 $mergeObjects: [
-                  "$passengerDetails", 
+                  "$passengerDetails",
                   {
                     seatInfo: {
                       $let: {
@@ -899,7 +899,7 @@ apicontroller.getFlightUpdatedSeat = async (req, res) => {
                               price: "$$matchedSeat.price",
                               class: "$$matchedSeat.seatClass"
                             },
-                            else: "$$REMOVE" 
+                            else: "$$REMOVE"
                           }
                         }
                       }
@@ -907,11 +907,11 @@ apicontroller.getFlightUpdatedSeat = async (req, res) => {
                   }
                 ]
               },
-              else: "$$REMOVE" 
+              else: "$$REMOVE"
             }
           }
         }
-        
+
       },
       {
         $group: {
@@ -1302,19 +1302,21 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
       {
         $lookup: {
           from: 'mealitemsimages',
-          let: { mealIds: {
-            $cond: {
-              if: { $isArray: "$mealOrder" },
-              then: {
-                $map: {
-                  input: "$mealOrder",
-                  as: "meal",
-                  in: "$$meal.particularMealId"
-                }
-              },
-              else: []
+          let: {
+            mealIds: {
+              $cond: {
+                if: { $isArray: "$mealOrder" },
+                then: {
+                  $map: {
+                    input: "$mealOrder",
+                    as: "meal",
+                    in: "$$meal.particularMealId"
+                  }
+                },
+                else: []
+              }
             }
-          }},
+          },
           pipeline: [
             {
               $match: {
@@ -1386,11 +1388,11 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
       }
     ]);
 
-    const flightBookDetails = contactDetailsArray[0] || {}; 
+    const flightBookDetails = contactDetailsArray[0] || {};
 
-    const discountCouponData = await discountCoupon.find({status: "Active"});
+    const discountCouponData = await discountCoupon.find({ status: "Active" });
 
-    const promocodeData =  await allPromoCodes.find({status: "Active"});
+    const promocodeData = await allPromoCodes.find({ status: "Active" });
 
     const flightBookData = {
       flightBookDetails,
@@ -1408,72 +1410,29 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
 
 apicontroller.addFlightTicketsData = async (req, res) => {
   try {
-    const { flightId, passengerPersonalDetails, selectedMealData, flightSeatData, paymentId } = req.body
+    const { paymentId, contactId } = req.body
+    console.log(req.body, 'contactIdcontactIdcontactIdcontactId')
+    const id = mongoose.Types.ObjectId(contactId)
+    console.log(id, 'ididididi')
+    
+    const updatedContact = await flightContactUs.findByIdAndUpdate(
+      { _id: id },
+      {
+        paymentId: paymentId,
+        paymentStatus: true,
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
-    const passengerPersonalId = []
+    console.log(updatedContact, 'updatedContactupdatedContact')
 
-    // for (let i = 0; i < passengerPersonalDetails?.passengerDetailsData.length; i++) {
+    if (!updatedContact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
 
-    //   const passengerDetail = passengerPersonalDetails?.passengerDetailsData[i];
-
-    //   const passengerTicketsDetails = await passengerDetails.create({
-    //     seatNumberId: flightSeatData[i]?.seat_id,
-    //     flightId,
-    //     fullName: passengerDetail?.fullName,
-    //     age: passengerDetail?.age,
-    //     gender: passengerDetail?.gender
-    //   })
-
-    //   passengerPersonalId.push(passengerTicketsDetails?._id)
-    // }
-
-    // const mealOrder = selectedMealData.map((meal) => ({
-    //   particularMealId: mongoose.Types.ObjectId(meal.meal_id), 
-    //   mealCount: meal.count.toString()  
-    // }));
-
-    // const passengerContactDetails = await flightContactUs.create({
-
-    //   paymentId,
-    //   passengerId: passengerPersonalId,
-    //   fullName: passengerPersonalDetails?.contactDetails?.fullName,
-    //   email: passengerPersonalDetails?.contactDetails?.email,
-    //   mobileNumber: passengerPersonalDetails?.contactDetails?.phoneNumber,
-    //   mealOrder
-
-    // })
-
-    // const updatedSeats = [];
-    // for (let seat of flightSeatData) {
-    //   const result = await flightSeat.updateOne(
-    //     {
-    //       flightId: mongoose.Types.ObjectId(flightId),
-    //       $or: [
-    //         { 'economy._id': mongoose.Types.ObjectId(seat.seat_id) },
-    //         { 'business._id': mongoose.Types.ObjectId(seat.seat_id) },
-    //         { 'first_class._id': mongoose.Types.ObjectId(seat.seat_id) }
-    //       ]
-    //     },
-    //     {
-    //       $set: {
-    //         'economy.$[elem].available': false,
-    //         'business.$[elem].available': false,
-    //         'first_class.$[elem].available': false
-    //       }
-    //     },
-    //     {
-    //       arrayFilters: [
-    //         { 'elem._id': mongoose.Types.ObjectId(seat.seat_id) }
-    //       ],
-    //       new: true
-    //     }
-    //   );
-    //   // console.log(result, 'result')
-    //   // if (result.modifiedCount > 0) {
-    //   //   updatedSeats.push(seat.seat_name);  
-    //   // }
-    // }
-    // console.log('Updated Seats:', updatedSeats);
     const htmlFilePath = "/admin-panel/flightTicketsDetailsMail/ticketsBookingMail.ejs"
     const ticketName = "ticket.pdf"
     await pdfGenerator(htmlFilePath, ticketName);
