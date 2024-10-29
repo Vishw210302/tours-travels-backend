@@ -621,7 +621,7 @@ apicontroller.deletePromoCode = async (req, res) => {
 
 apicontroller.getAllDiscountCoupon = async (req, res) => {
   try {
-    const discountCouponListing = await discountCoupon.find();
+    const discountCouponListing = await discountCoupon.find()
     res.status(200).json({ status: true, data: discountCouponListing });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -721,7 +721,6 @@ apicontroller.updateSeat = async (req, res) => {
 
   const contactId = mongoose.Types.ObjectId(id)
 
-  console.log(selectedSeatId, 'selectedSeatIdselectedSeatIdselectedSeatId')
   try {
 
     const contactDetailsArray = await flightContactUs.aggregate([
@@ -869,39 +868,50 @@ apicontroller.getFlightUpdatedSeat = async (req, res) => {
       },
       {
         $addFields: {
-          "passengerDetails.seatInfo": {
-            $let: {
-              vars: {
-                matchedSeat: {
-                  $first: {
-                    $filter: {
-                      input: "$allSeats",
-                      as: "seat",
-                      cond: {
-                        $eq: [
-                          "$$seat.seatId",
-                          "$passengerDetails.seatNumberId"
-                        ]
+          "passengerDetails": {
+            $cond: {
+              if: { $and: [{ $ne: ["$passengerDetails.seatNumberId", null] }, { $ne: ["$passengerDetails.seatNumberId", ""] }] }, 
+              then: {
+                $mergeObjects: [
+                  "$passengerDetails", 
+                  {
+                    seatInfo: {
+                      $let: {
+                        vars: {
+                          matchedSeat: {
+                            $first: {
+                              $filter: {
+                                input: "$allSeats",
+                                as: "seat",
+                                cond: {
+                                  $eq: ["$$seat.seatId", "$passengerDetails.seatNumberId"]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        in: {
+                          $cond: {
+                            if: { $ne: ["$$matchedSeat", null] },
+                            then: {
+                              _id: "$$matchedSeat._id",
+                              seat_number: "$$matchedSeat.seat_number",
+                              price: "$$matchedSeat.price",
+                              class: "$$matchedSeat.seatClass"
+                            },
+                            else: "$$REMOVE" 
+                          }
+                        }
                       }
                     }
                   }
-                }
+                ]
               },
-              in: {
-                $cond: {
-                  if: { $ne: ["$$matchedSeat", null] },
-                  then: {
-                    _id: "$$matchedSeat._id",
-                    seat_number: "$$matchedSeat.seat_number",
-                    price: "$$matchedSeat.price",
-                    class: "$$matchedSeat.seatClass"
-                  },
-                  else: null
-                }
-              }
+              else: "$$REMOVE" 
             }
           }
         }
+        
       },
       {
         $group: {
@@ -916,8 +926,7 @@ apicontroller.getFlightUpdatedSeat = async (req, res) => {
 
     const contactDetails = contactDetailsArray[0] || {};
 
-    const selectedSeat = contactDetails.passengerDetails.map((passenger) => passenger.seatInfo);
-
+    const selectedSeat = contactDetails.passengerDetails.map((passenger) => passenger?.seatInfo);
     res.status(200).json({ data: selectedSeat });
 
   } catch (error) {
@@ -1291,57 +1300,105 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
         }
       },
       {
-        $unwind: {
-          path: "$mealOrder",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
         $lookup: {
           from: 'mealitemsimages',
-          localField: 'mealOrder.particularMealId',
-          foreignField: '_id',
-          as: 'mealDetails'
+          let: { mealIds: {
+            $cond: {
+              if: { $isArray: "$mealOrder" },
+              then: {
+                $map: {
+                  input: "$mealOrder",
+                  as: "meal",
+                  in: "$$meal.particularMealId"
+                }
+              },
+              else: []
+            }
+          }},
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $in: ["$_id", "$$mealIds"]
+                }
+              }
+            }
+          ],
+          as: 'mealItemsData'
         }
       },
       {
-        $unwind: {
-          path: "$mealDetails",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $project: {
-          _id: 0,
+        $addFields: {
           mealDetails: {
-            _id: '$mealDetails._id',
-            mealItems: '$mealDetails.mealItems',
-            mealPrice: '$mealDetails.mealPrice',
-            mealCount: '$mealOrder.mealCount',
-          },
-          contactDetails:{
-            fullName: "$fullName",
-            email: "$email",
-            mobileNumber: "$mobileNumber",
-          },
-          passengerDetails: "$passengerDetails",
-          flightDetails: "$flightDetails"
+            $map: {
+              input: {
+                $cond: {
+                  if: { $isArray: "$mealOrder" },
+                  then: "$mealOrder",
+                  else: []
+                }
+              },
+              as: "meal",
+              in: {
+                $let: {
+                  vars: {
+                    mealItem: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$mealItemsData",
+                            as: "m",
+                            cond: { $eq: ["$$m._id", "$$meal.particularMealId"] }
+                          }
+                        },
+                        0
+                      ]
+                    }
+                  },
+                  in: {
+                    _id: "$$mealItem._id",
+                    mealItems: "$$mealItem.mealItems",
+                    mealPrice: "$$mealItem.mealPrice",
+                    mealCount: "$$meal.mealCount"
+                  }
+                }
+              }
+            }
+          }
         }
       },
       {
         $group: {
           _id: contactId,
-          contactDetails: { $first: "$contactDetails" },
-          mealDetails: { $addToSet: "$mealDetails" },
-          passengerDetails: { $addToSet: "$passengerDetails" }, 
-          flightDetails: { $first: "$flightDetails" },
+          contactDetails: {
+            $first: {
+              fullName: "$fullName",
+              email: "$email",
+              mobileNumber: "$mobileNumber"
+            }
+          },
+          mealDetails: {
+            $first: "$mealDetails"
+          },
+          passengerDetails: { $addToSet: "$passengerDetails" },
+          flightDetails: { $first: "$flightDetails" }
         }
       }
     ]);
 
-    const contactDetails = contactDetailsArray[0] || {};
+    const flightBookDetails = contactDetailsArray[0] || {}; 
 
-    return res.status(200).json({ data: contactDetails });
+    const discountCouponData = await discountCoupon.find({status: "Active"});
+
+    const promocodeData =  await allPromoCodes.find({status: "Active"});
+
+    const flightBookData = {
+      flightBookDetails,
+      discountCouponData,
+      promocodeData
+    }
+
+    return res.status(200).json({ data: flightBookData });
 
   } catch (error) {
 
