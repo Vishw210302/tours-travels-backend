@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
   'use strict';
 
   // Horizontal slider
@@ -137,7 +137,7 @@
     var range = [
       '0', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'
     ];
-    bigValueSlider.noUiSlider.on('update', function(values, handle) {
+    bigValueSlider.noUiSlider.on('update', function (values, handle) {
       console.log(range[Math.floor(values)]);
 
       bigValueSpan.innerHTML = range[Math.floor(values)];
@@ -151,11 +151,9 @@
         '10%': 10,
         '20%': 20,
         '30%': 30,
-        // Nope, 40 is no fun.
         '50%': 50,
         '60%': 60,
         '70%': 70,
-        // I never liked 80.
         '90%': 90,
         'max': 100
       },
@@ -167,14 +165,14 @@
       document.getElementById('skip-value-upper')
     ];
 
-    skipSlider.noUiSlider.on('update', function(values, handle) {
+    skipSlider.noUiSlider.on('update', function (values, handle) {
       skipValues[handle].innerHTML = values[handle];
     });
   }
 
   // Connected Slider
   if ($("#skipstep-connect").length) {
-    $(function() {
+    $(function () {
       var skipSlider = document.getElementById('skipstep-connect');
       noUiSlider.create(skipSlider, {
         connect: true,
@@ -199,13 +197,13 @@
         document.getElementById('skip-value-upper-2')
       ];
 
-      skipSlider.noUiSlider.on('update', function(values, handle) {
+      skipSlider.noUiSlider.on('update', function (values, handle) {
         skipValues[handle].innerHTML = values[handle];
       });
     });
   }
   if ($("#skipstep-connect-3").length) {
-    $(function() {
+    $(function () {
       var skipSlider = document.getElementById('skipstep-connect-3');
       noUiSlider.create(skipSlider, {
         connect: true,
@@ -230,7 +228,7 @@
         document.getElementById('skip-value-upper-3')
       ];
 
-      skipSlider.noUiSlider.on('update', function(values, handle) {
+      skipSlider.noUiSlider.on('update', function (values, handle) {
         skipValues[handle].innerHTML = values[handle];
       });
     });
