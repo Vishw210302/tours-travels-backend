@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Add Settings items here</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="">Social Media</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Add Settings items here
+                  </li>
+                </ol>
+              </nav>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add Settings items here</h4>
+                  <form
+                    class="forms-sample py-3"
+                    method="POST"
+                    action="/admin/post-setting-details"
+                    enctype="multipart/form-data"
+                    id="settingsForm"
+                  >
+                    <div class="form-group">
+                      <label for="keyName">Key Name :-</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="keyName"
+                        name="keyName"
+                        placeholder="Enter Key Name"
+                        required
+                      />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Content Type</label>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="contentType"
+                          id="textContent"
+                          value="text"
+                          checked
+                          onchange="toggleContentType()"
+                        />
+                        <label class="form-check-label" for="textContent">
+                          Text Link
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="radio"
+                          name="contentType"
+                          id="imageContent"
+                          value="image"
+                          onchange="toggleContentType()"
+                        />
+                        <label class="form-check-label" for="imageContent">
+                          Image
+                        </label>
+                      </div>
+                    </div>
+
+                    <div id="textLinkSection" class="form-group">
+                      <label for="valueContent">Value Content :-</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="valueContent"
+                        name="valueContent"
+                        placeholder="Enter Value Content..."
+                      />
+                    </div>
+
+                    <div
+                      id="imageSection"
+                      class="form-group"
+                      style="display: none"
+                    >
+                      <label for="valueImage">Value Image :-</label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="valueImage"
+                        name="valueContent"
+                        accept="image/*"
+                      />
+                      <small class="form-text" style="color: red; opacity: 0.7">
+                        Supported formats: JPG, PNG, GIF (Max size: 5MB)
+                      </small>
+                      <div id="imagePreview" class="mt-2" style="display: none">
+                        <img
+                          id="preview"
+                          src="#"
+                          alt="Preview"
+                          style="max-width: 200px; max-height: 200px"
+                        />
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mr-2">
+                      Submit
+                    </button>
+                    <a class="btn btn-dark" href="/admin/settingListing">
+                      Cancel
+                    </a>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <%- include("../partials/_footer.ejs") %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+
+    <script>
+      // Form validation and content type toggling
+      function toggleContentType() {
+        const textContent = document.getElementById("textContent");
+        const textLinkSection = document.getElementById("textLinkSection");
+        const imageSection = document.getElementById("imageSection");
+        const valueContent = document.getElementById("valueContent");
+        const valueImage = document.getElementById("valueImage");
+        const imagePreview = document.getElementById("imagePreview");
+
+        if (textContent.checked) {
+          textLinkSection.style.display = "block";
+          imageSection.style.display = "none";
+          valueContent.required = true;
+          valueImage.required = false;
+          // Clear image preview when switching to text
+          imagePreview.style.display = "none";
+          valueImage.value = "";
+        } else {
+          textLinkSection.style.display = "none";
+          imageSection.style.display = "block";
+          valueContent.required = false;
+          valueImage.required = true;
+          // Clear text content when switching to image
+          valueContent.value = "";
+        }
+      }
+
+      // Image preview functionality
+      document
+        .getElementById("valueImage")
+        .addEventListener("change", function (e) {
+          const preview = document.getElementById("preview");
+          const imagePreview = document.getElementById("imagePreview");
+          const file = e.target.files[0];
+
+          if (file) {
+            // Validate file type
+            const validTypes = ["image/jpeg", "image/png", "image/gif"];
+            if (!validTypes.includes(file.type)) {
+              alert("Please select a valid image file (JPG, PNG, or GIF)");
+              this.value = "";
+              imagePreview.style.display = "none";
+              return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+              alert("File size must be less than 5MB");
+              this.value = "";
+              imagePreview.style.display = "none";
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              preview.src = e.target.result;
+              imagePreview.style.display = "block";
+            };
+            reader.onerror = function (e) {
+              alert("Error loading image");
+              imagePreview.style.display = "none";
+            };
+            reader.readAsDataURL(file);
+          } else {
+            imagePreview.style.display = "none";
+          }
+        });
+
+      // Form submission validation
+      document
+        .getElementById("settingsForm")
+        .addEventListener("submit", function (e) {
+          const keyName = document.getElementById("keyName").value.trim();
+          const textContent = document.getElementById("textContent");
+          const valueContent = document
+            .getElementById("valueContent")
+            .value.trim();
+          const valueImage = document.getElementById("valueImage");
+
+          if (!keyName) {
+            e.preventDefault();
+            alert("Please enter a Key Name");
+            return;
+          }
+
+          if (textContent.checked && !valueContent) {
+            e.preventDefault();
+            alert("Please enter Value Content");
+            return;
+          }
+
+          if (!textContent.checked && !valueImage.files[0]) {
+            e.preventDefault();
+            alert("Please select an image");
+            return;
+          }
+        });
+    </script>
+  </body>
+</html>

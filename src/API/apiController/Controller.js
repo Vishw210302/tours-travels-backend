@@ -35,6 +35,7 @@ const hotelContactUs = require("../../schema/hotelContactUsSchema/hotelContactUs
 const hotelTestimonial = require("../../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema");
 const hotelCouponCode = require("../../schema/hotelCouponCodeSchema/hotelCouponCodeSchema");
 const hotelListing = require("../../schema/hotelListingSchema/hotelListingSchema");
+const Setting = require("../../schema/SettingSchema/SettingSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -758,7 +759,6 @@ apicontroller.updateSeat = async (req, res) => {
 
       await Promise.all(updatePromises);
 
-      console.log("Seat IDs updated successfully");
       res.status(200).json({ status: true, message: "Seat IDs updated successfully" });
 
     } else {
@@ -946,7 +946,6 @@ apicontroller.addPassengerDetails = async (req, res) => {
       let passengerTicketsDetails;
 
       if (passengerId) {
-        console.log("if passemger")
         passengerTicketsDetails = await passengerDetails.findOneAndUpdate(
           { _id: passengerId },
           {
@@ -961,8 +960,6 @@ apicontroller.addPassengerDetails = async (req, res) => {
 
 
       } else {
-
-        console.log("else passemger")
 
         passengerTicketsDetails = await passengerDetails.create({
           flightId,
@@ -985,7 +982,7 @@ apicontroller.addPassengerDetails = async (req, res) => {
     const contactId = mongoose.Types.ObjectId.isValid(details?.contactDetails?.id) ? mongoose.Types.ObjectId(details?.contactDetails?.id) : null;
 
     if (contactId) {
-      console.log("if contact")
+
       const updatedContactUs = await flightContactUs.findOneAndUpdate(
         { _id: contactId },
         { $set: contactData },
@@ -1002,7 +999,6 @@ apicontroller.addPassengerDetails = async (req, res) => {
       });
 
     } else {
-      console.log("else contact")
       const newContactUs = await flightContactUs.create(contactData);
 
       return res.status(200).json({
@@ -1023,7 +1019,6 @@ apicontroller.getPassengerDetailsByContactId = async (req, res) => {
     const id = req.query.id;
 
     const contactId = mongoose.Types.ObjectId.isValid(id) ? mongoose.Types.ObjectId(id) : null;
-    // const email = 'sandip@gmail.com';
     const contactDetails = await flightContactUs.aggregate([
       {
         $match: { _id: contactId }
@@ -1053,7 +1048,6 @@ apicontroller.getPassengerDetailsByContactId = async (req, res) => {
       res.status(200).json({ data: lastEntry });
     } else {
       res.send('No contact found for the given email.');
-      console.log("No contact found for the given email.");
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -1408,11 +1402,10 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
 
 apicontroller.addFlightTicketsData = async (req, res) => {
   try {
+
     const { paymentId, contactId } = req.body
-    console.log(req.body, 'contactIdcontactIdcontactIdcontactId')
     const id = mongoose.Types.ObjectId(contactId)
-    console.log(id, 'ididididi')
-    
+
     const updatedContact = await flightContactUs.findByIdAndUpdate(
       { _id: id },
       {
@@ -1442,7 +1435,6 @@ apicontroller.addFlightTicketsData = async (req, res) => {
       'Content-Length': pdfBuffer.length
     });
 
-    console.log(pdfBuffer, 'pdf')
     res.send(pdfBuffer);
 
   } catch (error) {
@@ -1627,6 +1619,25 @@ apicontroller.getParticularHotelListing = async (req, res) => {
     res.status(500).json({ status: false, message: error.message });
   }
 };
+
+apicontroller.getAllSetingListing = async (req, res) => {
+  try {
+    const allSettingListing = await Setting.find();
+    res.status(200).json({ status: true, data: allSettingListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteSettingListing = async (req, res) => {
+  try {
+    const deleteAllSettingListing = await Setting.findById(req.params.id);
+    await deleteAllSettingListing.remove();
+    res.status(200).json({ status: true, message: 'Setting Items deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 
 async function regenerateFlight() {
   const currentDate = new Date();

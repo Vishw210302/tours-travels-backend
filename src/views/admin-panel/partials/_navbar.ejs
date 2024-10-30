@@ -2,12 +2,11 @@
   <div
     class="navbar-menu-wrapper flex-grow d-flex justify-content-end align-items-stretch"
   >
-    <div>
+    <div class="dropdown">
       <div
-        data-toggle="collapse"
-        href="#hotelCouponCodes"
+        class="dropdown-toggle"
+        data-bs-toggle="dropdown"
         aria-expanded="false"
-        aria-controls="hotelCouponCodes"
         style="cursor: pointer"
       >
         <div class="d-flex" style="gap: 10px">
@@ -15,7 +14,13 @@
             <img
               src="/images/dashboard/profile_image.jpg"
               alt="profile_image"
-              style="height: 65px; width: 65px; border-radius: 50%"
+              style="
+                height: 65px;
+                width: 65px;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 2px solid #ffffff33;
+              "
             />
           </div>
           <div class="text-white">
@@ -24,20 +29,127 @@
           </div>
         </div>
       </div>
-      <div class="collapse bg-white" id="hotelCouponCodes">
-        <ul class="nav d-flex align-items-center sub-menu">
-          <div style="width: fit-content">
-            <span class="menu-icon">
-              <i class="mdi mdi-laptop" style="color: red"></i>
-            </span>
-          </div>
-          <div class="nav-item menu-items">
-            <div class="nav-link" href="/admin/hotelContactUs">
-              <span class="menu-title text-black">Setting</span>
-            </div>
-          </div>
-        </ul>
+
+      <div
+        class="dropdown-menu dropdown-menu-end"
+        style="min-width: 200px; margin-top: 5px"
+      >
+        <div class="py-2">
+          <a
+            class="dropdown-item d-flex align-items-center border-bottom p-2"
+            href="/admin/profile"
+          >
+            <span>Profile</span>
+          </a>
+
+          <a
+            class="dropdown-item d-flex align-items-center border-bottom p-2"
+            href="/admin/settingListing"
+          >
+            <span>Settings</span>
+          </a>
+
+          <a
+            class="dropdown-item d-flex align-items-center border-bottom p-2"
+            href="/admin/logout"
+          >
+            <span>Logout</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </nav>
+
+<style>
+  .navbar {
+    background-color: #191c24;
+    padding: 0.875rem 0;
+    transition: all 0.25s ease;
+  }
+
+  .navbar-menu-wrapper {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .dropdown-toggle::after {
+    display: none;
+  }
+
+  .dropdown-menu {
+    background-color: #191c24;
+    border: 1px solid #2c2e33;
+    border-radius: 0.25rem;
+    padding: 0;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .dropdown-item {
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .dropdown-item:hover {
+    background-color: #2c2e33;
+    color: #ffffff;
+  }
+
+  .dropdown-item:active {
+    background-color: #0d6efd;
+  }
+
+  .dropdown-divider {
+    border-top-color: #2c2e33;
+    margin: 0.5rem 0;
+  }
+  .mdi {
+    color: #6c7293;
+  }
+
+  .dropdown-item:hover .mdi {
+    color: #ffffff;
+  }
+  .dropdown-toggle img:hover {
+    border-color: #ffffff66;
+  }
+  .dropdown-menu.show {
+    animation: dropdownAnimation 0.2s ease-out;
+  }
+
+  @keyframes dropdownAnimation {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var dropdownElementList = [].slice.call(
+      document.querySelectorAll(".dropdown-toggle")
+    );
+    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+      return new bootstrap.Dropdown(dropdownToggleEl);
+    });
+
+    document.addEventListener("click", function (event) {
+      dropdownList.forEach(function (dropdown) {
+        if (!dropdown._element.contains(event.target)) {
+          dropdown.hide();
+        }
+      });
+    });
+
+    document
+      .querySelector(".dropdown-menu")
+      .addEventListener("click", function (event) {
+        event.stopPropagation();
+      });
+  });
+</script>

@@ -32,6 +32,7 @@ const packageThemeImage = require('../schema/packageThemeSchema/packageThemeSche
 const socialMediaLink = require('../schema/socialMediaLinkSchema/socialMediaLinkSchema');
 const hotelTestimonial = require('../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema');
 const hotelCouponCode = require('../schema/hotelCouponCodeSchema/hotelCouponCodeSchema');
+const setting = require('../schema/SettingSchema/SettingSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -1167,8 +1168,8 @@ adminController.addDiscountCouponPage = async (req, res) => {
 
 adminController.addDiscountCoupon = async (req, res) => {
     try {
-        
-        const {discountCouponName, promoCodeDescription, discountAmount} = req.body
+
+        const { discountCouponName, promoCodeDescription, discountAmount } = req.body
 
         await discountCoupon.create({
             discountCouponName,
@@ -1182,7 +1183,6 @@ adminController.addDiscountCoupon = async (req, res) => {
         console.log("error", error)
     }
 }
-
 
 adminController.updateDiscountCouponCode = async (req, res) => {
     try {
@@ -1661,6 +1661,65 @@ adminController.deleteCouponCodeHotel = async (req, res) => {
         const response = await axios.delete(`${process.env.baseUrl}/api/delete-coupon-code-hotel/${req.params.id}`);
         if (response.data.status && response.data.status == true) {
             res.redirect("/admin/hotelCouponCodeListing")
+        } else {
+            console.log("Error add in packages")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.settingListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-setting-listing`);
+        if (response.data.status == true) {
+            res.render("admin-panel/settingPage/settingPageListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addSettingDetails = async (req, res) => {
+    try {
+        res.render("admin-panel/settingPage/addSettingListing")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postSettingDetails = async (req, res) => {
+
+    try {
+        const { keyName, contentType } = req.body;
+
+        if (contentType == 'text') {
+            valueContent = req.body.valueContent;
+        } else if (contentType == 'image' && req.file) {
+            valueContent = req.file.filename;
+        } else {
+            return res.status(400).json({ message: "Invalid content type or missing content." });
+        }
+
+        const settingItem = new setting({ keyName, contentType, valueContent });
+
+        await settingItem.save();
+
+        res.redirect('/admin/settingListing');
+
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+
+};
+
+adminController.deleteSettingListing = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-setting-listing/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/settingListing")
         } else {
             console.log("Error add in packages")
         }

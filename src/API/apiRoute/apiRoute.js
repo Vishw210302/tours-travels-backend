@@ -145,6 +145,10 @@ apiRoute.delete('/delete-coupon-code-hotel/:id', apiController.deleteCouponCodeH
 apiRoute.get('/get-all-hotel-listing', apicontroller.getAllHotelListing)
 apiRoute.get('/get-particular-hotel-listing/:city', apicontroller.getParticularHotelListing)
 
+// Setting API for frontend
+apiRoute.get('/get-setting-listing', apicontroller.getAllSetingListing)
+apiRoute.delete('/delete-setting-listing/:id', apiController.deleteSettingListing);
+
 // Flight Tickets Get API
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
 

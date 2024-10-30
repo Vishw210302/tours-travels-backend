@@ -162,6 +162,12 @@ router.post('/post-hotel-coupon-code', adminController.postHotelCouponCode);
 router.put('/couponCodeHotel/status/:id', adminController.updateCouponCodeHotelStatus);
 router.get('/delete-coupon-code-hotel/:id', adminController.deleteCouponCodeHotel);
 
+// Setting API for frontend 
+router.get("/settingListing", adminController.settingListing);
+router.get("/add-setting-details", adminController.addSettingDetails);
+router.post('/post-setting-details', upload('/setting-image').single('valueContent'), adminController.postSettingDetails);
+router.get('/delete-setting-listing/:id', adminController.deleteSettingListing);
+
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);
