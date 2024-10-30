@@ -347,7 +347,7 @@ apicontroller.getAllCitiesListing = async (req, res) => {
     let getAllCities;
     if (!!city) {
       getAllCities = await airport_cities.find({ city: { $regex: city, $options: 'i' } });
-    } 
+    }
     res.status(200).json({ status: true, data: getAllCities });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -1405,6 +1405,7 @@ apicontroller.addFlightTicketsData = async (req, res) => {
 
     const { paymentId, contactId } = req.body
     const id = mongoose.Types.ObjectId(contactId)
+    console.log(id, 'ididididi')
 
     const updatedContact = await flightContactUs.findByIdAndUpdate(
       { _id: id },
@@ -1640,48 +1641,49 @@ apicontroller.deleteSettingListing = async (req, res) => {
 }
 
 async function regenerateFlight() {
-  const currentDate = new Date();
-  console.log("Current Date:", currentDate);
 
-  // Fetch all flight details from MongoDB
-  const allFlights = await FlightsDetails.find();
-  console.log("All Flights:", allFlights);
+  apicontroller.regenerateFlight = async () => {
+    const currentDate = new Date();
+    console.log("Current Date:", currentDate);
 
-  // Filter past flights using the JavaScript filter method
-  const pastFlights = allFlights.filter(flight => {
-    const departureTime = new Date(flight.departure.time);
-    return departureTime < currentDate;
-  });
+    // Fetch all flight details from MongoDB
+    const allFlights = await FlightsDetails.find();
 
-  // console.log(pastFlights, "Past Flights");
+    // Filter past flights using the JavaScript filter method
+    const pastFlights = allFlights.filter(flight => {
+      const departureTime = new Date(flight.departure.time);
+      return departureTime < currentDate;
+    });
 
-  // Insert pastFlights as new documents with new IDs
-  const newFlights = pastFlights.map(flight => {
-    const newFlight = { ...flight._doc };  // Use _doc to get the original document fields
-    delete newFlight._id;  // Remove the old _id to allow MongoDB to create a new one
-    return newFlight;
-  });
-console.log(newFlights,"Past Flights")
-  // if (newFlights.length > 0) {
-  //   await FlightsDetails.insertMany(newFlights);
-  //   console.log("Inserted new flights with new IDs.");
-  // } else {
-  //   console.log("No past flights to insert.");
-  // }
+    // console.log(pastFlights, "Past Flights");
 
-  // Delete pastFlights from the collection
-  // const flightIdsToDelete = pastFlights.map(flight => flight._id);
-  // if (flightIdsToDelete.length > 0) {
-  //   await FlightsDetails.deleteMany({ _id: { $in: flightIdsToDelete } });
-  //   console.log("Deleted past flights.");
-  // } else {
-  //   console.log("No past flights to delete.");
-  // }
+    // Insert pastFlights as new documents with new IDs
+    const newFlights = pastFlights.map(flight => {
+      const newFlight = { ...flight._doc };  // Use _doc to get the original document fields
+      delete newFlight._id;  // Remove the old _id to allow MongoDB to create a new one
+      return newFlight;
+    });
+    // console.log(newFlights, "Past Flights")
+    if (newFlights.length > 0) {
+      await FlightsDetails.insertMany(newFlights);
+      console.log("Inserted new flights with new IDs.");
+    } else {
+      console.log("No past flights to insert.");
+    }
 
-  return pastFlights;  
+    // Delete pastFlights from the collection
+    const flightIdsToDelete = pastFlights.map(flight => flight._id);
+    if (flightIdsToDelete.length > 0) {
+      await FlightsDetails.deleteMany({ _id: { $in: flightIdsToDelete } });
+      console.log("Deleted past flights.");
+    } else {
+      console.log("No past flights to delete.");
+    }
+    console.log("Past Flights", pastFlights);
+    return pastFlights;
+  }
 }
 
 
-// regenerateFlight()
 
 module.exports = apicontroller;

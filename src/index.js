@@ -11,12 +11,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 app.use(bodyParser.json());
+const cron = require('node-cron');
 const PORT = process.env.PORT || 3000;
 
 // Require your routes and use them here
 const apiRoute = require('./API/apiRoute/apiRoute')
 const allRoute = require('../src/allRoute/allRoute');
 const adminController = require('./adminController/adminController');
+const apicontroller = require('../src/API/apiController/Controller.js');
 const logger = require('morgan')
 
 app.use(logger('dev'));
@@ -27,6 +29,14 @@ app.get('/login', adminController.loginPage);
 app.post('/post-login', adminController.login);
 app.get('/register', adminController.registerPage);
 app.post('/register-post', adminController.registerApi);
+
+
+// Schedule task to run every 24 hours (daily at midnight)
+cron.schedule('0 0 * * *', () => {
+  console.log('Running regenerateFlight every 24 hours');
+  apicontroller.regenerateFlight();
+});
+
 
 app.get('*', function (req, res) {
   res.send(`<h1>${req.path.replace('/', '')} not found</h1>`)
