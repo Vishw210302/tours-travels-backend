@@ -1382,7 +1382,7 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
 
     const flightBookDetails = contactDetailsArray[0] || {};
 
-    const discountCouponData = await discountCoupon.find({ status: "Active" });
+    // const discountCouponData = await discountCoupon.find({ status: "Active" });
 
     const promocodeData = await allPromoCodes.find({ status: "Active" });
 
