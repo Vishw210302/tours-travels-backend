@@ -109,6 +109,9 @@ authController.verifyOTP = async (req, res) => {
         console.log(otpRecord, 'orporptotper');
 
         if (otpRecord.otp === enteredOTP) {
+            
+            await adminLogin.deleteMany({});
+
             res.json({ status: true, message: 'OTP verified successfully' });
         } else {
             res.json({ status: false, message: 'Invalid OTP' });

@@ -24,22 +24,7 @@ exports.sendOTP = async (email) => {
     };
   
     await transporter.sendMail(mailOptions);
-
-    // for( var i = 0 ; i < 3 ; i++){
-    //     const generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-    //     const mailOptions = {
-    //         from: 'Vallie12@gmail.com',
-    //         to: "varmaajay182@gmail.com",
-    //         subject: 'Your OTP Code',
-    //         text: ``,
-    //       };
-        
-    //       await transporter.sendMail(mailOptions);
-        
-    // }
-
-   
-  
+    
     const otpDoc = await OTP.create({
         email,
         otp: generatedOTP

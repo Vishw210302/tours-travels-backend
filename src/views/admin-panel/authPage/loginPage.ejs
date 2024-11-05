@@ -284,14 +284,9 @@
 
   <div id="newEmailModal" class="modal">
     <div class="modal-content">
-      <span class="close-modal" onclick="closeModal('newEmailModal')">&times;</span>
-      <div class="welcome-text">Update Email</div>
-      <div class="subtitle">Enter your new Google email address</div>
-      <input type="email" class="input-field" id="newEmail" placeholder="Enter new email">
-      <div id="updateMessage" class="message"></div>
-      <button class="update-button" onclick="updateEmail()">
-        <span class="text">Update Email</span>
-      </button>
+      <div class="welcome-text">Admin Email Removed</div>
+      <div class="subtitle">Previous admin email has been successfully removed from the system. You will be redirected
+        to add a new admin email.</div>
     </div>
   </div>
 
@@ -435,8 +430,13 @@
               $('#otpModal').fadeOut(() => {
                 $('#newEmailModal').fadeIn().css('display', 'flex');
               });
+
+              setTimeout(() => {
+                window.location.href = '/';
+              }, 4000);
+
             }, 1000);
-          
+
           } else {
             $('.otp-input')
               .map(function () {
