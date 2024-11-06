@@ -7,6 +7,11 @@ const packagesDetailsItenary = new mongoose.Schema({
         required: true
     },
 
+    packageThemeImageId:{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'packageThemeImage',
+    },
+
     mainPackageId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'packages',

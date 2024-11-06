@@ -97,7 +97,7 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">
-                    Add <%- data.PackageName || '' %> Package
+                    Add <%- data.packageName || '' %> Package
                   </h4>
                   <form
                     class="forms-sample"
@@ -213,52 +213,77 @@
                           />
                         </div>
                       </div>
-                      <div class="form-group">
-                        <label>Categories</label>
-                        <div class="d-flex">
-                          <div class="form-check mr-2">
-                            <input
-                              class="form-check-input styled-checkbox"
-                              type="radio"
-                              id="royalCategory"
-                              name="categories"
-                              value="royal"
-                            />
-                            <label
-                              class="form-check-label m-0 p-0"
-                              for="royalCategory"
-                              >Royal</label
-                            >
-                          </div>
-                          <div class="form-check mr-2">
-                            <input
-                              class="form-check-input styled-checkbox"
-                              type="radio"
-                              id="premiumCategory"
-                              name="categories"
-                              value="premium"
-                            />
-                            <label
-                              class="form-check-label m-0 p-0"
-                              for="premiumCategory"
-                              >Premium</label
-                            >
-                          </div>
-                          <div class="form-check mr-2">
-                            <input
-                              class="form-check-input styled-checkbox"
-                              type="radio"
-                              id="classicCategory"
-                              name="categories"
-                              value="classic"
-                            />
-                            <label
-                              class="form-check-label m-0 p-0"
-                              for="classicCategory"
-                              >Classic</label
-                            >
+                      <div class="d-flex">
+                        <div class="form-group mr-5">
+                          <label>Categories</label>
+                          <div class="d-flex">
+                            <div class="form-check mr-2">
+                              <input
+                                class="form-check-input styled-checkbox"
+                                type="radio"
+                                id="royalCategory"
+                                name="categories"
+                                value="royal"
+                              />
+                              <label
+                                class="form-check-label m-0 p-0"
+                                for="royalCategory"
+                                >Royal</label
+                              >
+                            </div>
+                            <div class="form-check mr-2">
+                              <input
+                                class="form-check-input styled-checkbox"
+                                type="radio"
+                                id="premiumCategory"
+                                name="categories"
+                                value="premium"
+                              />
+                              <label
+                                class="form-check-label m-0 p-0"
+                                for="premiumCategory"
+                                >Premium</label
+                              >
+                            </div>
+                            <div class="form-check mr-2">
+                              <input
+                                class="form-check-input styled-checkbox"
+                                type="radio"
+                                id="classicCategory"
+                                name="categories"
+                                value="classic"
+                              />
+                              <label
+                                class="form-check-label m-0 p-0"
+                                for="classicCategory"
+                                >Classic</label
+                              >
+                            </div>
                           </div>
                         </div>
+                        <div class="form-group">
+                          <label>Package Theme</label>
+                          <div class="d-flex">
+                            <% packageThemes.forEach(function(theme) { %>
+                              <div class="form-check mr-2">
+                                <input
+                                  class="form-check-input styled-checkbox"
+                                  type="checkbox"
+                                  id="<%= theme._id %>" 
+                                  name="packageThemes"
+                                  value="<%= theme._id %>" 
+                                />
+                                <label
+                                  class="form-check-label m-0 p-0"
+                                  for="<%= theme._id %>"
+                                >
+                                  <%= theme.packageName %> 
+                                </label>
+                              </div>
+                            <% }); %>
+                          </div>
+                        </div>
+                        
                       </div>
                     </div>
 
