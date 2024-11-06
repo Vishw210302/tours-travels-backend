@@ -39,8 +39,23 @@
                       >
                     </div>
                   </div>
+
+                  <div class="mb-3">
+                    <div class="m-0 p-0">
+                      <p>Search By Package name</p>
+                    </div>
+                    <input
+                      type="text"
+                      id="searchInput"
+                      class="form-control"
+                      style="border-radius: 14px"
+                      placeholder="Search Here..."
+                      onkeyup="filterTable()"
+                    />
+                  </div>
+
                   <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="packagesTable">
                       <thead>
                         <tr>
                           <th>Index</th>
@@ -116,5 +131,27 @@
       </div>
     </div>
     <%- include("../partials/_script.ejs") %>
+
+    <script>
+      function filterTable() {
+        const input = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const table = document.getElementById("packagesTable");
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+          const packageName = rows[i]
+            .getElementsByTagName("td")[1]
+            .innerText.toLowerCase();
+
+          if (packageName.includes(input)) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+    </script>
   </body>
 </html>

@@ -5,7 +5,7 @@ const uploads = multer();
 const adminController = require('../adminController/adminController');
 const { upload } = require('../utils/multer');
 const validatePackage = require('../middleware/validationMiddleware');
-const {packageSchema} = require('../utils/schemaValidation');
+const { packageSchema } = require('../utils/schemaValidation');
 
 // Register and Login and Dashboard Routes
 router.post('/register-data', adminController.registerApi);
