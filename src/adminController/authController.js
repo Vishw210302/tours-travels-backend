@@ -108,7 +108,7 @@ authController.verifyOTP = async (req, res) => {
         const otpRecord = await OTP.findOne({ email });
 
         if (otpRecord.otp === enteredOTP) {
-            
+
             await adminLogin.deleteMany({});
 
             res.json({ status: true, message: 'OTP verified successfully' });

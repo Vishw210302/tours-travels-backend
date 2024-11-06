@@ -4,6 +4,8 @@ const multer = require('multer');
 const uploads = multer();
 const adminController = require('../adminController/adminController');
 const { upload } = require('../utils/multer');
+const validatePackage = require('../middleware/validationMiddleware');
+const {packageSchema} = require('../utils/schemaValidation');
 
 // Register and Login and Dashboard Routes
 router.post('/register-data', adminController.registerApi);
@@ -169,7 +171,7 @@ router.post('/post-setting-details', upload('/setting-image').single('valueConte
 router.get('/delete-setting-listing/:id', adminController.deleteSettingListing);
 
 // Api Routes
-router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
+router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), validatePackage(packageSchema), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);
 // router.get('/testRoute', adminController.testRoute);
 
