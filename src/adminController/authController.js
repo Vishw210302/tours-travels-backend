@@ -23,7 +23,6 @@ authController.successGoogleLogin = async (req, res) => {
         }
 
         const existingAdmin = await adminLogin.findOne();
-        console.log(existingAdmin, 'existingAdminexistingAdmin');
 
         if (existingAdmin) {
 
@@ -109,7 +108,7 @@ authController.verifyOTP = async (req, res) => {
         console.log(otpRecord, 'orporptotper');
 
         if (otpRecord.otp === enteredOTP) {
-            
+
             await adminLogin.deleteMany({});
 
             res.json({ status: true, message: 'OTP verified successfully' });

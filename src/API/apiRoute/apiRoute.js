@@ -2,8 +2,8 @@ const express = require('express');
 const apiRoute = express.Router();
 const apiController = require('../apiController/Controller');
 
-// razorpay API
 
+// razorpay API
 const { createPaymentIntent, veryFyPayment } = require("../apiController/payments.controller");
 const apicontroller = require('../apiController/Controller');
 apiRoute.post("/create-payment-intent", createPaymentIntent);
@@ -28,7 +28,6 @@ apiRoute.get('/get-siteSeen', apiController.getSiteSeen);
 // Packages Itenary Details
 apiRoute.get('/get-itenary-details', apiController.getItenaryDetails);
 apiRoute.get('/get-itenary-detailsd', apiController.getItenaryDetails);
-
 
 // Itenary Id vise Details API
 apiRoute.get('/get-particular-itenary/:id', apiController.getParticularItenary)

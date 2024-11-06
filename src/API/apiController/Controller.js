@@ -39,20 +39,31 @@ const Setting = require("../../schema/SettingSchema/SettingSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
+
   try {
-    const package = new packages({
+    const newPackage = new packages({
       packageName: req.body.packageName,
       categories: req.body.categories,
       packageImage: req.body.packageImage,
     });
 
-    await package.save();
-    return res.status(200).json({ status: true, message: 'Packages added successfully!' });
+    await newPackage.save();
+
+    return res.status(200).json({
+      status: true,
+      message: 'Package added successfully!',
+    });
 
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({
+      status: false,
+      message: 'An error occurred while adding the package. Please try again later.',
+      error: error.message,
+    });
+
   }
-}
+
+};
 
 apicontroller.getPackages = async (req, res) => {
   try {
@@ -1683,7 +1694,5 @@ async function regenerateFlight() {
     return pastFlights;
   }
 }
-
-
 
 module.exports = apicontroller;
