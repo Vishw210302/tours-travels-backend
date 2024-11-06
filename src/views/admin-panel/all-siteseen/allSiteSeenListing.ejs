@@ -39,8 +39,22 @@
                       >
                     </div>
                   </div>
+                  <div class="mb-3">
+                    <div class="m-0 p-0">
+                      <p>Search By name and categories</p>
+                    </div>
+                    <input
+                      type="text"
+                      id="searchInput"
+                      class="form-control"
+                      style="border-radius: 14px"
+                      placeholder="Search Here..."
+                      onkeyup="filterTable()"
+                    />
+                  </div>
+
                   <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="siteseenTable">
                       <thead>
                         <tr>
                           <th>Index</th>
@@ -71,7 +85,6 @@
                           <td style="width: 30%; text-wrap: wrap">
                             <%= data[i].SiteseenDescription %>
                           </td>
-
                           <td><%= data[i].PackagesInclude %></td>
                           <td>
                             <a
@@ -111,5 +124,30 @@
       </div>
     </div>
     <%- include("../partials/_script.ejs") %>
+
+    <script>
+      function filterTable() {
+        const input = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const table = document.getElementById("siteseenTable");
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+          const siteseenName = rows[i]
+            .getElementsByTagName("td")[1]
+            .innerText.toLowerCase();
+          const category = rows[i]
+            .getElementsByTagName("td")[4]
+            .innerText.toLowerCase();
+
+          if (siteseenName.includes(input) || category.includes(input)) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+    </script>
   </body>
 </html>
