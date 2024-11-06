@@ -1,5 +1,6 @@
 const adminLogin = require("../schema/adminLoginSchema/adminLoginSchema");
 const OTP = require("../schema/adminLoginSchema/adminOtpSchema");
+const genarateToken = require("../utils/genarateToken");
 const { sendOTP } = require("../utils/sendOtp");
 
 const authController = {};
@@ -28,11 +29,12 @@ authController.successGoogleLogin = async (req, res) => {
 
             if (existingAdmin.email === req.user.email) {
 
-                req.session.adminId = existingAdmin._id;
+                var token = genarateToken(existingAdmin)
+                res.cookie('token', token)
                 return res.redirect('/admin');
 
             } else {
-
+                res.clearCookie('connect.sid');
                 return res.redirect('/');
             }
 
@@ -105,8 +107,6 @@ authController.verifyOTP = async (req, res) => {
 
         const otpRecord = await OTP.findOne({ email });
 
-        console.log(otpRecord, 'orporptotper');
-
         if (otpRecord.otp === enteredOTP) {
 
             await adminLogin.deleteMany({});
@@ -124,25 +124,9 @@ authController.verifyOTP = async (req, res) => {
 
 authController.logout = async (req, res) => {
     try {
-
-        req.session.adminId = null;
-
-        req.session.destroy((err) => {
-            if (err) {
-                console.error('Session destruction error:', err);
-            }
-        });
-
-        req.logout(function (err) {
-            if (err) {
-                console.error('Passport logout error:', err);
-                return res.redirect('/failure');
-            }
-
-            res.clearCookie('connect.sid');
-
-            res.redirect('/');
-        });
+        res.clearCookie('connect.sid');
+        res.clearCookie('token');
+        res.redirect("/");
     } catch (error) {
         console.error('Logout error:', error);
         res.redirect('/failure');

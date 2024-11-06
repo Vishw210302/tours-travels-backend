@@ -211,6 +211,14 @@ apicontroller.getParticularItenary = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'inclusionandexclusions',
+          localField: 'itenaries._id',
+          foreignField: 'itenaryId',
+          as: 'itenaries.inclusionandexclusions'
+        }
+      },
+      {
         $group: {
           _id: '$_id',
           packageName: { $first: '$packageName' },
@@ -1651,8 +1659,6 @@ apicontroller.deleteSettingListing = async (req, res) => {
   }
 }
 
-async function regenerateFlight() {
-
   apicontroller.regenerateFlight = async () => {
     const currentDate = new Date();
     console.log("Current Date:", currentDate);
@@ -1693,6 +1699,5 @@ async function regenerateFlight() {
     console.log("Past Flights", pastFlights);
     return pastFlights;
   }
-}
 
 module.exports = apicontroller;
