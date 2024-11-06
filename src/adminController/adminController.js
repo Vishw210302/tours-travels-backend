@@ -33,6 +33,7 @@ const socialMediaLink = require('../schema/socialMediaLinkSchema/socialMediaLink
 const hotelTestimonial = require('../schema/hotelTestimonialReviewSchema/hotelTestimonialReviewSchema');
 const hotelCouponCode = require('../schema/hotelCouponCodeSchema/hotelCouponCodeSchema');
 const setting = require('../schema/SettingSchema/SettingSchema');
+const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -541,12 +542,13 @@ adminController.addPriceDetails = async (req, res) => {
 
         const { itenaryId, perPersonPrice, childWithoutBed, childWithBed, costPerAdultExtraBed, costPerInfont } = req.body
 
-        const priceDetails = await itenaryPriceDetails.create({
+        await itenaryPriceDetails.create({
             itenaryId, perPersonPrice, childWithoutBed, childWithBed, costPerAdultExtraBed, costPerInfont
         })
 
-        const itenaryDetail = await itenary.findOne({ _id: itenaryId })
-        res.redirect(`/admin/particularFilePackages/${itenaryDetail.mainPackageId}`)
+        // particularFilePackages
+
+        res.redirect(`/admin/allInclusionAndExclusion/${itenaryId}`)
 
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -687,11 +689,27 @@ adminController.allInclusionAndExclusion = async (req, res) => {
 
 adminController.addInclusionAndExclusion = async (req, res) => {
     try {
-        const { inclusion, exclusion } = req.body
-        console.log(inclusion, 'in')
-        console.log(exclusion, 'ex')
+        const { itenaryId, inclusion, exclusion } = req.body;
+
+        if (!itenaryId || !inclusion || !exclusion) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+
+        await InclusionAndExclusion.create({
+            itenaryId,
+            inclusion,
+            exclusion
+        });
+
+        const itenaryDetail = await itenary.findOne({ _id: itenaryId })
+
+        res.status(201).json({
+            message: "Inclusion and Exclusion added successfully",
+            mainPackageId: itenaryDetail.mainPackageId
+        });
+
     } catch (error) {
-        console.log("error", error);
+        console.log("Error:", error);
         res.status(500).json({ message: "An error occurred while adding inclusion and exclusion" });
     }
 };

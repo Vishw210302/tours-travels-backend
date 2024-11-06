@@ -200,6 +200,14 @@ apicontroller.getParticularItenary = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'inclusionandexclusions',
+          localField: 'itenaries._id',
+          foreignField: 'itenaryId',
+          as: 'itenaries.inclusionandexclusions'
+        }
+      },
+      {
         $group: {
           _id: '$_id',
           packageName: { $first: '$packageName' },

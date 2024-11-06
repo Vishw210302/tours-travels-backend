@@ -71,7 +71,7 @@
         font-size: 1rem;
       }
 
-      .textColor{
+      .textColor {
         color: white;
       }
     </style>
@@ -102,12 +102,12 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Add Inclusion & Exclusion</h4>
-                  <form
-                    id="packageForm"
-                    action="/admin/add-inclusion-exclusion"
-                    method="POST"
-                  >
-                  <input type="hidden" value="<%- itenaryId %>">
+                  <form id="packageForm" action="" method="POST">
+                    <input
+                      type="hidden"
+                      value="<%- itenaryId %>"
+                      id="itenaryId"
+                    />
                     <div>
                       <div class="d-flex w-100 flex-wrap" style="gap: 10%">
                         <div class="form-group flex-grow-1" style="width: 40%">
@@ -124,7 +124,6 @@
                             </button>
                           </div>
                           <div id="inclusionList" class="bulleted-list"></div>
-                        
                         </div>
 
                         <div
@@ -144,11 +143,6 @@
                             </button>
                           </div>
                           <div id="exclusionList" class="bulleted-list"></div>
-                          <input
-                            type="hidden"
-                            name="exclusionPoints"
-                            id="exclusionPoints"
-                          />
                         </div>
                       </div>
                     </div>
@@ -202,6 +196,7 @@
         .getElementById("packageForm")
         .addEventListener("submit", function (e) {
           e.preventDefault();
+
           const inclusionPoints = Array.from(
             document.querySelectorAll("#inclusionList .list-item input")
           )
@@ -213,10 +208,37 @@
           )
             .map((input) => input.value)
             .filter((value) => value.trim() !== "");
-          document.getElementById("inclusionPoints").value = inclusionPoints;
-          document.getElementById("exclusionPoints").value = exclusionPoints;
 
-          this.submit();
+          // const inclusionPoints = ["Inclusion 1", "Inclusion 2", "Inclusion 3"];
+          // const exclusionPoints = ["Exclusion 1", "Exclusion 2"];
+
+          const itenaryId = document.getElementById("itenaryId").value; 
+
+          const data = {
+            itenaryId,
+            inclusion: inclusionPoints,
+            exclusion: exclusionPoints,
+          };
+
+          fetch("/admin/add-inclusion-exclusion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              window.location.href = `/admin/particularFilePackages/${data.mainPackageId}`;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
         });
     </script>
   </body>
