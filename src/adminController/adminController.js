@@ -206,9 +206,9 @@ adminController.particularFilePackages = async (req, res) => {
 adminController.particularDomesticItenary = async (req, res) => {
     try {
         const response = await axios.get(`${process.env.baseUrl}/api/particularPackage/${req.params.id}`);
-
+        const packageThemes = await packageThemeImage.find();
         if (response.data.status && response.data.status == true) {
-            res.render("admin-panel/domesticPackages/particularDomesticItenary", { data: response.data.data })
+            res.render("admin-panel/domesticPackages/particularDomesticItenary", { data: response.data.data, packageThemes })
         } else {
             console.log("Error add in packages")
         }
@@ -386,14 +386,24 @@ adminController.allDetailsItenaryDetails = async (req, res) => {
 adminController.addItenaryPackageImage = async (req, res) => {
     try {
 
-        const { mainPackageId, packageTitle, smallDescription, departureDates, perPersonCost, departureFrom, departureTo, categories } = req.body;
+        const { mainPackageId, packageTitle, smallDescription, departureDates, perPersonCost, departureFrom, departureTo, categories, packageThemes } = req.body;
+
         const formattedDepartureDates = departureDates.map(date => format(parseISO(date), 'yyyy-MM-dd'));
         const { filename } = req.file
 
         const allItenaryDetails = await packagesDetailsItenary.create({
-            mainPackageId, packageTitle, smallDescription, departureDates: formattedDepartureDates, perPersonCost, departureFrom, departureTo, categories, bannerImage: filename
-        })
-
+            mainPackageId,     
+            packageTitle,      
+            smallDescription,  
+            departureDates: formattedDepartureDates,
+            perPersonCost,      
+            departureFrom,      
+            departureTo,        
+            categories,         
+            bannerImage: filename ,
+            packageThemeImageId: packageThemes
+          });
+          
         res.redirect(`/admin/add-day-itenary-page/${allItenaryDetails.mainPackageId}/${allItenaryDetails._id}`)
 
     } catch (error) {
@@ -1462,7 +1472,6 @@ adminController.postPackageTheme = async (req, res) => {
             status: req.body.status,
         });
         await packageTheme.save();
-        console.log(packageTheme, 'package')
         res.redirect('/admin/popularPackagesThemeListing');
     } catch (error) {
         res.status(400).json({ message: error.message });
