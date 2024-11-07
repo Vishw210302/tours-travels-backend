@@ -13,10 +13,8 @@ const cookieParser = require('cookie-parser');
 const debug = require('debug')('app:server');
 require('./utils/passport.js');
 require('dotenv').config();
-const debug = require('debug')('app:server');
 
-
-require('./utils/passport.js');  
+require('./utils/passport.js');
 require('dotenv').config();
 
 // app.use((req, res, next) => {
@@ -36,8 +34,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-      secure: false, // Use secure cookies in production
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    secure: false, // Use secure cookies in production
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 app.use(passport.initialize());
@@ -55,12 +53,12 @@ const apiRoute = require('./API/apiRoute/apiRoute')
 const allRoute = require('../src/allRoute/allRoute');
 const apicontroller = require('../src/API/apiController/Controller.js');
 const authRoute = require('./allRoute/authRoute.js')
-const { isAuthenticated, isNotAuthenticated} = require('./middleware/authMiddleware.js')
+const { isAuthenticated, isNotAuthenticated } = require('./middleware/authMiddleware.js')
 
 const PORT = process.env.PORT || 3000;
 
 app.use('/api', apiRoute);
-app.use('/admin',isAuthenticated, allRoute);
+app.use('/admin', isAuthenticated, allRoute);
 app.use('/', authRoute)
 
 
@@ -68,10 +66,10 @@ app.use('/', authRoute)
 //   if (!req.session.returnTo) {
 //       return next();
 //   }
-  
+
 //   const returnTo = req.session.returnTo;
 //   delete req.session.returnTo;
-  
+
 //   if (req.isAuthenticated()) {
 //       res.redirect(returnTo);
 //   } else {
