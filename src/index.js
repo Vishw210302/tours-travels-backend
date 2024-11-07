@@ -13,7 +13,6 @@ const cookieParser = require('cookie-parser');
 const debug = require('debug')('app:server');
 require('./utils/passport.js');
 require('dotenv').config();
-const debug = require('debug')('app:server');
 
 
 require('./utils/passport.js');  
@@ -95,5 +94,5 @@ app.get('*', function (req, res) {
 })
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://192.168.1.46:${PORT}/`);
+  console.log(`Server is running on http://localhost:${PORT}/`);
 });
