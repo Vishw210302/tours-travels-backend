@@ -213,9 +213,9 @@
                           />
                         </div>
                       </div>
-                      <div class="d-flex">
-                        <div class="form-group mr-5">
-                          <label>Categories</label>
+                      <div class="d-flex" style="gap: 15px">
+                        <div>
+                          <label class="m-0">Categories</label>
                           <div class="d-flex">
                             <div class="form-check mr-2">
                               <input
@@ -265,25 +265,45 @@
                           <label>Package Theme</label>
                           <div class="d-flex">
                             <% packageThemes.forEach(function(theme) { %>
-                              <div class="form-check mr-2">
-                                <input
-                                  class="form-check-input styled-checkbox"
-                                  type="checkbox"
-                                  id="<%= theme._id %>" 
-                                  name="packageThemes"
-                                  value="<%= theme._id %>" 
-                                />
-                                <label
-                                  class="form-check-label m-0 p-0"
-                                  for="<%= theme._id %>"
-                                >
-                                  <%= theme.packageName %> 
-                                </label>
-                              </div>
+                            <div class="form-check mr-2">
+                              <input
+                                class="form-check-input styled-checkbox"
+                                type="checkbox"
+                                id="<%= theme._id %>"
+                                name="packageThemes"
+                                value="<%= theme._id %>"
+                              />
+                              <label
+                                class="form-check-label m-0 p-0"
+                                for="<%= theme._id %>"
+                              >
+                                <%= theme.packageName %>
+                              </label>
+                            </div>
                             <% }); %>
                           </div>
                         </div>
-                        
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-md-6">
+                          <label for="fileUpload">Upload Image or PDF</label>
+                          <input
+                            type="file"
+                            class="form-control"
+                            id="fileUpload"
+                            name="fileUpload"
+                            accept="image/*,.pdf"
+                            onchange="previewFile(event)"
+                          />
+                        </div>
+                        <div class="col-md-6 file-preview-container">
+                          <div>
+                            <p>Preview of Pdf or Image</p>
+                          </div>
+                          <div id="filePreview" class="file-preview">
+                            <!-- Preview will be shown here -->
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -367,6 +387,44 @@
         } else {
           preview.src = "";
           preview.style.display = "none";
+        }
+      }
+      function previewFile(event) {
+        const fileInput = event.target;
+        const file = fileInput.files[0];
+        const filePreview = document.getElementById("filePreview");
+        filePreview.innerHTML = "";
+
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            let content;
+
+            if (file.type.startsWith("image")) {
+              content = document.createElement("div");
+              const img = document.createElement("img");
+              img.src = e.target.result;
+              img.style.maxWidth = "51%";
+              content.appendChild(img);
+            } else if (file.type === "application/pdf") {
+              content = document.createElement("div");
+              content.classList.add("pdf-name");
+              content.innerText = `PDF: ${file.name}`;
+            }
+
+            const removeBtn = document.createElement("button");
+            removeBtn.innerText = "Remove";
+            removeBtn.type = "button";
+            removeBtn.onclick = function () {
+              fileInput.value = "";
+              filePreview.innerHTML = "";
+            };
+
+            content.appendChild(removeBtn);
+            filePreview.appendChild(content);
+          };
+
+          reader.readAsDataURL(file);
         }
       }
     </script>

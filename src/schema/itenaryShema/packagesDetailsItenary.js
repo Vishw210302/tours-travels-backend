@@ -7,7 +7,7 @@ const packagesDetailsItenary = new mongoose.Schema({
         required: true
     },
 
-    packageThemeImageId:{
+    packageThemeImageId: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'packageThemeImage',
     },
@@ -21,6 +21,7 @@ const packagesDetailsItenary = new mongoose.Schema({
         type: String,
         required: true
     },
+
     smallDescription: {
         type: String,
         required: true
@@ -40,19 +41,28 @@ const packagesDetailsItenary = new mongoose.Schema({
         type: String,
         required: true
     },
+
     departureTo: {
         type: String,
         required: true
     },
+
+    fileUpload: {
+        type: String,
+        required: true
+    },
+
     categories: {
         type: String,
         required: true
     },
+
     createdAt: {
         type: Date,
         default: null,
         default: new Date(),
     },
+
     deletedAt: {
         type: Date,
         default: null,

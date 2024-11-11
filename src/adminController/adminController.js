@@ -389,21 +389,22 @@ adminController.addItenaryPackageImage = async (req, res) => {
         const { mainPackageId, packageTitle, smallDescription, departureDates, perPersonCost, departureFrom, departureTo, categories, packageThemes } = req.body;
 
         const formattedDepartureDates = departureDates.map(date => format(parseISO(date), 'yyyy-MM-dd'));
-        const { filename } = req.file
+        const { bannerImage, fileUpload } = req.files
 
         const allItenaryDetails = await packagesDetailsItenary.create({
-            mainPackageId,     
-            packageTitle,      
-            smallDescription,  
+            mainPackageId,
+            packageTitle,
+            smallDescription,
             departureDates: formattedDepartureDates,
-            perPersonCost,      
-            departureFrom,      
-            departureTo,        
-            categories,         
-            bannerImage: filename ,
+            perPersonCost,
+            departureFrom,
+            departureTo,
+            fileUpload: fileUpload[0].filename,
+            categories,
+            bannerImage: bannerImage[0].filename,
             packageThemeImageId: packageThemes
-          });
-          
+        });
+
         res.redirect(`/admin/add-day-itenary-page/${allItenaryDetails.mainPackageId}/${allItenaryDetails._id}`)
 
     } catch (error) {

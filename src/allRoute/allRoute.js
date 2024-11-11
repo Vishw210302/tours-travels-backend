@@ -4,9 +4,6 @@ const multer = require('multer');
 const uploads = multer();
 const adminController = require('../adminController/adminController');
 const { upload } = require('../utils/multer');
-const validatePackage = require('../middleware/validationMiddleware');
-const { packageSchema } = require('../utils/schemaValidation');
-
 // Register and Login and Dashboard Routes
 router.post('/register-data', adminController.registerApi);
 router.get('/', adminController.index);
@@ -45,7 +42,11 @@ router.get('/particularDomesticItenary/:id', adminController.particularDomesticI
 
 // Itenary Package Create Api 
 router.get('/allDetailsItenaryDetails', adminController.allDetailsItenaryDetails);
-router.post('/add-itenary-create-package', upload('/itenary-package').single('bannerImage'), adminController.addItenaryPackageImage);
+// router.post('/add-itenary-create-package', upload('/itenary-package').single('bannerImage'), adminController.addItenaryPackageImage);
+router.post('/add-itenary-create-package', upload('/itenary-package').fields([
+    { name: 'bannerImage', maxCount: 1 },
+    { name: 'fileUpload', maxCount: 1 }
+]), adminController.addItenaryPackageImage);
 router.get('/add-day-itenary-page/:firstId/:secondId', adminController.adddDayWiseItenaryPage);
 router.post('/add-day-itenary', uploads.none(), adminController.adddDayWiseItenary);
 router.post('/edit-day-itenary/:id', uploads.none(), adminController.updateDayItenary);
