@@ -14,8 +14,6 @@ const debug = require('debug')('app:server');
 require('./utils/passport.js');
 require('dotenv').config();
 
-require('./utils/passport.js');
-require('dotenv').config();
 
 // app.use((req, res, next) => {
 //   debug(`${req.method} ${req.url}`);
