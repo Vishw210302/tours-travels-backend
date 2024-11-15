@@ -1,6 +1,5 @@
 const adminController = {};
 const axios = require('axios');
-const jwt = require('jsonwebtoken');
 const { format, parseISO } = require('date-fns');
 const packages = require('../../src/schema/adminPanelSchema/packagesSchema');
 const sliderSchema = require('../schema/sliderSchema/sliderSchema');
@@ -34,6 +33,7 @@ const hotelTestimonial = require('../schema/hotelTestimonialReviewSchema/hotelTe
 const hotelCouponCode = require('../schema/hotelCouponCodeSchema/hotelCouponCodeSchema');
 const setting = require('../schema/SettingSchema/SettingSchema');
 const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
+const itenaryFlightDetails = require('../schema/itenaryFlightsSchema/itenaryFlightsSchema');
 require('dotenv').config()
 
 adminController.index = async (req, res) => {
@@ -358,12 +358,6 @@ adminController.updateSiteSeen = async (req, res) => {
             updatedFields.siteseen = req.file.filename;
         }
 
-        const updatedData = await siteSeen.findOneAndUpdate(
-            { _id: req.params.id },
-            { $set: updatedFields },
-            { new: true }
-        );
-
         res.redirect('/admin/allSiteSeenListing')
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -386,7 +380,37 @@ adminController.allDetailsItenaryDetails = async (req, res) => {
 adminController.addItenaryPackageImage = async (req, res) => {
     try {
 
-        const { mainPackageId, packageTitle, smallDescription, departureDates, perPersonCost, departureFrom, departureTo, categories, packageThemes } = req.body;
+        const { mainPackageId, packageTitle, smallDescription, departureDates, perPersonCost, departureFrom, departureTo, categories, packageThemes, onWardDepartureLocation, onWardDepartureAirportCode, onWardDepartureTime, onWardArrivalLocation, onWardArrivalAirportCode, onWardArrivalTime, returnDepartureLocation, returnDepartureAirportCode, returnDepartureTime, returnArrivalLocation, returnArrivalAirportCode, returnArrivalTime } = req.body;
+
+        const onwardFlight = new itenaryFlightDetails({
+            departure: {
+                location: onWardDepartureLocation,
+                airportCode: onWardDepartureAirportCode,
+                time: onWardDepartureTime,
+            },
+            arrival: {
+                location: onWardArrivalLocation,
+                airportCode: onWardArrivalAirportCode,
+                time: onWardArrivalTime,
+            },
+        });
+
+        await onwardFlight.save();
+
+        const returnFlight = new itenaryFlightDetails({
+            departure: {
+                location: returnDepartureLocation,
+                airportCode: returnDepartureAirportCode,
+                time: returnDepartureTime,
+            },
+            arrival: {
+                location: returnArrivalLocation,
+                airportCode: returnArrivalAirportCode,
+                time: returnArrivalTime,
+            },
+        });
+
+        await returnFlight.save();
 
         const formattedDepartureDates = departureDates.map(date => format(parseISO(date), 'yyyy-MM-dd'));
         const { bannerImage, fileUpload } = req.files
@@ -398,6 +422,10 @@ adminController.addItenaryPackageImage = async (req, res) => {
             departureDates: formattedDepartureDates,
             perPersonCost,
             departureFrom,
+            flightsDetailsId: {
+                onwardFlightId: onwardFlight.id,
+                returnFlightId: returnFlight._id
+            },
             departureTo,
             fileUpload: fileUpload[0].filename,
             categories,
@@ -531,7 +559,6 @@ adminController.updateDayItenary = async (req, res) => {
 
 adminController.addPackagePricePage = async (req, res) => {
     try {
-
         res.render("admin-panel/domesticPackages/addPrice", { itenaryId: req.params.id })
 
     } catch (error) {
@@ -550,17 +577,11 @@ adminController.getAllDetailsOfItenaty = async (req, res) => {
 
 adminController.addPriceDetails = async (req, res) => {
     try {
-
         const { itenaryId, perPersonPrice, childWithoutBed, childWithBed, costPerAdultExtraBed, costPerInfont } = req.body
-
         await itenaryPriceDetails.create({
             itenaryId, perPersonPrice, childWithoutBed, childWithBed, costPerAdultExtraBed, costPerInfont
         })
-
-        // particularFilePackages
-
         res.redirect(`/admin/allInclusionAndExclusion/${itenaryId}`)
-
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -654,8 +675,6 @@ adminController.login = async (req, res) => {
         if (password !== user.password) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
-        const token = jwt.sign({ id: user._id, email: user.email }, process.env.secretKey, { expiresIn: '10h' });
-
         res.redirect("/admin")
     } catch (error) {
         console.log("error", error)
