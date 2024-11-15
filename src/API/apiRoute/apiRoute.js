@@ -28,6 +28,9 @@ apiRoute.get('/get-siteSeen', apiController.getSiteSeen);
 // Packages Itenary Details
 apiRoute.get('/get-itenary-details', apiController.getItenaryDetails);
 
+apiRoute.get('/get-itenary-by-categories/:key', apiController.getItenaryByCategories);
+
+
 // Itenary Id vise Details API
 apiRoute.get('/get-particular-itenary/:id', apiController.getParticularItenary)
 apiRoute.get('/get-all-details-itenary/:id', apiController.allDetailsOfItenaty)
