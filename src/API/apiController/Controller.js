@@ -140,6 +140,31 @@ apicontroller.getItenaryDetails = async (req, res) => {
   }
 }
 
+apicontroller.getItenaryByCategories = async (req, res) => {
+
+  const categories = req.params.key
+  try {
+
+    const package = await packages.find({
+      categories: categories
+    });
+
+    const internaries = await Promise.all(
+      package.map(async (pack) => {
+        return await itenatyDetails.find({
+          mainPackageId: pack._id
+        });
+      })
+    );
+
+    const flattenedInternaries = internaries.flat();
+    res.status(200).json({ status: true, data: flattenedInternaries });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+
 apicontroller.getTestimonialListing = async (req, res) => {
   try {
     const getTestimimonial = await testimonial.find();
