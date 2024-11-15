@@ -487,7 +487,7 @@ apicontroller.deleteBlogs = async (req, res) => {
 
 apicontroller.searchFligthsDetails = async (req, res) => {
   try {
-    const { from, to, flightClass, departure_Date, oneWay, adult, children, infant } = req.body
+    const { from, to, flightClass, departure_Date, oneWay } = req.body
     const query = {
       'departure.city': { $regex: new RegExp(from, 'i') },
       'arrival.city': { $regex: new RegExp(to, 'i') },
@@ -1708,22 +1708,18 @@ apicontroller.regenerateFlight = async () => {
   console.log("Current Date:", currentDate);
 
 
-  // Fetch all flight details from MongoDB
   const allFlights = await FlightsDetails.find();
 
-  // Filter past flights using the JavaScript filter method
   const pastFlights = allFlights.filter(flight => {
     const departureTime = new Date(flight.departure.time);
     return departureTime < currentDate;
   });
 
-  // Insert pastFlights as new documents with new IDs
   const newFlights = pastFlights.map(flight => {
-    const newFlight = { ...flight._doc };  // Use _doc to get the original document fields
-    delete newFlight._id;  // Remove the old _id to allow MongoDB to create a new one
+    const newFlight = { ...flight._doc };
+    delete newFlight._id;
     return newFlight;
   });
-  // console.log(newFlights, "Past Flights")
   if (newFlights.length > 0) {
     await FlightsDetails.insertMany(newFlights);
     console.log("Inserted new flights with new IDs.");
@@ -1731,7 +1727,6 @@ apicontroller.regenerateFlight = async () => {
     console.log("No past flights to insert.");
   }
 
-  // Delete pastFlights from the collection
   const flightIdsToDelete = pastFlights.map(flight => flight._id);
   if (flightIdsToDelete.length > 0) {
     await FlightsDetails.deleteMany({ _id: { $in: flightIdsToDelete } });

@@ -1,3 +1,4 @@
+const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const packagesDetailsItenary = new mongoose.Schema({
@@ -15,6 +16,17 @@ const packagesDetailsItenary = new mongoose.Schema({
     mainPackageId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'packages',
+    },
+
+    flightsDetailsId: {
+        onwardFlightId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'itenaryFlightDetails',
+        },
+        returnFlightId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'itenaryFlightDetails',
+        }
     },
 
     packageTitle: {
