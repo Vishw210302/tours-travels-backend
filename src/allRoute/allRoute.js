@@ -42,7 +42,6 @@ router.get('/particularDomesticItenary/:id', adminController.particularDomesticI
 
 // Itenary Package Create Api 
 router.get('/allDetailsItenaryDetails', adminController.allDetailsItenaryDetails);
-// router.post('/add-itenary-create-package', upload('/itenary-package').single('bannerImage'), adminController.addItenaryPackageImage);
 router.post('/add-itenary-create-package', upload('/itenary-package').fields([
     { name: 'bannerImage', maxCount: 1 },
     { name: 'fileUpload', maxCount: 1 }
