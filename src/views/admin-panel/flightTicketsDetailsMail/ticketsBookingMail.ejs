@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flight Ticket</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .ticket-container {
+        max-width: 800px;
+        margin: 30px auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .ticket-header {
+        background: linear-gradient(135deg, #2980b9, #3498db);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .ticket-body {
+        padding: 25px;
+      }
+      .passenger-section {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #e1e4e8;
+      }
+      .flight-route {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #f1f3f5;
+        padding: 15px;
+        border-radius: 10px;
+      }
+      .flight-details {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 10px;
+      }
+      .price-breakdown {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+      }
+      .barcode-section {
+        text-align: center;
+        background-color: #f1f3f5;
+        padding: 15px;
+        border-radius: 10px;
+      }
+      .passenger-badge {
+        background-color: #2980b9;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+      .fee-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      .fee-total {
+        font-weight: bold;
+        border-top: 1px solid #dee2e6;
+        padding-top: 10px;
+      }
+      .barcode-img {
+        max-width: 100%;
+        height: 50px;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="ticket-container">
+        <div class="ticket-header">
+          <div>
+            <h2 class="mb-0"><%= airline %></h2>
+            <small>Electronic Ticket</small>
+          </div>
+          <div class="text-end">
+            <strong>Booking Reference</strong>
+            <p class="mb-0"><%= bookingReference %></p>
+          </div>
+        </div>
+
+        <div class="ticket-body">
+          <div class="flight-route">
+            <div>
+              <h4><%= flight.from %></h4>
+              <p class="mb-0">Departure: <%= flight.departure %></p>
+            </div>
+            <div class="text-center">
+              <span>→</span>
+              <br />
+              <small><%= flight.duration %></small>
+            </div>
+            <div class="text-end">
+              <h4><%= flight.to %></h4>
+              <p class="mb-0">Arrival: <%= flight.arrival %></p>
+            </div>
+          </div>
+
+          <div class="passenger-section">
+            <% passengers.forEach((passenger, index) => { %>
+            <div class="passenger-badge">Passenger <%= index + 1 %></div>
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Name:</strong>
+                <p><%= passenger.name %></p>
+              </div>
+              <div class="col-md-4">
+                <strong>Age/Gender:</strong>
+                <p><%= passenger.age %> / <%= passenger.gender %></p>
+              </div>
+              <div class="col-md-4">
+                <strong>Seat:</strong>
+                <p><%= passenger.seat %></p>
+              </div>
+            </div>
+            <div class="barcode-section">
+              <img
+                id="barcode-<%= index %>"
+                alt="Passenger Barcode"
+                class="barcode-img"
+              />
+              <p class="mb-0">Scan for <%= passenger.name %> Check-in</p>
+            </div>
+            <% }); %>
+          </div>
+
+          <div class="flight-details mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Flight Number:</strong>
+                <p><%= flight.number %></p>
+              </div>
+              <div class="col-md-4">
+                <strong>Aircraft:</strong>
+                <p>Boeing 737</p>
+              </div>
+              <div class="col-md-4">
+                <strong>Class:</strong>
+                <p><%= flight.class %></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="price-breakdown mb-3">
+            <h5>Fee Breakdown</h5>
+            <div class="fee-item">
+              <span>Base Fare (<%= passengers.length %> passengers)</span>
+              <span>₹<%= price.baseFare %></span>
+            </div>
+            <div class="fee-item">
+              <span>Meals</span>
+              <span>₹<%= price.meals %></span>
+            </div>
+            <div class="fee-item">
+              <span>Seat Selection Fee</span>
+              <span>₹<%= price.seatPrice %></span>
+            </div>
+            <% if (price.discount > 0) { %>
+            <div class="fee-item">
+              <span>Discount</span>
+              <span>₹<%= price.discount %></span>
+            </div>
+            <% } %>
+            <div class="fee-item fee-total">
+              <span class="text-danger">Total Amount</span>
+              <span class="text-danger">₹<%= price.total %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const passengers = <%- JSON.stringify(passengers) %>;
+
+        passengers.forEach((passenger, index) => {
+          const barcodeValue = passenger.id || `${passenger.name}`;
+          const barcodeImg = document.getElementById(`barcode-${index}`);
+
+          if (barcodeImg) {
+            barcodeImg.src = generateBarcodeSVG(barcodeValue);
+          }
+        });
+      });
+
+      function generateBarcodeSVG(value) {
+        const canvas = document.createElement('canvas');
+
+        JsBarcode(canvas, value, {
+          format: "CODE128",
+          width: 2,
+          height: 50,
+          displayValue: true
+        });
+
+        return canvas.toDataURL('image/svg+xml');
+      }
+    </script>
+  </body>
+</html>
+

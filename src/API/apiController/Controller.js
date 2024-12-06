@@ -1206,6 +1206,238 @@ apicontroller.getUpdatedMealOrder = async (req, res) => {
   }
 }
 
+const allFlightPassengerDetails = async (contactId) => {
+
+  const contactDetailsArray = await flightContactUs.aggregate([
+    {
+      $match: { _id: contactId }
+    },
+    {
+      $lookup: {
+        from: 'passengerdetails',
+        localField: 'passengerId',
+        foreignField: '_id',
+        as: 'passengerDetails'
+      }
+    },
+    {
+      $unwind: "$passengerDetails"
+    },
+    {
+      $lookup: {
+        from: 'flightseats',
+        let: { flightId: "$passengerDetails.flightId" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$flightId", "$$flightId"] }
+            }
+          },
+          {
+            $project: {
+              seats: {
+                $concatArrays: [
+                  {
+                    $map: {
+                      input: "$economy",
+                      as: "seat",
+                      in: {
+                        $mergeObjects: [
+                          "$$seat",
+                          {
+                            seatClass: "economy",
+                            seatId: "$$seat._id"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    $map: {
+                      input: "$business",
+                      as: "seat",
+                      in: {
+                        $mergeObjects: [
+                          "$$seat",
+                          {
+                            seatClass: "business",
+                            seatId: "$$seat._id"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    $map: {
+                      input: "$first_class",
+                      as: "seat",
+                      in: {
+                        $mergeObjects: [
+                          "$$seat",
+                          {
+                            seatClass: "first_class",
+                            seatId: "$$seat._id"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            $unwind: "$seats"
+          },
+          {
+            $replaceRoot: { newRoot: "$seats" }
+          }
+        ],
+        as: 'allSeats'
+      }
+    },
+    {
+      $addFields: {
+        "passengerDetails.seatInfo": {
+          $let: {
+            vars: {
+              matchedSeat: {
+                $first: {
+                  $filter: {
+                    input: "$allSeats",
+                    as: "seat",
+                    cond: {
+                      $eq: [
+                        "$$seat.seatId",
+                        "$passengerDetails.seatNumberId"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            in: {
+              $cond: {
+                if: { $ne: ["$$matchedSeat", null] },
+                then: {
+                  _id: "$$matchedSeat._id",
+                  seat_number: "$$matchedSeat.seat_number",
+                  price: "$$matchedSeat.price",
+                  class: "$$matchedSeat.seatClass"
+                },
+                else: null
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      $lookup: {
+        from: 'flightsdetails',
+        localField: 'passengerDetails.flightId',
+        foreignField: '_id',
+        as: 'flightDetails'
+      }
+    },
+    {
+      $unwind: {
+        path: "$flightDetails",
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $lookup: {
+        from: 'mealitemsimages',
+        let: {
+          mealIds: {
+            $cond: {
+              if: { $isArray: "$mealOrder" },
+              then: {
+                $map: {
+                  input: "$mealOrder",
+                  as: "meal",
+                  in: "$$meal.particularMealId"
+                }
+              },
+              else: []
+            }
+          }
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $in: ["$_id", "$$mealIds"]
+              }
+            }
+          }
+        ],
+        as: 'mealItemsData'
+      }
+    },
+    {
+      $addFields: {
+        mealDetails: {
+          $map: {
+            input: {
+              $cond: {
+                if: { $isArray: "$mealOrder" },
+                then: "$mealOrder",
+                else: []
+              }
+            },
+            as: "meal",
+            in: {
+              $let: {
+                vars: {
+                  mealItem: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$mealItemsData",
+                          as: "m",
+                          cond: { $eq: ["$$m._id", "$$meal.particularMealId"] }
+                        }
+                      },
+                      0
+                    ]
+                  }
+                },
+                in: {
+                  _id: "$$mealItem._id",
+                  mealItems: "$$mealItem.mealItems",
+                  mealPrice: "$$mealItem.mealPrice",
+                  mealCount: "$$meal.mealCount"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      $group: {
+        _id: contactId,
+        contactDetails: {
+          $first: {
+            fullName: "$fullName",
+            email: "$email",
+            mobileNumber: "$mobileNumber"
+          }
+        },
+        mealDetails: {
+          $first: "$mealDetails"
+        },
+        passengerDetails: { $addToSet: "$passengerDetails" },
+        flightDetails: { $first: "$flightDetails" }
+      }
+    }
+  ]);
+
+  return contactDetailsArray
+}
+
 apicontroller.getFlightAllBookingDetails = async (req, res) => {
 
   const id = req.query.contactId
@@ -1218,232 +1450,7 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
 
   try {
 
-    const contactDetailsArray = await flightContactUs.aggregate([
-      {
-        $match: { _id: contactId }
-      },
-      {
-        $lookup: {
-          from: 'passengerdetails',
-          localField: 'passengerId',
-          foreignField: '_id',
-          as: 'passengerDetails'
-        }
-      },
-      {
-        $unwind: "$passengerDetails"
-      },
-      {
-        $lookup: {
-          from: 'flightseats',
-          let: { flightId: "$passengerDetails.flightId" },
-          pipeline: [
-            {
-              $match: {
-                $expr: { $eq: ["$flightId", "$$flightId"] }
-              }
-            },
-            {
-              $project: {
-                seats: {
-                  $concatArrays: [
-                    {
-                      $map: {
-                        input: "$economy",
-                        as: "seat",
-                        in: {
-                          $mergeObjects: [
-                            "$$seat",
-                            {
-                              seatClass: "economy",
-                              seatId: "$$seat._id"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      $map: {
-                        input: "$business",
-                        as: "seat",
-                        in: {
-                          $mergeObjects: [
-                            "$$seat",
-                            {
-                              seatClass: "business",
-                              seatId: "$$seat._id"
-                            }
-                          ]
-                        }
-                      }
-                    },
-                    {
-                      $map: {
-                        input: "$first_class",
-                        as: "seat",
-                        in: {
-                          $mergeObjects: [
-                            "$$seat",
-                            {
-                              seatClass: "first_class",
-                              seatId: "$$seat._id"
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              $unwind: "$seats"
-            },
-            {
-              $replaceRoot: { newRoot: "$seats" }
-            }
-          ],
-          as: 'allSeats'
-        }
-      },
-      {
-        $addFields: {
-          "passengerDetails.seatInfo": {
-            $let: {
-              vars: {
-                matchedSeat: {
-                  $first: {
-                    $filter: {
-                      input: "$allSeats",
-                      as: "seat",
-                      cond: {
-                        $eq: [
-                          "$$seat.seatId",
-                          "$passengerDetails.seatNumberId"
-                        ]
-                      }
-                    }
-                  }
-                }
-              },
-              in: {
-                $cond: {
-                  if: { $ne: ["$$matchedSeat", null] },
-                  then: {
-                    _id: "$$matchedSeat._id",
-                    seat_number: "$$matchedSeat.seat_number",
-                    price: "$$matchedSeat.price",
-                    class: "$$matchedSeat.seatClass"
-                  },
-                  else: null
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        $lookup: {
-          from: 'flightsdetails',
-          localField: 'passengerDetails.flightId',
-          foreignField: '_id',
-          as: 'flightDetails'
-        }
-      },
-      {
-        $unwind: {
-          path: "$flightDetails",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $lookup: {
-          from: 'mealitemsimages',
-          let: {
-            mealIds: {
-              $cond: {
-                if: { $isArray: "$mealOrder" },
-                then: {
-                  $map: {
-                    input: "$mealOrder",
-                    as: "meal",
-                    in: "$$meal.particularMealId"
-                  }
-                },
-                else: []
-              }
-            }
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $in: ["$_id", "$$mealIds"]
-                }
-              }
-            }
-          ],
-          as: 'mealItemsData'
-        }
-      },
-      {
-        $addFields: {
-          mealDetails: {
-            $map: {
-              input: {
-                $cond: {
-                  if: { $isArray: "$mealOrder" },
-                  then: "$mealOrder",
-                  else: []
-                }
-              },
-              as: "meal",
-              in: {
-                $let: {
-                  vars: {
-                    mealItem: {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$mealItemsData",
-                            as: "m",
-                            cond: { $eq: ["$$m._id", "$$meal.particularMealId"] }
-                          }
-                        },
-                        0
-                      ]
-                    }
-                  },
-                  in: {
-                    _id: "$$mealItem._id",
-                    mealItems: "$$mealItem.mealItems",
-                    mealPrice: "$$mealItem.mealPrice",
-                    mealCount: "$$meal.mealCount"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        $group: {
-          _id: contactId,
-          contactDetails: {
-            $first: {
-              fullName: "$fullName",
-              email: "$email",
-              mobileNumber: "$mobileNumber"
-            }
-          },
-          mealDetails: {
-            $first: "$mealDetails"
-          },
-          passengerDetails: { $addToSet: "$passengerDetails" },
-          flightDetails: { $first: "$flightDetails" }
-        }
-      }
-    ]);
+    const contactDetailsArray = await allFlightPassengerDetails(contactId)
 
     const flightBookDetails = contactDetailsArray[0] || {};
 
@@ -1468,9 +1475,8 @@ apicontroller.getFlightAllBookingDetails = async (req, res) => {
 apicontroller.addFlightTicketsData = async (req, res) => {
   try {
 
-    const { paymentId, contactId } = req.body
+    const { paymentId, contactId, className } = req.body
     const id = mongoose.Types.ObjectId(contactId)
-    console.log(id, 'ididididi')
 
     const updatedContact = await flightContactUs.findByIdAndUpdate(
       { _id: id },
@@ -1488,9 +1494,114 @@ apicontroller.addFlightTicketsData = async (req, res) => {
       return res.status(404).json({ message: 'Contact not found' });
     }
 
+    const contactDetailsArray = await allFlightPassengerDetails(id);
+    const allFilghtRelatedDetails = contactDetailsArray[0]
+    // res.send(allFilghtRelatedDetails)
+    
+    await seatUpdate()
+
+    const mealTotalPrice = allFilghtRelatedDetails.mealDetails.reduce((total, meal) => {
+      return total + meal.mealPrice * meal.mealCount;
+    }, 0);
+
+    const seatPrice = allFilghtRelatedDetails.passengerDetails.reduce((total, seatInfo) => {
+      return total + seatInfo.seatInfo.price
+    }, 0)
+
+    const baseFare = allFilghtRelatedDetails.flightDetails.class_details[className].prices.adult * allFilghtRelatedDetails.passengerDetails.length
+
+    const paymentIntent = await axios.post(`${process.env.baseUrl}/api/get-payment-intent`, { id: paymentId });
+
+    const finalPrice = paymentIntent.data.amount / 100;
+
+    const discount = baseFare + seatPrice + mealTotalPrice - finalPrice
+
+    const convertDateTime = (timeStamp) => {
+
+      const date = new Date(timeStamp);
+
+      if (isNaN(date)) {
+        throw new Error('Invalid Date');
+      }
+
+      const optionsDate = {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+      };
+
+      const optionsTime = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      };
+
+      const formattedDate = new Intl.DateTimeFormat('en-GB', optionsDate).format(date);
+      let formattedTime = new Intl.DateTimeFormat('en-GB', optionsTime).format(date);
+
+      formattedTime = formattedTime.toUpperCase();
+
+      const finalFormattedDate = `${formattedDate}, ${formattedTime}`;
+
+      return finalFormattedDate;
+    };
+
+    const calculateDuration = (departureTime, arrivalTime) => {
+
+      const departureDate = new Date(departureTime);
+      const arrivalDate = new Date(arrivalTime);
+
+      if (isNaN(departureDate) || isNaN(arrivalDate)) {
+        throw new Error('Invalid Date(s)');
+      }
+
+      const diffInMs = arrivalDate - departureDate;
+      const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+      const diffInMinutes = Math.floor((diffInMs % (1000 * 60 * 60)) / (1000 * 60));
+
+      return `${diffInHours} h, ${diffInMinutes} m`;
+    };
+
+    function capitalizeFirstLetter(str) {
+      if (!str) return str;
+      return str
+      .toLowerCase() 
+      .split('_')    
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) 
+      .join(' '); 
+    }
+
+    const ticketData = {
+      airline: allFilghtRelatedDetails.flightDetails.airline,
+      bookingReference: allFilghtRelatedDetails._id,
+      flight: {
+        from: `${allFilghtRelatedDetails.flightDetails.departure.city} (${allFilghtRelatedDetails.flightDetails.departure.airport})`,
+        to: `${allFilghtRelatedDetails.flightDetails.arrival.city} (${allFilghtRelatedDetails.flightDetails.arrival.airport})`,
+        departure: convertDateTime(allFilghtRelatedDetails.flightDetails.departure.time),
+        arrival: convertDateTime(allFilghtRelatedDetails.flightDetails.arrival.time),
+        number: allFilghtRelatedDetails.flightDetails.flightCode,
+        aircraft: "Boeing 737",
+        class: capitalizeFirstLetter(className) || "N/A",
+        duration: calculateDuration(allFilghtRelatedDetails.flightDetails.departure.time, allFilghtRelatedDetails.flightDetails.arrival.time),
+      },
+      passengers: allFilghtRelatedDetails.passengerDetails.map((passenger) => ({
+        name: passenger.fullName,
+        age: passenger.age,
+        gender: passenger.gender,
+        seat: passenger.seatInfo.seat_number,
+      })),
+      price: {
+        baseFare: baseFare,
+        meals: mealTotalPrice,
+        seatPrice: seatPrice,
+        ...(discount > 0 && { discount }),
+        total: finalPrice,
+      },
+    };
+
     const htmlFilePath = "/admin-panel/flightTicketsDetailsMail/ticketsBookingMail.ejs"
     const ticketName = `ticket-${updatedContact.email}.pdf`
-    await pdfGenerator(htmlFilePath, ticketName);
+    await pdfGenerator(htmlFilePath, ticketName, ticketData);
 
     const pdfPath = path.join(__dirname, '../../public', `/ticketsPDF/${ticketName}`);
     const pdfBuffer = fs.readFileSync(pdfPath);
@@ -1507,6 +1618,10 @@ apicontroller.addFlightTicketsData = async (req, res) => {
     console.log(error, "error")
     res.status(400).json({ message: error.message });
   }
+}
+
+const seatUpdate = () => {
+  
 }
 
 apicontroller.getPackageTheme = async (req, res) => {
