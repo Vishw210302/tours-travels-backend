@@ -4,7 +4,7 @@ const apiController = require('../apiController/Controller');
 
 
 // razorpay API
-const { createPaymentIntent, veryFyPayment, getPaymentDetails} = require("../apiController/payments.controller");
+const { createPaymentIntent, veryFyPayment, getPaymentDetails } = require("../apiController/payments.controller");
 apiRoute.post("/create-payment-intent", createPaymentIntent);
 apiRoute.post("/verifyPayment", veryFyPayment);
 apiRoute.post("/get-payment-intent", getPaymentDetails);
@@ -152,5 +152,18 @@ apiRoute.delete('/delete-setting-listing/:id', apiController.deleteSettingListin
 
 // Flight Tickets Get API
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
+
+// Roles API
+apiRoute.get('/get-all-roles-listing', apiController.getAllRolesListing)
+apiRoute.get('/get-role-data/:id', apiController.getRoleDataById)
+apiRoute.delete('/delete-particular-role/:id', apiController.deleteParticularRole);
+
+//  Permission API
+apiRoute.get('/get-all-permission-listing', apiController.getAllPermissionListing)
+apiRoute.delete('/delete-particular-permission/:id', apiController.deleteParticularPermission);
+
+// Employee API
+apiRoute.get('/get-all-employee-listing', apiController.getAllEmployeeListing)
+apiRoute.delete('/delete-particular-employee/:id', apiController.deleteParticularEmployee);
 
 module.exports = apiRoute;

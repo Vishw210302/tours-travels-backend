@@ -35,6 +35,13 @@ const setting = require('../schema/SettingSchema/SettingSchema');
 const InclusionAndExclusion = require('../schema/inclusionAndExclusionSchema/inclusionAndExclusionSchema');
 const itenaryFlightDetails = require('../schema/itenaryFlightsSchema/itenaryFlightsSchema');
 require('dotenv').config()
+const roles = require('../schema/rolesSchema/roleSchema');
+const permission = require('../schema/permissionNameSchema/permissionNameSchema');
+const rolesAndPermission = require('../schema/roleAndPermissionSchema/roleAndPermissionSchema');
+const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
+const { setEmployeePasswordEmail } = require('../utils/sendMail');
+const bcrypt = require('bcrypt');
+const userAndPermission = require('../schema/userAndPermissionSchema/userAndPermissionSchema');
 
 adminController.index = async (req, res) => {
     try {
@@ -1502,7 +1509,7 @@ adminController.deletePackageTheme = async (req, res) => {
     try {
         const response = await axios.delete(`${process.env.baseUrl}/api/delete-package-theme/${req.params.id}`);
         if (response.data.status && response.data.status == true) {
-            res.redirect("/admin/ticketsDetailsMail")
+            res.redirect("/admin/popularPackagesThemeListing")
         } else {
             console.log("Error add in Package Delete")
         }
@@ -1774,5 +1781,340 @@ adminController.deleteSettingListing = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+adminController.rolesListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-roles-listing`)
+        if (response.data.status == true) {
+            res.render("admin-panel/rolesPage/rolesListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addRoleName = async (req, res) => {
+    try {
+        res.render("admin-panel/rolesPage/addRoleListing")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postRolesName = async (req, res) => {
+    try {
+        const rolesNameListing = new roles({
+            roleName: req.body.roleName,
+            roleDescription: req.body.roleDescription,
+        });
+        await rolesNameListing.save();
+        res.redirect('/admin/rolesListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.deleteParticularRole = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-particular-role/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/rolesListing")
+        } else {
+            console.log("Error delete role listing")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.permissionListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-permission-listing`)
+        if (response.data.status == true) {
+            res.render("admin-panel/persmissionPage/persmissionListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addPermissionName = async (req, res) => {
+    try {
+        res.render("admin-panel/persmissionPage/addPermissionListing")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postPermissionName = async (req, res) => {
+    try {
+        const permissionNameListing = new permission({
+            permissionName: req.body.permissionName,
+            permissionDescription: req.body.permissionDescription,
+        });
+        await permissionNameListing.save();
+        res.redirect('/admin/permissionListing');
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.deleteParticularPermission = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-particular-permission/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/permissionListing")
+        } else {
+            console.log("Error delete role listing")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.roleAndPermissionListing = async (req, res) => {
+    try {
+        const roleId = req.params.id
+        const roleDataById = await axios.get(`${process.env.baseUrl}/api/get-role-data/${roleId}`)
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-permission-listing`)
+        const getRoleByPermission = await rolesAndPermission.findOne({ roleId })
+
+        if (response.data.status || roleDataById.data.status) {
+            res.render("admin-panel/roleAndPermission/roleAndPermissionListing", { data: response.data.data, roleDetail: roleDataById.data.data, getRoleByPermission })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.saveRoleAndPermission = async (req, res) => {
+    try {
+        const { roleId, permissionId } = req.body;
+
+        if (!roleId || !Array.isArray(permissionId) || permissionId.length === 0) {
+            return res.status(400).json({ message: "Invalid roleId or permissionId data" });
+        }
+
+        const role = await roles.findById(roleId)
+        if (role) {
+            await rolesAndPermission.findOneAndUpdate(
+                { roleId },
+                {
+                    $set: {
+                        permissionId,
+                        updatedAt: new Date(),
+                        deletedAt: null,
+                    },
+                },
+                { upsert: true, new: true }
+            );
+        } else {
+            const newRoleAndPermission = new rolesAndPermission({
+                roleId,
+                permissionId,
+                createdAt: new Date(),
+            });
+
+            await newRoleAndPermission.save();
+        }
+
+        res.redirect('/admin/rolesListing');
+    } catch (error) {
+        console.error("Error saving role and permission:", error);
+        res.status(500).json({ message: "An error occurred while saving data", error: error.message });
+    }
+};
+
+adminController.allUserListing = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-employee-listing`)
+        if (response.data.status == true) {
+            res.render("admin-panel/allUsers/allUserListing", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.emailTemplateOfPassword = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-employee-listing`)
+        if (response.data.status == true) {
+            res.render("admin-panel/allUsers/employeePasswordReset", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.addUsers = async (req, res) => {
+    try {
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-roles-listing`)
+        if (response.data.status == true) {
+            res.render("admin-panel/allUsers/addUsers", { data: response.data.data })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postAllEmployee = async (req, res) => {
+    try {
+        const employeeName = req.body.employeeName;
+        passEmpName = req.body.employeeName.trim().split(' ')[0];
+        const generatedPassword = `${passEmpName}@123`;
+        const hashedPassword = await bcrypt.hash(generatedPassword, 10);
+
+        const addAllEmployee = new employees({
+            employeeName: employeeName,
+            employees: req.file ? req.file.filename : '',
+            employeeEmail: req.body.employeeEmail,
+            employeeRole: req.body.employeeRole,
+            employeePassword: hashedPassword,
+        });
+
+        await addAllEmployee.save();
+
+        await setEmployeePasswordEmail(
+            addAllEmployee.employeeEmail,
+            generatedPassword,
+        );
+
+        res.redirect('/admin/allUserListing');
+
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.deleteParticularEmployee = async (req, res) => {
+    try {
+        const response = await axios.delete(`${process.env.baseUrl}/api/delete-particular-employee/${req.params.id}`);
+        if (response.data.status && response.data.status == true) {
+            res.redirect("/admin/allUserListing")
+        } else {
+            console.log("Error delete Employee")
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+adminController.particularUserPermission = async (req, res) => {
+    try {
+        const userId = req.params.id
+        const allUserAndPermission = await userAndPermission.findOne({ userId }).populate("permissionId")
+
+        var particularUser = await employees
+            .findById(userId)
+            .populate('employeeRole')
+            .exec();
+
+        let particularUserData = JSON.parse(JSON.stringify(particularUser))
+
+        if (particularUserData.employeeRole) {
+            var rolesAndPermissionData = await rolesAndPermission
+                .findOne({ roleId: particularUserData.employeeRole._id })
+                .populate('permissionId')
+                .exec();
+
+            let combinedPermissions = allUserAndPermission
+                ? [...rolesAndPermissionData?.permissionId, ...allUserAndPermission?.permissionId]
+                : rolesAndPermissionData?.permissionId;
+
+            const removedPermissionIds = allUserAndPermission?.removedPermissionId || [];
+
+            if (removedPermissionIds) {
+                combinedPermissions = combinedPermissions.filter(
+                    (permission) => !removedPermissionIds.includes(permission._id.toString())
+                );
+            }
+
+            particularUserData.employeeRole = {
+                ...particularUserData.employeeRole,
+                permissions: combinedPermissions
+            };
+        }
+
+        const userData = await axios.get(`${process.env.baseUrl}/api/get-all-employee-listing`)
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-permission-listing`)
+        if (response.data.status || userData.data.status) {
+            res.render(`admin-panel/allUsers/particularUsersPermission`, { data: response.data.data, userData: userData.data.data, particularUserData })
+        } else {
+            console.log("Error get in listing in packages")
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.postParticularUserPermission = async (req, res) => {
+    try {
+
+        const role = await rolesAndPermission.findOne({ roleId: req.body.roleId }).populate("permissionId");
+
+        const existingPermissionIds = role.permissionId.map((permission) => permission._id.toString());
+
+        const newPermissions = req.body.permissionId?.filter((permission) => {
+            return !existingPermissionIds.includes(permission);
+        });
+
+        const userExist = await userAndPermission.findOne({ userId: req.body.userId })
+
+        if (req.body.removedPermissionId) {
+            var removedPermissionIdsFromReq = JSON.parse(req.body.removedPermissionId)
+        }
+
+        if (userExist) {
+
+            const updatedRemovedPermissions = userExist.removedPermissionId?.filter(
+                (removedId) => !req.body.permissionId.includes(removedId.toString())
+            );
+
+            const finalRemovedPermissions = Array.from(
+                new Set([...updatedRemovedPermissions, ...removedPermissionIdsFromReq])
+            );
+            await userAndPermission.findOneAndUpdate(
+                { userId: req.body.userId },
+                {
+                    $set: {
+                        permissionId: newPermissions,
+                        removedPermissionId: finalRemovedPermissions,
+                        updatedAt: new Date(),
+                        deletedAt: null,
+                    },
+                },
+                { upsert: true, new: true }
+            );
+        } else {
+
+            const particularUserPermission = new userAndPermission({
+                userId: req.body.userId,
+                permissionId: newPermissions,
+                removedPermissionId: removedPermissionIdsFromReq,
+            });
+
+            await particularUserPermission.save();
+        }
+
+        res.redirect('/admin/allUserListing');
+    } catch (error) {
+        console.error("Error in Permission Filtering:", error.message);
+        res.status(400).json({ message: error.message });
+    }
+};
 
 module.exports = adminController;

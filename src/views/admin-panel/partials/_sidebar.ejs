@@ -1,6 +1,13 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-  <ul class="nav mt-5">
-    <div class="mt-3">
+  <div class="main_logo">
+    <div>
+      <a href="/admin">
+        <img src="/images/dashboard/logo-white.png" alt="skyBooking" />
+      </a>
+    </div>
+  </div>
+  <ul class="nav mt-2">
+    <div>
       <li class="nav-item menu-items mt-2">
         <a class="nav-link" href="/admin">
           <span href="#dashboard" class="menu-icon" aria-controls="dashboard">
@@ -10,7 +17,7 @@
         </a>
       </li>
 
-      <li class="nav-item menu-items">
+      <li class="nav-item menu-items mt-2">
         <a
           class="nav-link"
           data-toggle="collapse"
@@ -202,6 +209,58 @@
                 <span class="menu-title">Branch Location</span>
               </a>
             </li>
+            <li class="nav-item menu-items mt-2">
+              <a class="nav-link" href="/admin/socialMediaLinkListing">
+                <span class="menu-icon">
+                  <i class="mdi mdi-playlist-play"></i>
+                </span>
+                <span class="menu-title">Social Media Link</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item menu-items mt-2">
+        <a
+          class="nav-link"
+          data-toggle="collapse"
+          href="#roleAndPermission"
+          aria-expanded="false"
+          aria-controls="roleAndPermission"
+        >
+          <span class="menu-icon">
+            <i class="mdi mdi-laptop"></i>
+          </span>
+          <span class="menu-title">Role & Permission</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="roleAndPermission">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item menu-items mt-2">
+              <a class="nav-link" href="/admin/allUserListing">
+                <span class="menu-icon">
+                  <i class="mdi mdi-playlist-play"></i>
+                </span>
+                <span class="menu-title">Users / Employees</span>
+              </a>
+            </li>
+            <li class="nav-item menu-items mt-2">
+              <a class="nav-link" href="/admin/rolesListing">
+                <span class="menu-icon">
+                  <i class="mdi mdi-playlist-play"></i>
+                </span>
+                <span class="menu-title">Roles</span>
+              </a>
+            </li>
+            <li class="nav-item menu-items mt-2">
+              <a class="nav-link" href="/admin/permissionListing">
+                <span class="menu-icon">
+                  <i class="mdi mdi-playlist-play"></i>
+                </span>
+                <span class="menu-title">Permission</span>
+              </a>
+            </li>
           </ul>
         </div>
       </li>
@@ -316,29 +375,11 @@
       </li>
 
       <li class="nav-item menu-items mt-2">
-        <a class="nav-link" href="/admin/ticketsDetailsMail">
-          <span class="menu-icon">
-            <i class="mdi mdi-playlist-play"></i>
-          </span>
-          <span class="menu-title">Tem. mail page</span>
-        </a>
-      </li>
-
-      <li class="nav-item menu-items mt-2">
         <a class="nav-link" href="/admin/popularPackagesThemeListing">
           <span class="menu-icon">
             <i class="mdi mdi-playlist-play"></i>
           </span>
           <span class="menu-title">Package Theme</span>
-        </a>
-      </li>
-
-      <li class="nav-item menu-items mt-2">
-        <a class="nav-link" href="/admin/socialMediaLinkListing">
-          <span class="menu-icon">
-            <i class="mdi mdi-playlist-play"></i>
-          </span>
-          <span class="menu-title">Social Media Link</span>
         </a>
       </li>
     </div>

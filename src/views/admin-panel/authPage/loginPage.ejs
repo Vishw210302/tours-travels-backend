@@ -1,510 +1,678 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <style>
-    body {
-      font-family: 'Roboto', Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background: #1a1a1a;
-    }
-
-    .container {
-      text-align: center;
-      padding: 40px;
-      background: #202124;
-      border-radius: 16px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-      width: 320px;
-      border: 1px solid #333;
-      margin: 20px;
-    }
-
-    .welcome-text {
-      color: #ffffff;
-      font-size: 26px;
-      margin-bottom: 24px;
-      font-weight: 500;
-    }
-
-    .subtitle {
-      color: #9aa0a6;
-      font-size: 15px;
-      margin-bottom: 35px;
-      line-height: 1.5;
-    }
-
-    .sign-in-button,
-    .update-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 14px 16px;
-      border: none;
-      border-radius: 30px;
-      background: #303134;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-      border: 1px solid #444;
-      margin-bottom: 15px;
-    }
-
-    .sign-in-button:hover,
-    .update-button:hover {
-      background: #3c4043;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transform: translateY(-1px);
-      border-color: #555;
-    }
-
-    .google-logo {
-      background: #303134;
-      border-radius: 50%;
-      padding: 8px;
-      margin-right: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .text {
-      color: #e8eaed;
-      font-size: 16px;
-      font-weight: 500;
-      letter-spacing: 0.25px;
-    }
-
-    .g-logo {
-      height: 20px;
-    }
-
-    .divider {
-      margin: 30px 0;
-      border-top: 1px solid #333;
-    }
-
-    .footer-text {
-      margin-top: 25px;
-      color: #9aa0a6;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .footer-text a {
-      color: #8ab4f8;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .footer-text a:hover {
-      text-decoration: underline;
-    }
-
-    .input-field {
-      width: 92%;
-      padding: 12px;
-      margin: 10px 0;
-      background: #303134;
-      border: 1px solid #444;
-      border-radius: 8px;
-      color: #e8eaed;
-      font-size: 16px;
-    }
-
-    .input-field:focus {
-      outline: none;
-      border-color: #8ab4f8;
-    }
-
-    .otp-container {
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0;
-    }
-
-    .otp-input {
-      width: 40px;
-      height: 40px;
-      text-align: center;
-      font-size: 20px;
-      margin: 0 4px;
-      background: #303134;
-      border: 1px solid #444;
-      border-radius: 8px;
-      color: #e8eaed;
-    }
-
-    .message {
-      color: #8ab4f8;
-      margin: 10px 0;
-      font-size: 14px;
-    }
-
-    .error {
-      color: #f28b82;
-    }
-
-    .success {
-      color: #81c995;
-    }
-
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
-      background: #202124;
-      padding: 30px;
-      border-radius: 16px;
-      border: 1px solid #333;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .close-modal {
-      color: #9aa0a6;
-      float: right;
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    .close-modal:hover {
-      color: #e8eaed;
-    }
-
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 4px solid #3498db;
-      width: 15px;
-      height: 15px;
-      animation: spin 1s linear infinite;
-      margin-right: 14px;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
+  <head>
+    <style>
+      :root {
+        --primary-bg: #121212;
+        --secondary-bg: #1e1e1e;
+        --text-primary: #e0e0e0;
+        --text-secondary: #a0a0a0;
+        --accent-color: #4a90e2;
+        --hover-color: #6ab0ff;
+        --border-color: #333333;
       }
 
-      100% {
-        transform: rotate(360deg);
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
       }
-    }
-  </style>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-</head>
 
-<body>
-  <div class="container">
-    <div class="welcome-text">Tours and travel</div>
-    <div class="subtitle">Let's pick up where we left off</div>
+      body {
+        background: linear-gradient(135deg, var(--primary-bg) 0%, #0f0f0f 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
 
-    <button class="sign-in-button" onclick="window.location.href='/auth/google'">
-      <span class="google-logo">
-        <svg class="g-logo" viewBox="0 0 24 24">
-          <path
-            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            fill="#4285F4" />
-          <path
-            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            fill="#34A853" />
-          <path
-            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-            fill="#FBBC05" />
-          <path
-            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-            fill="#EA4335" />
-        </svg>
-      </span>
-      <span class="text">Continue with Google</span>
-    </button>
+      .container {
+        background: var(--secondary-bg);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+        transform: perspective(1000px) rotateX(-10deg) rotateY(10deg) scale(0.9);
+        opacity: 0.9;
+        transition: all 0.5s ease;
+      }
 
-    <button class="update-button" onclick="showUpdateModal()">
-      <span class="text">Update Google Account</span>
-    </button>
+      .container:hover {
+        transform: perspective(1000px) rotateX(0) rotateY(0) scale(1);
+        opacity: 1;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      }
 
-    <div class="divider"></div>
+      .tab-buttons {
+        display: flex;
+        margin-bottom: 30px;
+        background: var(--primary-bg);
+        border-radius: 10px;
+        overflow: hidden;
+      }
 
-    <div class="footer-text">
-      By continuing, you agree to our <a href="#">Terms of Service</a> and acknowledge that you have read our <a
-        href="#">Privacy Policy</a>
-    </div>
-  </div>
+      .tab-button {
+        flex: 1;
+        padding: 15px;
+        font-size: 18px;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+      }
 
-  <div id="updateModal" class="modal">
-    <div class="modal-content">
-      <span class="close-modal" onclick="closeModal('updateModal')">&times;</span>
-      <div class="welcome-text">Update Account</div>
-      <div id="" class="subtitle">Current email: <span id="currentEmail"></span></div>
-      <button class="update-button" id="sendOtpButton" onclick="sendOTP()">
-        <div id="loader" class="loader" style="display: none;"></div>
-        <span class="text">Send OTP to Email</span>
-      </button>
-    </div>
-  </div>
+      .tab-button.active {
+        background: var(--accent-color);
+        color: white;
+      }
 
-  <div id="otpModal" class="modal">
-    <div class="modal-content">
-      <span class="close-modal" onclick="closeModal('otpModal')">&times;</span>
-      <div class="welcome-text">Enter OTP</div>
-      <div class="subtitle">Please enter the OTP sent to your email</div>
-      <div class="otp-container">
-        <input type="text" maxlength="1" class="otp-input">
-        <input type="text" maxlength="1" class="otp-input">
-        <input type="text" maxlength="1" class="otp-input">
-        <input type="text" maxlength="1" class="otp-input">
-        <input type="text" maxlength="1" class="otp-input">
-        <input type="text" maxlength="1" class="otp-input">
+      .tab-button:hover:not(.active) {
+        background: rgba(74, 144, 226, 0.1);
+        color: var(--accent-color);
+      }
+
+      .form-container {
+        display: none;
+      }
+
+      .form-container.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        background: var(--primary-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      .input-field:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+      }
+
+      .submit-button,
+      .sign-in-button,
+      .update-button {
+        width: 100%;
+        padding: 15px;
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+      }
+
+      .submit-button:hover,
+      .sign-in-button:hover,
+      .update-button:hover {
+        background: var(--hover-color);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+      }
+
+      .google-logo {
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+      }
+
+      .welcome-text {
+        color: var(--text-primary);
+        font-size: 28px;
+        margin-bottom: 15px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .subtitle {
+        color: var(--text-secondary);
+        font-size: 16px;
+        margin-bottom: 30px;
+        text-align: center;
+        line-height: 1.6;
+      }
+
+      .divider {
+        position: relative;
+        text-align: center;
+        margin: 30px 0;
+      }
+
+      .divider::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--border-color);
+      }
+
+      .footer-text {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 14px;
+        margin-top: 20px;
+      }
+
+      .footer-text a {
+        color: var(--accent-color);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      .footer-text a:hover {
+        text-decoration: underline;
+        color: var(--hover-color);
+      }
+
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: var(--secondary-bg);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border-color);
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: var(--text-secondary);
+        font-size: 24px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .close-modal:hover {
+        color: var(--text-primary);
+      }
+
+      .otp-container {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+      }
+
+      .otp-input {
+        width: 45px;
+        height: 45px;
+        text-align: center;
+        font-size: 20px;
+        background: var(--primary-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        color: var(--text-primary);
+      }
+
+      .message {
+        text-align: center;
+        margin: 15px 0;
+        font-size: 14px;
+      }
+
+      .error {
+        color: #ff6b6b;
+      }
+
+      .success {
+        color: #4ecdc4;
+      }
+
+      .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid var(--accent-color);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+      }
+
+      .lable-color {
+        color: white;
+      }
+
+      .forgot-password {
+        display: flex;
+        justify-content: end;
+      }
+
+      .forgot-password-text {
+        color: white;
+        text-decoration: none;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="welcome-text">Tours and Travel</div>
+      <div class="subtitle">Secure and seamless login experience</div>
+      <div class="tab-buttons">
+        <button class="tab-button active" onclick="showForm('employeeForm')">
+          Employee Login
+        </button>
+        <button class="tab-button" onclick="showForm('adminForm')">
+          Admin Login
+        </button>
       </div>
-      <div id="otpMessage" class="message"></div>
-      <button class="update-button" id="verifyOTPButton" onclick="verifyOTP()">
-        <div id="loader" class="loader" style="display: none;"></div>
-        <span class="text">Verify OTP</span>
-      </button>
 
+      <!-- Employee Login Form -->
+      <div id="employeeForm" class="form-container active">
+        <form action="/employee-loginPage" method="POST">
+          <p class="lable-color">Email :-</p>
+          <input
+            type="text"
+            name="employeeEmail"
+            class="input-field"
+            placeholder="Please enter email ..."
+            required
+          />
+          <p class="lable-color">Password :-</p>
+          <input
+            type="password"
+            name="employeePassword"
+            class="input-field"
+            placeholder="Enter password here ..."
+            required
+          />
+          <div class="forgot-password">
+            <a href="" class="forgot-password-text">Forgot Password</a>
+          </div>
+          <button type="submit" class="submit-button">Login</button>
+        </form>
+      </div>
+
+      <!-- Admin Login Form -->
+
+      <div id="adminForm" class="form-container">
+        <div>
+          <button
+            class="sign-in-button"
+            onclick="window.location.href='/auth/google'"
+          >
+            <span class="google-logo">
+              <svg class="g-logo" viewBox="0 0 24 24" width="24" height="24">
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  fill="#4285F4"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  fill="#34A853"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                  fill="#FBBC05"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                  fill="#EA4335"
+                />
+              </svg>
+            </span>
+            Continue with Google
+          </button>
+
+          <button class="update-button" onclick="showUpdateModal()">
+            Update Google Account
+          </button>
+
+          <div class="divider"></div>
+
+          <div class="footer-text">
+            By continuing, you agree to our <a href="#">Terms of Service</a> and
+            acknowledge that you have read our <a href="#">Privacy Policy</a>
+          </div>
+        </div>
+
+        <div id="updateModal" class="modal">
+          <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('updateModal')"
+              >&times;</span
+            >
+            <div class="welcome-text">Update Account</div>
+            <div id="" class="subtitle">
+              Current email: <span id="currentEmail"></span>
+            </div>
+            <button
+              class="update-button"
+              id="sendOtpButton"
+              onclick="sendOTP()"
+            >
+              <div id="loader" class="loader" style="display: none"></div>
+              Send OTP to Email
+            </button>
+          </div>
+        </div>
+
+        <div id="otpModal" class="modal">
+          <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('otpModal')"
+              >&times;</span
+            >
+            <div class="welcome-text">Enter OTP</div>
+            <div class="subtitle">Please enter the OTP sent to your email</div>
+            <div class="otp-container">
+              <input type="text" maxlength="1" class="otp-input" />
+              <input type="text" maxlength="1" class="otp-input" />
+              <input type="text" maxlength="1" class="otp-input" />
+              <input type="text" maxlength="1" class="otp-input" />
+              <input type="text" maxlength="1" class="otp-input" />
+              <input type="text" maxlength="1" class="otp-input" />
+            </div>
+            <div id="otpMessage" class="message"></div>
+            <button
+              class="update-button"
+              id="verifyOTPButton"
+              onclick="verifyOTP()"
+            >
+              <div id="loader" class="loader" style="display: none"></div>
+              Verify OTP
+            </button>
+          </div>
+        </div>
+
+        <div id="newEmailModal" class="modal">
+          <div class="modal-content">
+            <div class="welcome-text">Admin Email Removed</div>
+            <div class="subtitle">
+              Previous admin email has been successfully removed from the
+              system. You will be redirected to add a new admin email.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div id="newEmailModal" class="modal">
-    <div class="modal-content">
-      <div class="welcome-text">Admin Email Removed</div>
-      <div class="subtitle">Previous admin email has been successfully removed from the system. You will be redirected
-        to add a new admin email.</div>
-    </div>
-  </div>
+    <script>
+      let generatedOTP = "";
 
-  <script>
-    let generatedOTP = '';
-
-    $(document).ready(function () {
-      // Handle OTP input
-      $('.otp-input').on('keyup', function (e) {
-        const currentIndex = $('.otp-input').index(this);
-        const maxLength = $(this).attr('maxlength');
-        const currentLength = $(this).val().length;
-
-        // Only proceed if:
-        // 1. The current input has reached its max length
-        // 2. It's not the last input
-        // 3. Not a backspace key
-        // 4. Not holding shift (to prevent selection jumping)
-        if (currentLength === parseInt(maxLength) &&
-          currentIndex < 5 &&
-          e.keyCode !== 8 &&
-          !e.shiftKey) {
-          $('.otp-input').eq(currentIndex + 1).focus();
-        }
-
-        // Handle backspace
-        if (e.keyCode === 8 && currentLength === 0 && currentIndex > 0) {
-          $('.otp-input').eq(currentIndex - 1).focus();
-        }
-      });
-
-      // Prevent non-numeric inputs
-      $('.otp-input').on('input', function () {
-        this.value = this.value.replace(/[^0-9]/g, '');
-      });
-
-      // Handle paste event for OTP
-      $('.otp-input').on('paste', function (e) {
-        e.preventDefault();
-        const pastedData = (e.originalEvent.clipboardData || window.clipboardData)
-          .getData('text')
-          .replace(/[^0-9]/g, '')  // Remove non-numeric characters
-          .slice(0, 6);  // Only take first 6 digits
-
-        if (pastedData) {
-          $('.otp-input').each(function (index) {
-            if (pastedData[index]) {
-              $(this).val(pastedData[index]);
-            }
-          });
-        }
-      });
-    });
-
-    function showUpdateModal() {
-      loadEmails();
-    }
-
-    function loadEmails() {
-      $.ajax({
-        url: '/get-admin-email',
-        method: 'GET',
-        dataType: 'json',
-        success: function (response) {
-
-          $("#currentEmail").text('')
-
-          if (response.status == true) {
-            $("#currentEmail").text(response.admin.email)
-            $('#updateModal').fadeIn().css('display', 'flex');
+      $(document).ready(function () {
+        $(".otp-input").on("keyup", function (e) {
+          const currentIndex = $(".otp-input").index(this);
+          const maxLength = $(this).attr("maxlength");
+          const currentLength = $(this).val().length;
+          if (
+            currentLength === parseInt(maxLength) &&
+            currentIndex < 5 &&
+            e.keyCode !== 8 &&
+            !e.shiftKey
+          ) {
+            $(".otp-input")
+              .eq(currentIndex + 1)
+              .focus();
           }
 
-        },
-        error: function (xhr, status, error) {
-          $('#currentEmail').html('<p>Error loading emails. Please try again.</p>');
-          console.error('Error:', error);
-        }
-      });
-    }
+          if (e.keyCode === 8 && currentLength === 0 && currentIndex > 0) {
+            $(".otp-input")
+              .eq(currentIndex - 1)
+              .focus();
+          }
+        });
 
-    function closeModal(modalId) {
-      $(`#${modalId}`).fadeOut();
-    }
+        $(".otp-input").on("input", function () {
+          this.value = this.value.replace(/[^0-9]/g, "");
+        });
 
-    function sendOTP() {
+        $(".otp-input").on("paste", function (e) {
+          e.preventDefault();
+          const pastedData = (
+            e.originalEvent.clipboardData || window.clipboardData
+          )
+            .getData("text")
+            .replace(/[^0-9]/g, "")
+            .slice(0, 6);
 
-      const getEmail = $("#currentEmail").text()
-      $('#loader').show();
-      $('#sendOtpButton').prop('disabled', true);
-
-      $.ajax({
-        url: `/get-admin-email-otp?email=${getEmail}`,
-        method: 'GET',
-        dataType: 'json',
-
-        success: function (response) {
-          $('#loader').hide();
-          $('#updateModal').fadeOut(() => {
-            $('#otpModal').fadeIn().css('display', 'flex');
-          });
-        },
-        error: function (xhr, status, error) {
-          $('#loader').hide();
-          $('#sendOtpButton').prop('disabled', false);
-          console.error('Error:', error);
-          console.error('Error:', error);
-        }
+          if (pastedData) {
+            $(".otp-input").each(function (index) {
+              if (pastedData[index]) {
+                $(this).val(pastedData[index]);
+              }
+            });
+          }
+        });
       });
 
-    }
+      function showUpdateModal() {
+        loadEmails();
+      }
 
-    function verifyOTP() {
+      function loadEmails() {
+        $.ajax({
+          url: "/get-admin-email",
+          method: "GET",
+          dataType: "json",
+          success: function (response) {
+            $("#currentEmail").text("");
 
-      const enteredOTP = $('.otp-input')
-        .map(function () {
-          return $(this).val();
-        })
-        .get()
-        .join('');
+            if (response.status == true) {
+              $("#currentEmail").text(response.admin.email);
+              $("#updateModal").fadeIn().css("display", "flex");
+            }
+          },
+          error: function (xhr, status, error) {
+            $("#currentEmail").html(
+              "<p>Error loading emails. Please try again.</p>"
+            );
+            console.error("Error:", error);
+          },
+        });
+      }
 
-      const getEmail = $("#currentEmail").text()
+      function closeModal(modalId) {
+        $(`#${modalId}`).fadeOut();
+      }
 
-      $('.loader').show();
-      $('#verifyOTPButtons').prop('disabled', true);
+      function sendOTP() {
+        const getEmail = $("#currentEmail").text();
+        $("#loader").show();
+        $("#sendOtpButton").prop("disabled", true);
 
-      $.ajax({
-        url: `/verify-otp?email=${getEmail}&otp=${enteredOTP}`,
-        method: 'GET',
-        dataType: 'json',
-        success: function (response) {
-          $('.loader').hide();
-          console.log(response, 'responseresponseresponseresponse');
-          if (response.status) {
+        $.ajax({
+          url: `/get-admin-email-otp?email=${getEmail}`,
+          method: "GET",
+          dataType: "json",
 
-            $('#otpMessage')
-              .text('OTP verified successfully')
-              .removeClass()
-              .addClass('message success');
+          success: function (response) {
+            $("#loader").hide();
+            $("#updateModal").fadeOut(() => {
+              $("#otpModal").fadeIn().css("display", "flex");
+            });
+          },
+          error: function (xhr, status, error) {
+            $("#loader").hide();
+            $("#sendOtpButton").prop("disabled", false);
+            console.error("Error:", error);
+            console.error("Error:", error);
+          },
+        });
+      }
 
-            setTimeout(() => {
-              $('#otpModal').fadeOut(() => {
-                $('#newEmailModal').fadeIn().css('display', 'flex');
-              });
+      function verifyOTP() {
+        const enteredOTP = $(".otp-input")
+          .map(function () {
+            return $(this).val();
+          })
+          .get()
+          .join("");
+
+        const getEmail = $("#currentEmail").text();
+
+        $(".loader").show();
+        $("#verifyOTPButtons").prop("disabled", true);
+
+        $.ajax({
+          url: `/verify-otp?email=${getEmail}&otp=${enteredOTP}`,
+          method: "GET",
+          dataType: "json",
+          success: function (response) {
+            $(".loader").hide();
+            if (response.status) {
+              $("#otpMessage")
+                .text("OTP verified successfully")
+                .removeClass()
+                .addClass("message success");
 
               setTimeout(() => {
-                window.location.href = '/';
-              }, 4000);
+                $("#otpModal").fadeOut(() => {
+                  $("#newEmailModal").fadeIn().css("display", "flex");
+                });
 
-            }, 1000);
+                setTimeout(() => {
+                  window.location.href = "/";
+                }, 4000);
+              }, 1000);
+            } else {
+              $(".otp-input").map(function () {
+                return $(this).val("");
+              });
+              $("#otpMessage")
+                .text("Invalid OTP. Please try again")
+                .removeClass()
+                .addClass("message error");
+            }
+          },
+          error: function (xhr, status, error) {
+            $(".loader").hide();
+            $("#verifyOTPButtons").prop("disabled", true);
+            console.error("Error:", error);
+            console.error("Error:", error);
+          },
+        });
 
-          } else {
-            $('.otp-input')
-              .map(function () {
-                return $(this).val('');
-              })
-            $('#otpMessage')
-              .text('Invalid OTP. Please try again')
-              .removeClass()
-              .addClass('message error');
+        if (enteredOTP === generatedOTP) {
+          $("#otpMessage")
+            .text("OTP verified successfully")
+            .removeClass()
+            .addClass("message success");
+
+          setTimeout(() => {
+            $("#otpModal").fadeOut(() => {
+              $("#newEmailModal").fadeIn().css("display", "flex");
+            });
+          }, 1000);
+        } else {
+          $("#otpMessage")
+            .text("Invalid OTP. Please try again")
+            .removeClass()
+            .addClass("message error");
+        }
+      }
+
+      function updateEmail() {
+        const newEmail = $("#newEmail").val();
+        if (newEmail && newEmail.includes("@")) {
+          $("#updateMessage")
+            .text("Email updated successfully")
+            .removeClass()
+            .addClass("message success");
+
+          $("#currentEmail").text(`Current email: ${newEmail}`);
+
+          setTimeout(() => {
+            $("#newEmailModal").fadeOut();
+          }, 1500);
+        } else {
+          $("#updateMessage")
+            .text("Please enter a valid email address")
+            .removeClass()
+            .addClass("message error");
+        }
+      }
+
+      function showForm(formId) {
+        document
+          .querySelectorAll(".form-container")
+          .forEach((form) => form.classList.remove("active"));
+        document.getElementById(formId).classList.add("active");
+
+        document
+          .querySelectorAll(".tab-button")
+          .forEach((button) => button.classList.remove("active"));
+        const activeButton = Array.from(
+          document.querySelectorAll(".tab-button")
+        ).find(
+          (button) =>
+            button.textContent.trim() ===
+            (formId === "employeeForm" ? "Employee Login" : "Admin Login")
+        );
+        activeButton.classList.add("active");
+      }
+
+      $(window).on("click", function (event) {
+        $(".modal").each(function () {
+          if (event.target === this) {
+            $(this).fadeOut();
           }
-
-        },
-        error: function (xhr, status, error) {
-          $('.loader').hide();
-          $('#verifyOTPButtons').prop('disabled', true);
-          console.error('Error:', error);
-          console.error('Error:', error);
-        }
+        });
       });
-
-      if (enteredOTP === generatedOTP) {
-        $('#otpMessage')
-          .text('OTP verified successfully')
-          .removeClass()
-          .addClass('message success');
-
-        setTimeout(() => {
-          $('#otpModal').fadeOut(() => {
-            $('#newEmailModal').fadeIn().css('display', 'flex');
-          });
-        }, 1000);
-      } else {
-        $('#otpMessage')
-          .text('Invalid OTP. Please try again')
-          .removeClass()
-          .addClass('message error');
-      }
-    }
-
-    function updateEmail() {
-      const newEmail = $('#newEmail').val();
-      if (newEmail && newEmail.includes('@')) {
-        $('#updateMessage')
-          .text('Email updated successfully')
-          .removeClass()
-          .addClass('message success');
-
-        $('#currentEmail').text(`Current email: ${newEmail}`);
-
-        setTimeout(() => {
-          $('#newEmailModal').fadeOut();
-        }, 1500);
-      } else {
-        $('#updateMessage')
-          .text('Please enter a valid email address')
-          .removeClass()
-          .addClass('message error');
-      }
-    }
-
-    $(window).on('click', function (event) {
-      $('.modal').each(function () {
-        if (event.target === this) {
-          $(this).fadeOut();
-        }
-      });
-    });
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <%- console.log("datadatadatadatadatadata",data) %>
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Add Employee</h3>
+            </div>
+            <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add New Employee</h4>
+                  <form
+                    class="forms-sample"
+                    action="/admin/post-all-employees"
+                    method="POST"
+                    enctype="multipart/form-data"
+                  >
+                    <div class="form-group">
+                      <label for="employeeName">Employee Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="employeeName"
+                        id="employeeName"
+                        placeholder="Employee Name"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label>Employee Image</label>
+                      <div class="input-group col-xs-12">
+                        <input
+                          type="file"
+                          name="employeeImage"
+                          class="form-control file-upload-info"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="employeeEmail">Employee Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        name="employeeEmail"
+                        id="employeeEmail"
+                        placeholder="Employee Email"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="employeeRole">Select Employee Role</label>
+                      <select
+                        class="form-control"
+                        name="employeeRole"
+                        id="employeeRole"
+                        required
+                      >
+                        <option value="" disabled selected>
+                          Select a role
+                        </option>
+                        <% data.forEach(function(role) { %>
+                        <option value="<%= role._id %>">
+                          <%= role.roleName %>
+                        </option>
+                        <% }); %>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">
+                      Submit
+                    </button>
+                    <a class="btn btn-dark" href="/admin/allUserListing"
+                      >Cancel</a
+                    >
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include("../partials/_footer.ejs") %>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

@@ -139,7 +139,6 @@ router.post('/post-package-theme', upload('/package-theme').single('packageTheme
 router.put('/packageTheme/status/:id', adminController.updatePackageTheme);
 
 // Flight tickets mail template API
-router.get("/ticketsDetailsMail", adminController.ticketsMailDetails);
 router.get('/delete-package-theme/:id', adminController.deletePackageTheme);
 
 // Social Media Link API
@@ -169,6 +168,33 @@ router.get("/settingListing", adminController.settingListing);
 router.get("/add-setting-details", adminController.addSettingDetails);
 router.post('/post-setting-details', upload('/setting-image').single('valueContent'), adminController.postSettingDetails);
 router.get('/delete-setting-listing/:id', adminController.deleteSettingListing);
+
+// Roles API
+router.get("/rolesListing", adminController.rolesListing);
+router.get("/add-role-name", adminController.addRoleName);
+router.post('/post-roles-name', adminController.postRolesName);
+router.get('/delete-particular-role/:id', adminController.deleteParticularRole);
+
+// Permission API
+router.get("/permissionListing", adminController.permissionListing);
+router.get("/add-permission-name", adminController.addPermissionName);
+router.post('/post-permission-name', adminController.postPermissionName);
+router.get('/delete-particular-permission/:id', adminController.deleteParticularPermission);
+
+// Role And Permission API
+router.get("/roleAndPermissionListing/:id", adminController.roleAndPermissionListing);
+router.post("/save-role-permission", adminController.saveRoleAndPermission);
+
+//  User / Employee API
+router.get("/allUserListing", adminController.allUserListing);
+router.get("/emailTemplateOfPassword/:id", adminController.emailTemplateOfPassword);
+router.get("/addUsers", adminController.addUsers);
+router.post('/post-all-employees', upload('/employee-image').single('employeeImage'), adminController.postAllEmployee);
+router.get('/delete-particular-employee/:id', adminController.deleteParticularEmployee);
+
+// user Permission API
+router.get("/particularUsersPermission/:id", adminController.particularUserPermission);
+router.post("/post-particular-user-permission", adminController.postParticularUserPermission)
 
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
