@@ -1,324 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flight Ticket</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <style>
       body {
-        font-family: "Arial", sans-serif;
-        background: #f0f0f0;
-        margin: 0;
-        padding: 20px;
+        background-color: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
       .ticket-container {
         max-width: 800px;
-        margin: 0 auto;
-      }
-      .ticket {
+        margin: 30px auto;
         background: white;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        margin-bottom: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         overflow: hidden;
       }
       .ticket-header {
-        background: linear-gradient(135deg, #1a365d, #2c5282);
+        background: linear-gradient(135deg, #2980b9, #3498db);
         color: white;
         padding: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
-      .airline-logo {
-        font-size: 28px;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 2px;
+      .ticket-body {
+        padding: 25px;
       }
-      .booking-ref {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-size: 14px;
-      }
-      .flight-info {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
-        padding: 30px;
-        background: #f8fafc;
-        position: relative;
-      }
-      .passenger-card {
-        background: white;
+      .passenger-section {
+        background-color: #f8f9fa;
         border-radius: 10px;
-        padding: 20px;
-        margin: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #e1e4e8;
       }
-      .passenger-header {
+      .flight-route {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 2px solid #e2e8f0;
-      }
-      .passenger-details {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
         margin-bottom: 20px;
+        background-color: #f1f3f5;
+        padding: 15px;
+        border-radius: 10px;
       }
-      .detail-item {
-        padding: 8px;
-        background: #f8fafc;
-        border-radius: 5px;
+      .flight-details {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 10px;
       }
-      .detail-label {
-        font-size: 12px;
-        color: #64748b;
-        margin-bottom: 4px;
-      }
-      .detail-value {
-        font-weight: bold;
-        color: #1a365d;
+      .price-breakdown {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
       }
       .barcode-section {
         text-align: center;
+        background-color: #f1f3f5;
         padding: 15px;
-        background: #f8fafc;
-        border-radius: 8px;
-      }
-      .fees {
-        margin: 20px;
-        padding: 20px;
-        background: #f8fafc;
         border-radius: 10px;
       }
-      .fee-table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-      .fee-table th,
-      .fee-table td {
-        padding: 12px;
-        border-bottom: 1px solid #e2e8f0;
-      }
-      .fee-table tr:last-child td {
-        border-top: 2px solid #2c5282;
-        font-weight: bold;
-        color: #1a365d;
-      }
-      .flight-path {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 0;
-        color: #2c5282;
-        font-weight: bold;
-      }
-      .airport-code {
-        padding: 10px 20px;
-        background: #e2e8f0;
+      .passenger-badge {
+        background-color: #2980b9;
+        color: white;
+        padding: 5px 10px;
         border-radius: 5px;
+        margin-bottom: 10px;
       }
-      .flight-line {
-        height: 2px;
-        width: 100px;
-        background: #2c5282;
-        margin: 0 15px;
-        position: relative;
+      .fee-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
       }
-      .flight-line::after {
-        content: "✈️";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 0 10px;
+      .fee-total {
+        font-weight: bold;
+        border-top: 1px solid #dee2e6;
+        padding-top: 10px;
       }
-      .info-section {
-        margin: 20px;
-        padding: 20px;
-        background: #fffbeb;
-        border-left: 4px solid #eab308;
-        border-radius: 0 10px 10px 0;
+      .barcode-img {
+        max-width: 100%;
+        height: 50px;
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js"></script>
   </head>
   <body>
-    <div class="ticket-container">
-      <div class="ticket">
+    <div class="container">
+      <div class="ticket-container">
         <div class="ticket-header">
-          <div class="airline-logo">SKYWAYS AIRLINES</div>
-          <div class="booking-ref">Booking Reference: SK284692</div>
-        </div>
-
-        <div class="flight-path">
-          <span class="airport-code">JFK</span>
-          <div class="flight-line"></div>
-          <span class="airport-code">LHR</span>
-        </div>
-
-        <div class="flight-info">
           <div>
-            <h3>DEPARTURE</h3>
-            <p>New York (JFK)</p>
-            <p>Terminal 4</p>
-            <p>15 NOV 2024 • 10:30 AM</p>
+            <h2 class="mb-0"><%= airline %></h2>
+            <small>Electronic Ticket</small>
           </div>
-          <div>
-            <h3>FLIGHT DETAILS</h3>
-            <p>Flight: SK 456</p>
-            <p>Duration: 7h 15m</p>
-            <p>Aircraft: Boeing 787</p>
-            <p>Class: Economy</p>
-          </div>
-          <div>
-            <h3>ARRIVAL</h3>
-            <p>London (LHR)</p>
-            <p>Terminal 5</p>
-            <p>15 NOV 2024 • 10:45 PM</p>
+          <div class="text-end">
+            <strong>Booking Reference</strong>
+            <p class="mb-0"><%= bookingReference %></p>
           </div>
         </div>
 
-        <!-- Passenger 1 -->
-        <div class="passenger-card">
-          <div class="passenger-header">
-            <h3>PASSENGER 1</h3>
-            <div>TICKET: 045-7896542</div>
-          </div>
-          <div class="passenger-details">
-            <div class="detail-item">
-              <div class="detail-label">Name</div>
-              <div class="detail-value">SMITH, JOHN</div>
+        <div class="ticket-body">
+          <div class="flight-route">
+            <div>
+              <h4><%= flight.from %></h4>
+              <p class="mb-0">Departure: <%= flight.departure %></p>
             </div>
-            <div class="detail-item">
-              <div class="detail-label">Seat</div>
-              <div class="detail-value">23A</div>
+            <div class="text-center">
+              <span>→</span>
+              <br />
+              <small><%= flight.duration %></small>
             </div>
-            <div class="detail-item">
-              <div class="detail-label">Baggage</div>
-              <div class="detail-value">23KG</div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">Gate</div>
-              <div class="detail-value">B12</div>
+            <div class="text-end">
+              <h4><%= flight.to %></h4>
+              <p class="mb-0">Arrival: <%= flight.arrival %></p>
             </div>
           </div>
-          <div class="barcode-section">
-            <img src="/api/placeholder/250/80" alt="Passenger 1 Barcode" />
-            <p>*045-7896542-23A*</p>
-          </div>
-        </div>
 
-        <!-- Passenger 2 -->
-        <div class="passenger-card">
-          <div class="passenger-header">
-            <h3>PASSENGER 2</h3>
-            <div>TICKET: 045-7896543</div>
+          <div class="passenger-section">
+            <% passengers.forEach((passenger, index) => { %>
+            <div class="passenger-badge">Passenger <%= index + 1 %></div>
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Name:</strong>
+                <p><%= passenger.name %></p>
+              </div>
+              <div class="col-md-4">
+                <strong>Age/Gender:</strong>
+                <p><%= passenger.age %> / <%= passenger.gender %></p>
+              </div>
+              <div class="col-md-4">
+                <strong>Seat:</strong>
+                <p><%= passenger.seat %></p>
+              </div>
+            </div>
+            <div class="barcode-section">
+              <img
+                id="barcode-<%= index %>"
+                alt="Passenger Barcode"
+                class="barcode-img"
+              />
+              <p class="mb-0">Scan for <%= passenger.name %> Check-in</p>
+            </div>
+            <% }); %>
           </div>
-          <div class="passenger-details">
-            <div class="detail-item">
-              <div class="detail-label">Name</div>
-              <div class="detail-value">SMITH, EMMA</div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">Seat</div>
-              <div class="detail-value">23B</div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">Baggage</div>
-              <div class="detail-value">23KG</div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">Gate</div>
-              <div class="detail-value">B12</div>
-            </div>
-          </div>
-          <div class="barcode-section">
-            <img src="/api/placeholder/250/80" alt="Passenger 2 Barcode" />
-            <p>*045-7896543-23B*</p>
-          </div>
-        </div>
 
-        <!-- Passenger 3 -->
-        <div class="passenger-card">
-          <div class="passenger-header">
-            <h3>PASSENGER 3</h3>
-            <div>TICKET: 045-7896544</div>
-          </div>
-          <div class="passenger-details">
-            <div class="detail-item">
-              <div class="detail-label">Name</div>
-              <div class="detail-value">SMITH, OLIVER</div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">Seat</div>
-              <div class="detail-value">23C</div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">Baggage</div>
-              <div class="detail-value">23KG</div>
-            </div>
-            <div class="detail-item">
-              <div class="detail-label">Gate</div>
-              <div class="detail-value">B12</div>
+          <div class="flight-details mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Flight Number:</strong>
+                <p><%= flight.number %></p>
+              </div>
+              <div class="col-md-4">
+                <strong>Aircraft:</strong>
+                <p>Boeing 737</p>
+              </div>
+              <div class="col-md-4">
+                <strong>Class:</strong>
+                <p><%= flight.class %></p>
+              </div>
             </div>
           </div>
-          <div class="barcode-section">
-            <img src="/api/placeholder/250/80" alt="Passenger 3 Barcode" />
-            <p>*045-7896544-23C*</p>
-          </div>
-        </div>
 
-        <div class="fees">
-          <h3>FEE BREAKDOWN</h3>
-          <table class="fee-table">
-            <tr>
-              <td>Base Fare (3 passengers)</td>
-              <td>$1,500.00</td>
-            </tr>
-            <tr>
-              <td>Taxes and Fees</td>
-              <td>$225.00</td>
-            </tr>
-            <tr>
-              <td>Baggage Fees (2 extra bags)</td>
-              <td>$120.00</td>
-            </tr>
-            <tr>
-              <td>Seat Selection Fee</td>
-              <td>$90.00</td>
-            </tr>
-            <tr>
-              <td>Insurance</td>
-              <td>$75.00</td>
-            </tr>
-            <tr>
-              <td>Total</td>
-              <td>$2,010.00</td>
-            </tr>
-          </table>
-        </div>
-
-        <div class="info-section">
-          <h3>Important Information</h3>
-          <ul>
-            <li>
-              Please arrive at the airport at least 3 hours before departure
-            </li>
-            <li>
-              Each passenger is allowed one carry-on bag (8kg) and one personal
-              item
-            </li>
-            <li>Checked baggage allowance: 23kg per person</li>
-            <li>Gate closes 30 minutes before departure</li>
-            <li>Present this ticket with valid ID at check-in</li>
-          </ul>
+          <div class="price-breakdown mb-3">
+            <h5>Fee Breakdown</h5>
+            <div class="fee-item">
+              <span>Base Fare (<%= passengers.length %> passengers)</span>
+              <span>₹<%= price.baseFare %></span>
+            </div>
+            <div class="fee-item">
+              <span>Meals</span>
+              <span>₹<%= price.meals %></span>
+            </div>
+            <div class="fee-item">
+              <span>Seat Selection Fee</span>
+              <span>₹<%= price.seatPrice %></span>
+            </div>
+            <% if (price.discount > 0) { %>
+            <div class="fee-item">
+              <span>Discount</span>
+              <span>₹<%= price.discount %></span>
+            </div>
+            <% } %>
+            <div class="fee-item fee-total">
+              <span class="text-danger">Total Amount</span>
+              <span class="text-danger">₹<%= price.total %></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const passengers = <%- JSON.stringify(passengers) %>;
+
+        passengers.forEach((passenger, index) => {
+          const barcodeValue = passenger.id || `${passenger.name}`;
+          const barcodeImg = document.getElementById(`barcode-${index}`);
+
+          if (barcodeImg) {
+            barcodeImg.src = generateBarcodeSVG(barcodeValue);
+          }
+        });
+      });
+
+      function generateBarcodeSVG(value) {
+        const canvas = document.createElement('canvas');
+
+        JsBarcode(canvas, value, {
+          format: "CODE128",
+          width: 2,
+          height: 50,
+          displayValue: true
+        });
+
+        return canvas.toDataURL('image/svg+xml');
+      }
+    </script>
   </body>
 </html>

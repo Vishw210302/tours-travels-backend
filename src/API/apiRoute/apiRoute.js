@@ -4,10 +4,10 @@ const apiController = require('../apiController/Controller');
 
 
 // razorpay API
-const { createPaymentIntent, veryFyPayment } = require("../apiController/payments.controller");
-const apicontroller = require('../apiController/Controller');
+const { createPaymentIntent, veryFyPayment, getPaymentDetails} = require("../apiController/payments.controller");
 apiRoute.post("/create-payment-intent", createPaymentIntent);
 apiRoute.post("/verifyPayment", veryFyPayment);
+apiRoute.post("/get-payment-intent", getPaymentDetails);
 
 // Package API
 apiRoute.post('/add-packagessss', apiController.addPackages);
@@ -143,11 +143,11 @@ apiRoute.get('/get-all-coupon-code-active', apiController.getAllCouponCodeActive
 apiRoute.delete('/delete-coupon-code-hotel/:id', apiController.deleteCouponCodeHotel);
 
 // Hotel Listing API 
-apiRoute.get('/get-all-hotel-listing', apicontroller.getAllHotelListing)
-apiRoute.get('/get-particular-hotel-listing/:city', apicontroller.getParticularHotelListing)
+apiRoute.get('/get-all-hotel-listing', apiController.getAllHotelListing)
+apiRoute.get('/get-particular-hotel-listing/:city', apiController.getParticularHotelListing)
 
 // Setting API for frontend
-apiRoute.get('/get-setting-listing', apicontroller.getAllSetingListing)
+apiRoute.get('/get-setting-listing', apiController.getAllSetingListing)
 apiRoute.delete('/delete-setting-listing/:id', apiController.deleteSettingListing);
 
 // Flight Tickets Get API
