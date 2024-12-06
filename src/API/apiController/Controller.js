@@ -39,6 +39,7 @@ const Setting = require("../../schema/SettingSchema/SettingSchema");
 const roles = require("../../schema/rolesSchema/roleSchema");
 const permission = require("../../schema/permissionNameSchema/permissionNameSchema");
 const employees = require("../../schema/allEmployeeSchema/allEmployeeSchema");
+const { default: axios } = require("axios");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
