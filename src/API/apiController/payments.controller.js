@@ -22,6 +22,24 @@ exports.createPaymentIntent = async (req, res) => {
     }
 }
 
+exports.getPaymentDetails = async (req, res) => {
+
+    const { id } = req.body; 
+
+    if (!id) {
+      return res.status(400).json({ error: 'Payment ID is required' });
+    }
+  
+    try {
+      const paymentIntent = await stripe.paymentIntents.retrieve(id);
+      res.json(paymentIntent); 
+    } catch (error) {
+      console.error('Error retrieving payment intent:', error);
+      res.status(500).json({ error: 'Failed to retrieve payment intent' });
+    }
+
+}
+
 exports.veryFyPayment = async (req, res) => {
     const { order_id, payment_id, signature } = req.body;
 
