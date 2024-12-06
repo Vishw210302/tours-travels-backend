@@ -15204,6 +15204,13 @@ input[type="button"].btn-block {
   list-style: none;
 }
 
+.main_logo {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  margin-top: 10px;
+}
+
 .nav-link {
   display: block;
   padding: 0.5rem 1rem;

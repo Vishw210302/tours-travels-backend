@@ -36,6 +36,9 @@ const hotelTestimonial = require("../../schema/hotelTestimonialReviewSchema/hote
 const hotelCouponCode = require("../../schema/hotelCouponCodeSchema/hotelCouponCodeSchema");
 const hotelListing = require("../../schema/hotelListingSchema/hotelListingSchema");
 const Setting = require("../../schema/SettingSchema/SettingSchema");
+const roles = require("../../schema/rolesSchema/roleSchema");
+const permission = require("../../schema/permissionNameSchema/permissionNameSchema");
+const employees = require("../../schema/allEmployeeSchema/allEmployeeSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -163,7 +166,6 @@ apicontroller.getItenaryByCategories = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
-
 
 apicontroller.getTestimonialListing = async (req, res) => {
   try {
@@ -1736,6 +1738,73 @@ apicontroller.regenerateFlight = async () => {
   }
   console.log("Past Flights", pastFlights);
   return pastFlights;
+}
+
+apicontroller.getAllRolesListing = async (req, res) => {
+  try {
+    const allRolesListing = await roles.find();
+    res.status(200).json({ status: true, data: allRolesListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getRoleDataById = async (req, res) => {
+  try {
+    let roleId = req.params.id
+    const roleDataById = await roles.findById(roleId);
+    res.status(200).json({ status: true, data: roleDataById });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteParticularRole = async (req, res) => {
+  try {
+    const deleteParticularRoles = await roles.findById(req.params.id);
+    await deleteParticularRoles.remove();
+    res.status(200).json({ status: true, message: 'role deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getAllPermissionListing = async (req, res) => {
+  try {
+    const allPermissionListing = await permission.find();
+    res.status(200).json({ status: true, data: allPermissionListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteParticularPermission = async (req, res) => {
+  try {
+    const deleteParticularPermission = await permission.findById(req.params.id);
+    await deleteParticularPermission.remove();
+    res.status(200).json({ status: true, message: 'Permission deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.getAllEmployeeListing = async (req, res) => {
+  try {
+    const allEmployeeListing = await employees.find().populate('employeeRole');
+    res.status(200).json({ status: true, data: allEmployeeListing });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.deleteParticularEmployee = async (req, res) => {
+  try {
+    const deleteParticularEmployee = await employees.findById(req.params.id);
+    await deleteParticularEmployee.remove();
+    res.status(200).json({ status: true, message: 'Employee deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 }
 
 module.exports = apicontroller;

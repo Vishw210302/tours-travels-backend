@@ -26,6 +26,8 @@ router.get('/auth/google/callback', (req, res, next) => {
 	})(req, res, next);
 });
 
+router.post("/employee-loginPage" , authController.employeeLogin)
+
 router.get('/success', authController.successGoogleLogin);
 
 router.get('/failure', authController.failureGoogleLogin);

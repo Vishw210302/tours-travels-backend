@@ -7,14 +7,13 @@ let isAuthenticated = (req, res, next) => {
 
     try {
         const token = req.cookies.token;
-
         if (!token || token == undefined) {
             return res.redirect("/");
         }
 
 
         jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-
+            
             if (err) {
                 return res.redirect("/");
             }

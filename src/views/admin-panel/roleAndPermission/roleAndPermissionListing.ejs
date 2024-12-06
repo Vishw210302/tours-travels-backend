@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+    <style>
+      /* Your existing CSS styles */
+      .permissions-section {
+        border-radius: 8px;
+        padding: 20px;
+      }
+      .permission-category {
+        margin-bottom: 20px;
+        border-bottom: 1px solid #e9ecef;
+        padding-bottom: 15px;
+      }
+      .permission-category h5 {
+        margin-bottom: 15px;
+        font-size: 18px;
+        color: #343a40;
+      }
+      .permission-checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .permission-checkbox {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        margin-bottom: 10px;
+      }
+      .permission-checkbox input {
+        margin-right: 8px;
+      }
+      .role-selection .card-header {
+        font-weight: 600;
+        font-size: 18px;
+        background-color: #007bff;
+        color: white;
+      }
+      .role-selection .list-group-item {
+        cursor: pointer;
+        background-color: #343a40;
+        color: white;
+        transition: all 0.3s ease;
+      }
+      .role-selection .list-group-item:hover {
+        background-color: #007bff;
+        color: white;
+      }
+      .role-selection .list-group-item.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+      }
+      label {
+        margin: 0;
+      }
+      .page-header h3 {
+        font-size: 24px;
+        font-weight: bold;
+        color: #007bff;
+      }
+      .breadcrumb-item a {
+        color: #007bff;
+        text-decoration: none;
+      }
+      .breadcrumb-item.active {
+        color: #6c757d;
+      }
+      .save-btn {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background-color: #28a745;
+        color: white;
+        font-weight: 600;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+      .save-btn:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h6 class="page-title">Roles and Permissions Management</h6>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin">Dashboard</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Roles and Permissions
+                  </li>
+                </ol>
+              </nav>
+            </div>
+
+            <div>
+              <form action="/admin/save-role-permission" method="post">
+                <div class="card">
+                  <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="m-0" style="font-size: 15px">
+                      Permissions for
+                      <strong class="text-uppercase"><%= roleDetail?.roleName || "" %></strong> Role
+                    </h4>
+                    <button class="save-btn" type="submit">
+                      <i class="fa-solid fa-save"></i>
+                      Save Permissions
+                    </button>
+                  </div>
+                  <input
+                    type="hidden"
+                    name="roleId"
+                    value="<%= roleDetail?._id || "" %>"
+                  />
+                  <div class="card-body permissions-section">
+                    <% 
+                      function extractCategory(permissionName) {
+                        const words = permissionName.trim().split(" ");
+                        return words.slice(1).join(" ").trim();
+                      }
+                      const groupedPermissions = {};
+                      data.forEach((permission) => {
+                        const category = extractCategory(permission.permissionName);
+                        if (!groupedPermissions[category]) {
+                          groupedPermissions[category] = [];
+                        }
+                        groupedPermissions[category].push(permission);
+                      });
+
+                      Object.keys(groupedPermissions).forEach((category) => {
+                    %>
+                    <div class="permission-category">
+                      <div class="d-flex align-items-center mb-2" style="gap: 10px;">
+                        <h6 class="text-white m-0 font-weight-bold">
+                          <%= category %>
+                        </h6>
+                        <p class="fs-4 m-0">Permissions</p>
+                      </div>
+                      <div class="permission-checkbox-group">
+                        <% 
+                          groupedPermissions[category]?.forEach((permission) => {
+                            const isChecked = getRoleByPermission?.permissionId.some(
+                              (id) => id.toString() === permission?._id.toString()
+                            );
+                        %>
+                        <div class="permission-checkbox">
+                          <input
+                            type="checkbox"
+                            name="permissionId[]"
+                            value="<%= permission._id %>"
+                            id="<%= permission._id %>"
+                            <%= isChecked ? "checked" : "" %>
+                          />
+                          <label for="<%= permission._id %>">
+                            <%= permission.permissionName.trim() %>
+                          </label>
+                        </div>
+                        <% }); %>
+                      </div>
+                    </div>
+                    <% }); %>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <%- include("../partials/_footer.ejs") %>
+        </div>
+      </div>
+    </div>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

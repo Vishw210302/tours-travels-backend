@@ -153,4 +153,17 @@ apiRoute.delete('/delete-setting-listing/:id', apiController.deleteSettingListin
 // Flight Tickets Get API
 apiRoute.post("/addFlightTicketsData", apiController.addFlightTicketsData)
 
+// Roles API
+apiRoute.get('/get-all-roles-listing', apicontroller.getAllRolesListing)
+apiRoute.get('/get-role-data/:id', apicontroller.getRoleDataById)
+apiRoute.delete('/delete-particular-role/:id', apiController.deleteParticularRole);
+
+//  Permission API
+apiRoute.get('/get-all-permission-listing', apicontroller.getAllPermissionListing)
+apiRoute.delete('/delete-particular-permission/:id', apiController.deleteParticularPermission);
+
+// Employee API
+apiRoute.get('/get-all-employee-listing', apicontroller.getAllEmployeeListing)
+apiRoute.delete('/delete-particular-employee/:id', apiController.deleteParticularEmployee);
+
 module.exports = apiRoute;
