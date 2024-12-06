@@ -36,7 +36,7 @@ const hotelTestimonial = require("../../schema/hotelTestimonialReviewSchema/hote
 const hotelCouponCode = require("../../schema/hotelCouponCodeSchema/hotelCouponCodeSchema");
 const hotelListing = require("../../schema/hotelListingSchema/hotelListingSchema");
 const Setting = require("../../schema/SettingSchema/SettingSchema");
-const { default: axios } = require("axios");
+
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
