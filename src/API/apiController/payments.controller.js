@@ -3,9 +3,7 @@ require('dotenv').config()
 const stripe = Stripe(process.env.STRIPE_KEY);
 
 exports.createPaymentIntent = async (req, res) => {
-
     const { amount, currency, description } = req.body;
-
     try {
         const paymentIntent = await stripe.paymentIntents.create({
             amount,
@@ -23,19 +21,18 @@ exports.createPaymentIntent = async (req, res) => {
 }
 
 exports.getPaymentDetails = async (req, res) => {
-
-    const { id } = req.body; 
+    const { id } = req.body;
 
     if (!id) {
-      return res.status(400).json({ error: 'Payment ID is required' });
+        return res.status(400).json({ error: 'Payment ID is required' });
     }
-  
+
     try {
-      const paymentIntent = await stripe.paymentIntents.retrieve(id);
-      res.json(paymentIntent); 
+        const paymentIntent = await stripe.paymentIntents.retrieve(id);
+        res.json(paymentIntent);
     } catch (error) {
-      console.error('Error retrieving payment intent:', error);
-      res.status(500).json({ error: 'Failed to retrieve payment intent' });
+        console.error('Error retrieving payment intent:', error);
+        res.status(500).json({ error: 'Failed to retrieve payment intent' });
     }
 
 }

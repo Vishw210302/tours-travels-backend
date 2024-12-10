@@ -2,7 +2,7 @@
   <div
     class="navbar-menu-wrapper flex-grow d-flex justify-content-end align-items-stretch"
   >
-    <div class="dropdown">
+    <div class="dropdown mt-1">
       <div
         class="dropdown-toggle"
         data-bs-toggle="dropdown"
@@ -12,8 +12,9 @@
         <div class="d-flex" style="gap: 10px">
           <div>
             <img
-              src="/images/dashboard/profile_image.jpg"
+              src="/uploads/employee-image/"
               alt="profile_image"
+              id="profileImage"
               style="
                 height: 65px;
                 width: 65px;
@@ -24,8 +25,8 @@
             />
           </div>
           <div class="text-white">
-            <p class="mb-0 mt-3 fs-5">Vishw Prajapati</p>
-            <p class="m-0 text-white-50">Admin</p>
+            <p class="mb-0 mt-3 fs-5" id="userName"></p>
+            <p class="m-0 text-white-50" id="userRole"></p>
           </div>
         </div>
       </div>
@@ -36,8 +37,9 @@
       >
         <div class="py-2">
           <a
+            id="profileLink"
             class="dropdown-item d-flex align-items-center border-bottom p-2"
-            href="/admin/profile"
+            href="#"
           >
             <span>Profile</span>
           </a>
@@ -52,6 +54,7 @@
           <a
             class="dropdown-item d-flex align-items-center border-bottom p-2"
             href="/logout"
+            onclick="logout()"
           >
             <span>Logout</span>
           </a>
@@ -129,11 +132,46 @@
   }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
+  function logout() {
+    localStorage.removeItem("user");
+  }
+  $(document).ready(function () {
+    const userData = localStorage.getItem("user");
+
+    function setData(user) {
+      $("#userName").text(user.employeeName);
+      $("#userRole").text(user.employeeRole.roleName);
+      $("#profileImage").attr(
+        "src",
+        `/uploads/employee-image/${user.employees}`
+      );
+      $("#profileLink").attr(
+        "href",
+        `/admin/user-personal-profile-details/${user._id}`
+      );
+    }
+
+    if (userData) {
+      const data = JSON.parse(userData);
+      setData(data);
+    } else {
+      $.ajax({
+        url: "/admin/user",
+        success: function (result) {
+          localStorage.setItem("user", JSON.stringify(result?.user));
+          setData(result?.user);
+        },
+      });
+    }
+  });
+
   document.addEventListener("DOMContentLoaded", function () {
     var dropdownElementList = [].slice.call(
       document.querySelectorAll(".dropdown-toggle")
     );
+
     var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
       return new bootstrap.Dropdown(dropdownToggleEl);
     });

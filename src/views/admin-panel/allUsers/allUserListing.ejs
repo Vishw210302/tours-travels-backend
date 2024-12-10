@@ -45,6 +45,7 @@
                           <th>Employees Images</th>
                           <th>Employees Name</th>
                           <th>Employees Email</th>
+                          <th>Employees Number</th>
                           <th>Employees Role</th>
                           <th>Action</th>
                         </tr>
@@ -66,9 +67,10 @@
                               "
                             />
                           </td>
-                          <td><%= data[i].employeeName %></td>
-                          <td><%= data[i].employeeEmail %></td>
-                          <td><%= data[i].employeeRole.roleName %></td>
+                          <td><%= data[i]?.employeeName %></td>
+                          <td><%= data[i]?.employeeEmail %></td>
+                          <td><%= data[i]?.employeeNumber %></td>
+                          <td><%= data[i]?.employeeRole?.roleName %></td>
                           <td>
                             <a
                               class="mr-2"

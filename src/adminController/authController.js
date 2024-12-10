@@ -4,8 +4,6 @@ const employees = require("../schema/allEmployeeSchema/allEmployeeSchema");
 const genarateToken = require("../utils/genarateToken");
 const { sendOTP } = require("../utils/sendOtp");
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const secretKey = 'your-secret-key';
 
 const authController = {};
 
@@ -32,7 +30,7 @@ authController.successGoogleLogin = async (req, res) => {
 
             if (existingAdmin.email === req.user.email) {
 
-                var token = genarateToken(existingAdmin,'admin')
+                var token = genarateToken(existingAdmin, 'admin')
                 res.cookie('token', token)
                 return res.redirect('/admin');
 
@@ -67,7 +65,7 @@ authController.employeeLogin = async (req, res) => {
             return res.status(400).json({ message: "Email and password are required" });
         }
 
-        const employee = await employees.findOne({ employeeEmail });
+        const employee = await employees.findOne({ employeeEmail }).populate('employeeRole');
         if (!employee) {
             return res.status(404).json({ message: "Employee not found" });
         }
@@ -76,8 +74,9 @@ authController.employeeLogin = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
-
         const token = genarateToken(employee, 'employee')
+
+        req.session.user = employee
         res.cookie('token', token)
 
         res.redirect("/admin")
@@ -85,7 +84,6 @@ authController.employeeLogin = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 
 authController.failureGoogleLogin = (req, res) => {
     console.log('Authentication failed');

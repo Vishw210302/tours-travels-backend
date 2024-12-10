@@ -1498,7 +1498,7 @@ apicontroller.addFlightTicketsData = async (req, res) => {
     const contactDetailsArray = await allFlightPassengerDetails(id);
     const allFilghtRelatedDetails = contactDetailsArray[0]
     // res.send(allFilghtRelatedDetails)
-    
+
     await seatUpdate()
 
     const mealTotalPrice = allFilghtRelatedDetails.mealDetails.reduce((total, meal) => {
@@ -1566,10 +1566,10 @@ apicontroller.addFlightTicketsData = async (req, res) => {
     function capitalizeFirstLetter(str) {
       if (!str) return str;
       return str
-      .toLowerCase() 
-      .split('_')    
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) 
-      .join(' '); 
+        .toLowerCase()
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
     }
 
     const ticketData = {
@@ -1622,7 +1622,7 @@ apicontroller.addFlightTicketsData = async (req, res) => {
 }
 
 const seatUpdate = () => {
-  
+
 }
 
 apicontroller.getPackageTheme = async (req, res) => {

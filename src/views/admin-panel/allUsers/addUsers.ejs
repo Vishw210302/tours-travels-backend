@@ -10,7 +10,6 @@
       <div class="container-fluid page-body-wrapper">
         <%- include("../partials/_navbar.ejs") %>
         <div class="main-panel">
-          <%- console.log("datadatadatadatadatadata",data) %>
           <div class="content-wrapper">
             <div class="page-header">
               <h3 class="page-title">Add Employee</h3>
@@ -55,6 +54,17 @@
                         name="employeeEmail"
                         id="employeeEmail"
                         placeholder="Employee Email"
+                        required
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label for="employeeNumber">Employee Number</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        name="employeeNumber"
+                        id="employeeNumber"
+                        placeholder="Employee Number"
                         required
                       />
                     </div>
