@@ -179,6 +179,7 @@ router.get('/delete-particular-role/:id', adminController.deleteParticularRole);
 router.get("/permissionListing", adminController.permissionListing);
 router.get("/add-permission-name", adminController.addPermissionName);
 router.post('/post-permission-name', adminController.postPermissionName);
+router.post('/post-multiple-permission-delete', adminController.postMultiplePermissionDelete);
 router.get('/delete-particular-permission/:id', adminController.deleteParticularPermission);
 
 // Role And Permission API
@@ -199,6 +200,10 @@ router.post("/post-particular-user-permission", adminController.postParticularUs
 // Api Routes
 router.post('/add-packages-listing', upload('/packages-Image').single('packageImage'), adminController.addPackagesListing);
 router.get('/admin-delete-package/:id', adminController.adminDeletePackages);
-// router.get('/testRoute', adminController.testRoute);
+router.get('/user', adminController.getUserData);
+
+// user Profile API
+router.get('/user-personal-profile-details/:id', adminController.getUserProfileDetails)
+router.get('/edit-user-personal-profile-details', adminController.editUserProfileDetails)
 
 module.exports = router;

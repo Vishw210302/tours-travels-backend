@@ -13,6 +13,10 @@ const allEmployeeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    employeeNumber: {
+        type: String,
+        required: true,
+    },
     employeeRole: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'roles',
@@ -22,6 +26,14 @@ const allEmployeeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    createdAt: {
+        type: Date,
+        default: new Date(),
+    },
+    deletedAt: {
+        type: Date,
+        default: null,
+    }
 });
 
 const employees = mongoose.model('employees', allEmployeeSchema);

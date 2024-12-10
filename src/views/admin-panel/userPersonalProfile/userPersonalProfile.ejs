@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+    <style>
+      body {
+        background-color: #121212;
+        color: #e0e0e0;
+        font-family: "Inter", sans-serif;
+      }
+
+      .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        background-color: #1e1e1e;
+        border-radius: 12px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        border: 1px solid #333;
+      }
+
+      .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #333;
+      }
+
+      .profile-avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 2rem;
+        border: 4px solid #4a90e2;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(74, 144, 226, 0.5);
+      }
+
+      .profile-name {
+        font-size: 30px;
+        font-weight: 700;
+        color: #4a90e2;
+        margin-bottom: 0.5rem;
+      }
+
+      .profile-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        background-color: #2a2a2a;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid #333;
+      }
+
+      .detail-label {
+        font-weight: 600;
+        color: #aaa;
+        margin-bottom: 0.3rem;
+      }
+
+      .detail-value {
+        font-size: 1rem;
+        color: #e0e0e0;
+      }
+
+      .profile-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-primary {
+        background-color: #4a90e2;
+        color: white;
+        border: 1px solid #4a90e2;
+        box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
+      }
+
+      .btn-secondary {
+        background-color: transparent;
+        color: #4a90e2;
+        border: 1px solid #4a90e2;
+      }
+
+      .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(74, 144, 226, 0.4);
+      }
+
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .modal-content {
+        background-color: #2a2a2a;
+        padding: 2.5rem;
+        border-radius: 15px;
+        width: 450px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        position: relative;
+        transform: scale(0.9);
+        transition: all 0.3s ease;
+        border: 1px solid #3a3a3a;
+      }
+
+      .modal.active .modal-content {
+        transform: scale(1);
+      }
+
+      .modal-header {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: #4a90e2;
+        text-align: center;
+        position: relative;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 1.8rem;
+        color: #aaa;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .modal-close:hover {
+        color: #4a90e2;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        color: #aaa;
+        margin-bottom: 0.7rem;
+        font-weight: 500;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+      }
+
+      .form-group button {
+        width: 100%;
+        padding: 0.9rem;
+        background-color: #4a90e2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
+      }
+
+      .form-group button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(74, 144, 226, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="profile-container">
+              <div class="profile-header">
+                <a
+                  href="/uploads/employee-image/<%= user.employees %>"
+                  target="_blank"
+                >
+                  <img
+                    src="/uploads/employee-image/<%= user.employees %>"
+                    alt="userImage"
+                    class="profile-avatar"
+                  />
+                </a>
+                <div class="profile-info">
+                  <h1 class="profile-name"><%= user.employeeName %></h1>
+                  <span class="detail-value">
+                    <%= user.employeeRole.roleName %>
+                  </span>
+                </div>
+              </div>
+
+              <div class="profile-details">
+                <div class="detail-item">
+                  <span class="detail-label">Email:- </span>
+                  <span class="detail-value"><%= user.employeeEmail %></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Phone:- </span>
+                  <span class="detail-value"><%= user.employeeNumber %></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Joined:- </span>
+                  <span class="detail-value">
+                    <%= new Date(user.createdAt).toLocaleDateString("en-GB") %>
+                  </span>
+                </div>
+              </div>
+
+              <div class="profile-actions">
+                <a href="#" class="btn btn-primary" id="editProfileBtn"
+                  >Edit Profile</a
+                >
+                <a href="#" class="btn btn-secondary" id="changePasswordBtn"
+                  >Change Password</a
+                >
+              </div>
+            </div>
+          </div>
+          <%- include("../partials/_footer.ejs") %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editProfileModal">
+      <div class="modal-content">
+        <span class="modal-close" id="closeEditProfile">&times;</span>
+        <h2 class="modal-header">Edit Profile</h2>
+        <form id="editProfileForm">
+          <div class="form-group">
+            <label for="editPhone">Phone Number</label>
+            <input
+              type="text"
+              id="editPhone"
+              placeholder="Enter new phone number"
+              value=""
+            />
+          </div>
+          <div class="form-group">
+            <label for="editImage">Profile Image</label>
+            <input type="file" id="editImage" />
+          </div>
+          <div class="form-group">
+            <button type="submit">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal" id="changePasswordModal">
+      <div class="modal-content">
+        <span class="modal-close" id="closeChangePassword">&times;</span>
+        <h2 class="modal-header">Change Password</h2>
+        <form>
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input
+              type="password"
+              id="currentPassword"
+              placeholder="Enter current password"
+            />
+          </div>
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input
+              type="password"
+              id="newPassword"
+              placeholder="Enter new password"
+            />
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm new password"
+            />
+          </div>
+          <div class="form-group">
+            <button type="submit">Change Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const editProfileBtn = document.getElementById("editProfileBtn");
+      const changePasswordBtn = document.getElementById("changePasswordBtn");
+      const editProfileModal = document.getElementById("editProfileModal");
+      const changePasswordModal = document.getElementById(
+        "changePasswordModal"
+      );
+      const closeEditProfile = document.getElementById("closeEditProfile");
+      const closeChangePassword = document.getElementById(
+        "closeChangePassword"
+      );
+      const editPhone = document.getElementById("editPhone");
+      const editImage = document.getElementById("editImage");
+
+      editProfileBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        editPhone.value = "<%= user.employeeNumber %>";
+        editProfileModal.classList.add("active");
+      });
+
+      changePasswordBtn.addEventListener("click", () => {
+        changePasswordModal.classList.add("active");
+      });
+
+      closeEditProfile.addEventListener("click", () => {
+        editProfileModal.classList.remove("active");
+      });
+
+      closeChangePassword.addEventListener("click", () => {
+        changePasswordModal.classList.remove("active");
+      });
+
+      window.addEventListener("click", (event) => {
+        if (event.target === editProfileModal) {
+          editProfileModal.classList.remove("active");
+        }
+        if (event.target === changePasswordModal) {
+          changePasswordModal.classList.remove("active");
+        }
+      });
+    </script>
+    <%- include("../partials/_script.ejs") %>
+  </body>
+</html>

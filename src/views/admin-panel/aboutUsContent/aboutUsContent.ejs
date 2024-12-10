@@ -130,7 +130,8 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <script>
-      <% for (var i = 0; i < data.length; i++) { %>
+      <% for (var i = 0; i < data.length; i++) { 
+        %>
       var swiper = new Swiper('.mySwiper<%= i %>', {
         navigation: {
           nextEl: '.swiper-button-next',
@@ -139,7 +140,8 @@
         loop: true,
         slidesPerView: 1,
       });
-      <% } %>
+      <% }
+       %>
     </script>
   </body>
 </html>

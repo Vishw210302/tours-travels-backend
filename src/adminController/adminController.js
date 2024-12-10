@@ -42,6 +42,7 @@ const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 const { setEmployeePasswordEmail } = require('../utils/sendMail');
 const bcrypt = require('bcrypt');
 const userAndPermission = require('../schema/userAndPermissionSchema/userAndPermissionSchema');
+const apicontroller = require('../API/apiController/Controller');
 
 adminController.index = async (req, res) => {
     try {
@@ -1876,6 +1877,21 @@ adminController.deleteParticularPermission = async (req, res) => {
     }
 }
 
+adminController.postMultiplePermissionDelete = async (req, res) => {
+    const { ids } = req.body;
+    if (!ids || !ids.length) {
+        return res.status(400).send({ message: 'No permissions selected for deletion.' });
+    }
+
+    try {
+        await permission.deleteMany({ _id: { $in: ids } });
+        res.status(200).send({ message: 'Permissions deleted successfully.' });
+    } catch (error) {
+        console.error('Error deleting permissions:', error);
+        res.status(500).send({ message: 'Failed to delete permissions.' });
+    }
+}
+
 adminController.roleAndPermissionListing = async (req, res) => {
     try {
         const roleId = req.params.id
@@ -1982,6 +1998,7 @@ adminController.postAllEmployee = async (req, res) => {
             employees: req.file ? req.file.filename : '',
             employeeEmail: req.body.employeeEmail,
             employeeRole: req.body.employeeRole,
+            employeeNumber: req.body.employeeNumber,
             employeePassword: hashedPassword,
         });
 
@@ -2114,6 +2131,46 @@ adminController.postParticularUserPermission = async (req, res) => {
     } catch (error) {
         console.error("Error in Permission Filtering:", error.message);
         res.status(400).json({ message: error.message });
+    }
+};
+
+adminController.getUserData = async (req, res) => {
+    try {
+        if (!req?.session.user) throw new Error('User not login')
+        res.status(200).json({ user: req.session.user })
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+adminController.getUserProfileDetails = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const response = await axios.get(`${process.env.baseUrl}/api/get-all-employee-listing`);
+
+        if (response.data.status) {
+            const user = response.data.data.find(employee => employee._id === userId);
+
+            if (user) {
+                res.render("admin-panel/userPersonalProfile/userPersonalProfile", { user });
+            } else {
+                res.status(404).send("User not found");
+            }
+        } else {
+            console.log("Error fetching the employee listing");
+            res.status(500).send("Failed to fetch employee listing");
+        }
+    } catch (error) {
+        console.log("Error:", error);
+        res.status(500).send("An error occurred");
+    }
+};
+
+adminController.editUserProfileDetails = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log("error", error);
     }
 };
 
