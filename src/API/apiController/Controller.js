@@ -40,6 +40,7 @@ const roles = require("../../schema/rolesSchema/roleSchema");
 const permission = require("../../schema/permissionNameSchema/permissionNameSchema");
 const employees = require("../../schema/allEmployeeSchema/allEmployeeSchema");
 const { default: axios } = require("axios");
+const ItenaryPaymentDetails = require("../../schema/itenaryShema/itenaryPaymentSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -100,6 +101,7 @@ apicontroller.particularPackageId = async (req, res) => {
 
 apicontroller.getSlider = async (req, res) => {
   try {
+
     const homePageSliderImage = await slider.find();
     res.status(200).json({ status: true, data: homePageSliderImage });
   } catch (error) {
@@ -1919,6 +1921,51 @@ apicontroller.deleteParticularEmployee = async (req, res) => {
     await deleteParticularEmployee.remove();
     res.status(200).json({ status: true, message: 'Employee deleted successfully!' });
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.itenaryPayment = async (req, res) => {
+  try {
+
+    const { paymentId, personDetail, payPrice, itenaryId, remainingBalance } = req.body
+
+    if (!paymentId || !personDetail || !personDetail.name || !personDetail.mobile || !personDetail.email || !itenaryId) {
+      return res.status(400).json({ message: 'Missing required fields.' });
+    }
+
+    const {
+      name,
+      mobile,
+      email,
+      adults,
+      childrenWithoutBed,
+      infants
+    } = personDetail;
+
+    const paymentRecord = await ItenaryPaymentDetails.create({
+      cardHolderName: name,
+      email,
+      phoneNumber: mobile,
+      numberOfPerson: {
+        adults: parseInt(adults, 10) || 0,
+        childrenWithoutBed: parseInt(childrenWithoutBed, 10) || 0,
+        infants: parseInt(infants, 10) || 0,
+      },
+      paymentId,
+      payPrice,
+      remainingBalance,
+      itenaryId
+    });
+
+    res.status(201).json({
+      status: 201,
+      message: 'Payment details successfully created.',
+      data: paymentRecord
+    });
+
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 }

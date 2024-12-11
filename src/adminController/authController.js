@@ -126,8 +126,6 @@ authController.verifyOTP = async (req, res) => {
     const email = req.query.email;
     const enteredOTP = req.query.otp;
 
-    console.log(enteredOTP, 'enteredOTPenteredOTPenteredOTPenteredOTPenteredOTP');
-
     if (!email || !enteredOTP) {
         return res.status(400).json({ error: 'Email and OTP are required' });
     }

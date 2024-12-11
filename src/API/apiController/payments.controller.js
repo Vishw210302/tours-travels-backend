@@ -1,10 +1,12 @@
 const Stripe = require('stripe');
 require('dotenv').config()
 const stripe = Stripe(process.env.STRIPE_KEY);
+const crypto = require('crypto');
 
 exports.createPaymentIntent = async (req, res) => {
-    const { amount, currency, description } = req.body;
     try {
+        const { amount, currency, description } = req.body;
+
         const paymentIntent = await stripe.paymentIntents.create({
             amount,
             currency,
@@ -14,6 +16,7 @@ exports.createPaymentIntent = async (req, res) => {
         res.status(200).json({
             paymentIntent,
         });
+        
     } catch (error) {
         console.error('Error creating PaymentIntent:', error);
         res.status(500).json({ error: error.message });
@@ -21,42 +24,50 @@ exports.createPaymentIntent = async (req, res) => {
 }
 
 exports.getPaymentDetails = async (req, res) => {
-    const { id } = req.body;
-
-    if (!id) {
-        return res.status(400).json({ error: 'Payment ID is required' });
-    }
-
     try {
+        const { id } = req.body;
+
+        if (!id) {
+            return res.status(400).json({ error: 'Payment ID is required' });
+        }
+
         const paymentIntent = await stripe.paymentIntents.retrieve(id);
         res.json(paymentIntent);
     } catch (error) {
         console.error('Error retrieving payment intent:', error);
         res.status(500).json({ error: 'Failed to retrieve payment intent' });
     }
-
 }
 
-exports.veryFyPayment = async (req, res) => {
-    const { order_id, payment_id, signature } = req.body;
+exports.verifyPayment = async (req, res) => {
+    try {
+        const { order_id, payment_id, signature } = req.body;
 
-    const secret = process.env.key_secret;
+        if (!order_id || !payment_id || !signature) {
+            return res.status(400).json({ error: 'Order ID, payment ID, and signature are required' });
+        }
 
-    const hmac = crypto.createHmac("sha256", secret)
+        const secret = process.env.key_secret;
 
-    hmac.update(order_id + "|" + payment_id);
+        const hmac = crypto.createHmac("sha256", secret)
 
-    const generatedSignature = hmac.digest("hex");
+        hmac.update(order_id + "|" + payment_id);
 
-    if (generatedSignature === signature) {
-        return res.status(200).json({
-            success: true,
-            message: "Payment verified",
-        });
-    } else {
-        return res.status(400).json({
-            success: false,
-            message: "Payment not verified"
-        })
+        const generatedSignature = hmac.digest("hex");
+
+        if (generatedSignature === signature) {
+            return res.status(200).json({
+                success: true,
+                message: "Payment verified",
+            });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "Payment not verified"
+            })
+        }
+    } catch (error) {
+        console.error('Error verifying payment:', error);
+        res.status(500).json({ error: error.message });
     }
 }

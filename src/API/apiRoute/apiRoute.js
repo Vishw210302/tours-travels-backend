@@ -3,9 +3,9 @@ const apiRoute = express.Router();
 const apiController = require('../apiController/Controller');
 
 // razorpay API
-const { createPaymentIntent, veryFyPayment, getPaymentDetails } = require("../apiController/payments.controller");
+const { createPaymentIntent, verifyPayment, getPaymentDetails } = require("../apiController/payments.controller");
 apiRoute.post("/create-payment-intent", createPaymentIntent);
-apiRoute.post("/verifyPayment", veryFyPayment);
+apiRoute.post("/verifyPayment", verifyPayment);
 apiRoute.post("/get-payment-intent", getPaymentDetails);
 
 // Package API
@@ -162,5 +162,8 @@ apiRoute.delete('/delete-particular-permission/:id', apiController.deleteParticu
 // Employee API
 apiRoute.get('/get-all-employee-listing', apiController.getAllEmployeeListing)
 apiRoute.delete('/delete-particular-employee/:id', apiController.deleteParticularEmployee);
+
+//itenaryPayment
+apiRoute.post("/itenary-payment", apiController.itenaryPayment)
 
 module.exports = apiRoute;
