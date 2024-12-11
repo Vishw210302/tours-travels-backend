@@ -42,7 +42,6 @@ const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 const { setEmployeePasswordEmail } = require('../utils/sendMail');
 const bcrypt = require('bcrypt');
 const userAndPermission = require('../schema/userAndPermissionSchema/userAndPermissionSchema');
-const apicontroller = require('../API/apiController/Controller');
 
 adminController.index = async (req, res) => {
     try {
@@ -2168,10 +2167,73 @@ adminController.getUserProfileDetails = async (req, res) => {
 
 adminController.editUserProfileDetails = async (req, res) => {
     try {
+        const { userId, employeeNumber } = req.body;
+        const profileImage = req.file ? req.file.filename : null;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
+
+        let updateData = { employeeNumber };
+
+        if (profileImage) {
+            updateData = { ...updateData, employees: profileImage };
+        }
+
+        const updatedUser = await employees.findOneAndUpdate(
+            { _id: userId },
+            { $set: updateData },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.redirect(`/admin/user-personal-profile-details/${userId}`);
 
     } catch (error) {
-        console.log("error", error);
+        console.error("Error updating user profile:", error);
+        res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+adminController.employeeChangePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword, confirmPassword, userId } = req.body;
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: 'New password and confirm password do not match.' });
+        }
+
+        const employee = await employees.findById(userId);
+        if (!employee) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(currentPassword, employee.employeePassword);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Current password is incorrect.' });
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        employee.employeePassword = hashedNewPassword;
+        await employee.save();
+
+        res.redirect(`/admin/user-personal-profile-details/${userId}`);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'An error occurred while changing the password.', error: error.message });
+    }
+};
+
+adminController.getErrorPage = (req, res) => {
+    res.render('admin-panel/404page/404page')
+}
 
 module.exports = adminController;

@@ -31,11 +31,13 @@
                     <div>
                       <h4 class="card-title">Employees Listing</h4>
                     </div>
+                    <% if (hasPermission('Add Employees')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/addUsers"
                         >Add Employees</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -47,7 +49,11 @@
                           <th>Employees Email</th>
                           <th>Employees Number</th>
                           <th>Employees Role</th>
+                          <% if (hasPermission('Edit Employees') || 
+                          hasPermission('Delete Employees') || 
+                          hasPermission('View Permission Employees') ) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -71,7 +77,11 @@
                           <td><%= data[i]?.employeeEmail %></td>
                           <td><%= data[i]?.employeeNumber %></td>
                           <td><%= data[i]?.employeeRole?.roleName %></td>
+                          <% if (hasPermission('Edit Employees') || 
+                          hasPermission('Delete Employees') || 
+                          hasPermission('View Permission Employees') ) { %>
                           <td>
+                            <% if (hasPermission('Edit Employees')) { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -80,6 +90,8 @@
                               <i class="fa-solid fa-pen-to-square text-primary">
                               </i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('Delete Employees')) { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -87,6 +99,8 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('View Permission Employees')) { %>
                             <a
                               style="font-size: 18px"
                               href="/admin/particularUsersPermission/<%= data[i]._id %>"
@@ -96,7 +110,9 @@
                                 style="font-size: 18px"
                               ></i
                             ></a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

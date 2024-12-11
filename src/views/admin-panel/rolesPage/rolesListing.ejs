@@ -31,11 +31,13 @@
                     <div>
                       <h4 class="card-title">Roles Listing</h4>
                     </div>
+                    <% if (hasPermission('Add Roles')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-role-name">
                         Add Roles
                       </a>
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -44,7 +46,11 @@
                           <th>Index</th>
                           <th>Roles Name</th>
                           <th>Roles Description</th>
+                          <% if (hasPermission('Edit Roles') || 
+                          hasPermission('Delete Roles') || 
+                          hasPermission('View Roles Permission')) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <% for (var i = 0; i < data.length; i++) { %>
@@ -53,7 +59,11 @@
                           <td style="width: 5%"><%= i + 1 %></td>
                           <td><%= data[i].roleName %></td>
                           <td><%= data[i].roleDescription %></td>
+                          <% if (hasPermission('Edit Roles') || 
+                          hasPermission('Delete Roles') || 
+                          hasPermission('View Roles Permission')) { %>
                           <td>
+                            <% if (hasPermission('Edit Roles')) { %>
                             <a
                               class="mr-3"
                               style="font-size: 18px"
@@ -62,6 +72,7 @@
                               <i class="fa-solid fa-pen-to-square text-primary">
                               </i>
                             </a>
+                            <% } %> <% if (hasPermission('Delete Roles')) { %>
                             <a
                               class="mr-3"
                               style="font-size: 18px"
@@ -69,6 +80,8 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('View Roles Permission')) { %>
                             <a
                               style="font-size: 18px"
                               href="/admin/roleAndPermissionListing/<%= data[i]._id %>"
@@ -78,7 +91,9 @@
                                 style="font-size: 15px"
                               ></i
                             ></a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                       </tbody>
                       <% } %>

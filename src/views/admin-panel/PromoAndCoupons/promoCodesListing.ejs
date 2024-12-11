@@ -58,11 +58,13 @@
                     <div>
                       <h4 style="margin: 0">All Promo Codes</h4>
                     </div>
+                    <% if (hasPermission('Add Promo Codes')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-promoCodes"
                         >Add Promo Codes</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -72,8 +74,12 @@
                           <th class="name">Promo Codes</th>
                           <th class="name">Amount</th>
                           <th class="description">Status</th>
+                          <% if (hasPermission('Status Promo Codes')) { %>
                           <th class="action">Action</th>
+                          <% } %>
+                          <% if (hasPermission('Delete Promo Codes')) { %>
                           <th class="action">Status</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -90,6 +96,7 @@
                               <%= data[i].status %>
                             </div>
                           </td>
+                          <% if (hasPermission('Status Promo Codes')) { %>
                           <td class="action">
                             <div class="form-check form-check-primary">
                               <input class="checkbox" type="checkbox"
@@ -98,6 +105,8 @@
                               onchange="promoCodeToggleStatus(this)" />
                             </div>
                           </td>
+                          <% } %>
+                          <% if (hasPermission('Delete Promo Codes')) { %>
                           <td>
                             <a
                               href="/admin/delete-promoCode/<%= data[i]._id %>"
@@ -109,6 +118,7 @@
                               ></i>
                             </a>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %> <% } else { %>
                         <tr style="width: 100%">

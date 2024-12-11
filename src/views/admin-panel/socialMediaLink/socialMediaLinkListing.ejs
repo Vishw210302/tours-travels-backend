@@ -31,6 +31,7 @@
                     <div>
                       <h4 class="card-title">Social Media Link</h4>
                     </div>
+                    <% if (hasPermission('Add Social Media Link')) { %>
                     <div>
                       <a
                         class="btn btn-primary"
@@ -38,6 +39,7 @@
                         >Add Social Media Link</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -47,7 +49,9 @@
                           <th>Social Media Name</th>
                           <th>Social Media Link</th>
                           <th>Social Media Order</th>
+                          <% if (hasPermission('Edit Social Media Link') || hasPermission('Delete Social Media Link')) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -57,11 +61,15 @@
                           <td><%= data[i].socialMediaName %></td>
                           <td><%= data[i].socialMediaLink %></td>
                           <td><%= data[i].order %></td>
+                          <% if (hasPermission('Edit Social Media Link') || hasPermission('Delete Social Media Link')) { %>
                           <td>
+                            <% if (hasPermission('Edit Social Media Link')) { %>
                             <a class="mr-3" style="font-size: 18px" href="">
                               <i class="fa-solid fa-pen-to-square text-primary">
                               </i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('Delete Social Media Link')) { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -69,7 +77,9 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

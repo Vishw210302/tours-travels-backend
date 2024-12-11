@@ -33,11 +33,13 @@
                     <div>
                       <h4 class="card-title">All Meal Categories</h4>
                     </div>
+                    <% if (hasPermission('Add Flight Meal')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-meal-listing"
                         >Add Meal Location</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -45,8 +47,14 @@
                         <tr>
                           <th>Index</th>
                           <th>Meal Categories</th>
+                          <% if (hasPermission('Delete Flight Meal') || 
+                          hasPermission('View Sub Flight Meal') || 
+                          hasPermission('Edit Flight Meal') ) { %>
                           <th>Status</th>
+                          <% } %>
+                          <% if (hasPermission('Add Sub Flight Meal')) { %>
                           <th>Add</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -54,21 +62,28 @@
                         <tr>
                           <td class="py-1"><%= i + 1 %></td>
                           <td><%= data[i].mealCategories %></td>
+                          <% if (hasPermission('Delete Flight Meal') || 
+                          hasPermission('View Sub Flight Meal') || 
+                          hasPermission('Edit Flight Meal') ) { %>
                           <td>
+                            <% if (hasPermission('Delete Flight Meal')) { %>
                             <a
                               href="/admin/delete-flight-meal/<%= data[i]._id %>"
-                              style="text-decoration: none"
+                              style="text-decoration: none;
+                              margin-right: 1rem;
+                              "
                             >
                               <i
                                 class="fa-solid fa-trash text-danger"
                                 style="font-size: 18px"
                               ></i
                             ></a>
+                            <% } %>
+                            <% if (hasPermission('View Sub Flight Meal')) { %>
                             <a
                               href="/admin/get-particular-meal-listing/<%= data[i]._id %>"
                               style="
                                 margin-right: 1rem;
-                                margin-left: 1rem;
                                 text-decoration: none;
                               "
                             >
@@ -77,6 +92,8 @@
                                 style="font-size: 15px"
                               ></i
                             ></a>
+                            <% } %>
+                            <% if (hasPermission('Edit Flight Meal')) { %>
                             <a
                               href="/admin/"
                               style="margin-right: 1rem; text-decoration: none"
@@ -86,7 +103,10 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
+                          <% if (hasPermission('Add Sub Flight Meal')) { %>
                           <td>
                             <a
                               href="/admin/mealCategoriesItemListing/<%= data[i]._id %>"
@@ -94,6 +114,7 @@
                               ><i class="fa-sharp fa-solid fa-plus"></i
                             ></a>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

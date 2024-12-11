@@ -1,6 +1,7 @@
 const adminLogin = require("../schema/adminLoginSchema/adminLoginSchema");
 
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const { roleAndPermission } = require("../utils/roleAndPermission");
 require('dotenv').config();
 
 let isAuthenticated = (req, res, next) => {
@@ -13,12 +14,14 @@ let isAuthenticated = (req, res, next) => {
 
 
         jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-            
+
             if (err) {
                 return res.redirect("/");
             }
 
             req.user = decoded;
+            const permission= await roleAndPermission(req.user.id)
+            res.locals.hasPermission = permission
             next();
         });
     } catch (err) {

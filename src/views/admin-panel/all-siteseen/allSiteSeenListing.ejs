@@ -2,6 +2,14 @@
 <html lang="en">
   <head>
     <%- include("../partials/head.ejs") %>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+    />
   </head>
 
   <body>
@@ -33,28 +41,21 @@
                     <div>
                       <h4 class="card-title">All Siteseen</h4>
                     </div>
+                    <% if (hasPermission('Add Siteseens')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-SiteSeen"
                         >Add Siteseen</a
                       >
                     </div>
-                  </div>
-                  <div class="mb-3">
-                    <div class="m-0 p-0">
-                      <p>Search By name and categories</p>
-                    </div>
-                    <input
-                      type="text"
-                      id="searchInput"
-                      class="form-control"
-                      style="border-radius: 14px"
-                      placeholder="Search Here..."
-                      onkeyup="filterTable()"
-                    />
+                    <% } %>
                   </div>
 
                   <div class="table-responsive">
-                    <table class="table table-striped" id="siteseenTable">
+                    <table
+                      class="table table-striped"
+                      id="siteseenTable"
+                      style="width: 100%"
+                    >
                       <thead>
                         <tr>
                           <th>Index</th>
@@ -62,7 +63,10 @@
                           <th>Siteseen Image</th>
                           <th>Siteseen Description</th>
                           <th>Categories</th>
+                          <% if (hasPermission('Edit Siteseens') ||
+                          hasPermission('Delete Siteseens') ) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -87,7 +91,10 @@
                             <%= data[i].SiteseenDescription %>
                           </td>
                           <td><%= data[i].PackagesInclude %></td>
+                          <% if (hasPermission('Edit Siteseens') ||
+                          hasPermission('Delete Siteseens') ) { %>
                           <td>
+                            <% if (hasPermission('Edit Siteseens')) { %>
                             <a
                               href="/admin/siteseen-update-page/<%= data[i]._id %>"
                               style="
@@ -101,6 +108,8 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %> <% if (hasPermission('Delete Siteseens')) {
+                            %>
                             <a
                               href="/admin/admin-delete-package/"
                               style="text-decoration: none"
@@ -110,7 +119,9 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>
@@ -125,30 +136,26 @@
       </div>
     </div>
     <%- include("../partials/_script.ejs") %>
-
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <script>
-      function filterTable() {
-        const input = document
-          .getElementById("searchInput")
-          .value.toLowerCase();
-        const table = document.getElementById("siteseenTable");
-        const rows = table.getElementsByTagName("tr");
-
-        for (let i = 1; i < rows.length; i++) {
-          const siteseenName = rows[i]
-            .getElementsByTagName("td")[1]
-            .innerText.toLowerCase();
-          const category = rows[i]
-            .getElementsByTagName("td")[4]
-            .innerText.toLowerCase();
-
-          if (siteseenName.includes(input) || category.includes(input)) {
-            rows[i].style.display = "";
-          } else {
-            rows[i].style.display = "none";
-          }
-        }
-      }
+      $(document).ready(function () {
+        $("#siteseenTable").DataTable({
+          lengthMenu: [
+            [10, 15, 20, 25],
+            [10, 15, 20, 25],
+          ],
+          responsive: true,
+          columnDefs: [
+            {
+              targets: [2, 3, 4],
+              orderable: false,
+            },
+          ],
+        });
+      });
     </script>
   </body>
 </html>

@@ -31,11 +31,13 @@
                     <div>
                       <h4 class="card-title">Brands</h4>
                     </div>
+                    <% if (hasPermission('Add Brands')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-brand-logo"
                         >Add Brands</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -65,6 +67,7 @@
                           </td>
                           <td><%= data[i].key %></td>
                           <td>
+                            <% if (hasPermission('Edit Brands')) { %>
                             <a
                               class="mr-3"
                               style="font-size: 18px"
@@ -73,6 +76,7 @@
                               <i class="fa-solid fa-pen-to-square text-primary">
                               </i>
                             </a>
+                            <% } %> <% if (hasPermission('Delete Brands')) { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -80,6 +84,7 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
                           </td>
                         </tr>
                         <% } %>

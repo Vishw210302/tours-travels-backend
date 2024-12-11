@@ -33,11 +33,13 @@
                     <div>
                       <h4 class="card-title">All Packages Details</h4>
                     </div>
+                    <% if (hasPermission('Add All Package')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-packages"
                         >Add Packages</a
                       >
                     </div>
+                    <% } %>
                   </div>
 
                   <div class="mb-3">
@@ -62,8 +64,12 @@
                           <th>Packages Name</th>
                           <th>Packages Image</th>
                           <th>Categories</th>
+                          <% if (hasPermission('Edit All Package') || hasPermission('Delete All Package')) { %>
                           <th>Action</th>
+                          <% } %>
+                            <% if (hasPermission('Add Particular Package')) { %>
                           <th>Add</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -85,7 +91,9 @@
                             />
                           </td>
                           <td><%= data[i].categories %></td>
+                          <% if (hasPermission('Edit All Package') || hasPermission('Delete All Package')) { %>
                           <td>
+                            <% if (hasPermission('Edit All Package')) { %>
                             <a
                               href=""
                               style="
@@ -99,6 +107,8 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('Delete All Package')) { %>
                             <a
                               href="/admin/admin-delete-package/<%= data[i]._id %>"
                               style="text-decoration: none"
@@ -108,7 +118,10 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
+                          <% if (hasPermission('Add Particular Package')) { %>
                           <td>
                             <a
                               href="/admin/particularDomesticItenary/<%= data[i]._id %>"
@@ -117,6 +130,7 @@
                               <i class="fa-sharp fa-solid fa-plus"></i>
                             </a>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>
