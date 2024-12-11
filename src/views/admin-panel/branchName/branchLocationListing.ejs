@@ -33,6 +33,7 @@
                     <div>
                       <h4 class="card-title">All Branch Location</h4>
                     </div>
+                    <% if (hasPermission('Add Branch Location')) { %>
                     <div>
                       <a
                         class="btn btn-primary"
@@ -40,6 +41,7 @@
                         >Add Branch Location</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -47,8 +49,12 @@
                         <tr>
                           <th>Index</th>
                           <th>Branch Name</th>
+                          <% if (hasPermission('Delete Branch Location') || hasPermission('View Sub Branch Location')  || hasPermission('Edit Branch Location') ) { %>
                           <th>Status</th>
+                          <% } %>
+                          <% if (hasPermission('Add Sub Branch Location')) { %>
                           <th>Add</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -57,20 +63,26 @@
                           <td class="py-1"><%= i + 1 %></td>
                           <td><%= data[i].branchLocation %></td>
                           <td>
+                            <% if (hasPermission('Delete Branch Location')) { %>
                             <a
                               href="/admin/delete-branch-location/<%= data[i]._id %>"
-                              style="text-decoration: none"
+                              style="
+                                margin-right: 1rem;
+                                margin-left: 1rem;
+                                text-decoration: none;
+                              "
                             >
                               <i
                                 class="fa-solid fa-trash text-danger"
                                 style="font-size: 18px"
                               ></i
                             ></a>
+                            <% } %>
+                            <% if (hasPermission('View Sub Branch Location')) { %>
                             <a
                               href="/admin/allBranchNameListing/<%= data[i]._id %>"
                               style="
                                 margin-right: 1rem;
-                                margin-left: 1rem;
                                 text-decoration: none;
                               "
                             >
@@ -79,6 +91,8 @@
                                 style="font-size: 15px"
                               ></i
                             ></a>
+                            <% } %>
+                            <% if (hasPermission('Edit Branch Location')) { %>
                             <a
                               href="/admin/editBranchNameListing/<%= data[i]._id %>"
                               style="margin-right: 1rem; text-decoration: none"
@@ -88,7 +102,9 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% if (hasPermission('Add Sub Branch Location')) { %>
                           <td>
                             <a
                               href="/admin/add-branch/<%= data[i]._id %>"
@@ -96,6 +112,7 @@
                               ><i class="fa-sharp fa-solid fa-plus"></i
                             ></a>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

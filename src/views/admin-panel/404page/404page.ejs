@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404 - Page Not Found</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #1a202c;
+        color: #e2e8f0;
+      }
+      .error-container {
+        min-height: calc(100vh - 4rem);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .error-code {
+        font-size: 10rem;
+        font-weight: bold;
+        background: linear-gradient(to right, #4299e1, #9b2226);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+      .error-message {
+        max-width: 600px;
+        text-align: center;
+        margin-top: 1rem;
+        line-height: 1.6;
+      }
+      .btn-home {
+        background-color: #4299e1;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+      }
+      .btn-home:hover {
+        background-color: #3182ce;
+        transform: translateY(-3px);
+        box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1),
+          0 3px 6px rgba(0, 0, 0, 0.08);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-200">
+    <div class="container mx-auto px-4">
+      <div class="error-container">
+        <div class="error-code">404</div>
+        <h1 class="text-3xl font-bold">Page Not Found</h1>
+        <p class="error-message">
+          Oops! The page you are looking for seems to have wandered off into the
+          digital wilderness. It might have been moved, deleted, or never
+          existed in the first place.
+        </p>
+        <a href="/" class="btn-home hover:no-underline"> Return to Homepage </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -31,6 +31,7 @@
                     <div>
                       <h4 class="card-title">Youtube Videos</h4>
                     </div>
+                    <% if (hasPermission('Add Youtube Videos')) { %>
                     <div>
                       <a
                         class="btn btn-primary"
@@ -38,6 +39,7 @@
                         >Add Youtube Videos</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -45,7 +47,9 @@
                         <tr>
                           <th>Index</th>
                           <th>Youtube Videos URL</th>
+                          <% if (hasPermission('Edit Youtube Videos') || hasPermission('Delete Youtube Videos') ) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -53,11 +57,15 @@
                         <tr>
                           <td style="width: 5%"><%= i + 1 %></td>
                           <td><%= data[i].youtubeURL %></td>
+                          <% if (hasPermission('Edit Youtube Videos') || hasPermission('Delete Youtube Videos') ) { %>
                           <td>
+                            <% if (hasPermission('Edit Youtube Videos')) { %>
                             <a class="mr-3" style="font-size: 18px" href="">
                               <i class="fa-solid fa-pen-to-square text-primary">
                               </i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('Delete Youtube Videos')) { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -65,7 +73,9 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

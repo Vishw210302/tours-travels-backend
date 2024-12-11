@@ -33,11 +33,13 @@
                     <div>
                       <h4 class="card-title">All Blogs</h4>
                     </div>
+                    <% if (hasPermission('Add Blogs')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/addBlogs"
                         >Add Blogs</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -50,7 +52,10 @@
                           <th>Blog Date</th>
                           <th>Blog Type</th>
                           <th>Blog Author</th>
+                          <% if (hasPermission('Edit Blogs') ||
+                          hasPermission('Delete Blogs')) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -81,7 +86,10 @@
                           <td><%= data[i].blogType %></td>
                           <td><%= data[i].blogAuthor %></td>
 
+                          <% if (hasPermission('Edit Blogs') ||
+                          hasPermission('Delete Blogs')) { %>
                           <td>
+                            <% if (hasPermission('Edit Blogs')) { %>
                             <a
                               href=""
                               style="
@@ -95,6 +103,7 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %> <% if (hasPermission('Delete Blogs')) { %>
                             <a
                               href="/admin/delete-blogs-listing/<%= data[i]._id %>"
                               style="text-decoration: none"
@@ -104,7 +113,9 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

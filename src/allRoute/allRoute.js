@@ -4,6 +4,7 @@ const multer = require('multer');
 const uploads = multer();
 const adminController = require('../adminController/adminController');
 const { upload } = require('../utils/multer');
+
 // Register and Login and Dashboard Routes
 router.post('/register-data', adminController.registerApi);
 router.get('/', adminController.index);
@@ -204,6 +205,11 @@ router.get('/user', adminController.getUserData);
 
 // user Profile API
 router.get('/user-personal-profile-details/:id', adminController.getUserProfileDetails)
-router.get('/edit-user-personal-profile-details', adminController.editUserProfileDetails)
+router.post('/edit-user-personal-profile-details', upload('/employee-image').single('employeeImage'), adminController.editUserProfileDetails);
 
+// Password Change API
+router.post("/employee-password-change", adminController.employeeChangePassword)
+
+// 404 Error API 
+router.get('*', adminController.getErrorPage)
 module.exports = router;

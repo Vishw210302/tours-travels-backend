@@ -49,11 +49,13 @@
                     <div>
                       <h4 class="card-title">About Us Content Listing</h4>
                     </div>
+                    <% if (hasPermission('Add About Us Content')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/addAboutUsContent"
                         >Add About Us Content</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -62,8 +64,10 @@
                           <th>Index</th>
                           <th>About Us Title</th>
                           <th>About Us Content</th>
-                          <th>About Us Images</th>
+                          <th style="display: flex; justify-content: center;">About Us Images</th>
+                          <% if (hasPermission('Edit About Us Content') || hasPermission('Delete About Us Content') ) { %>
                           <th>Status</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -95,12 +99,16 @@
                               <div class="swiper-button-prev"></div>
                             </div>
                           </td>
+                          <% if (hasPermission('Edit About Us Content') || hasPermission('Delete About Us Content') ) { %>
                           <td>
+                            <% if (hasPermission('Edit About Us Content')) { %>
                             <a class="mr-3" style="font-size: 18px" href="">
                               <i
                                 class="fa-solid fa-pen-to-square text-primary"
                               ></i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('Delete About Us Content')) { %>
                             <a
                               href="/admin/delete-about-us-content/<%= data[i]._id %>"
                               style="text-decoration: none"
@@ -110,7 +118,9 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

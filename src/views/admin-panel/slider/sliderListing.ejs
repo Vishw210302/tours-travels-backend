@@ -31,11 +31,13 @@
                     <div>
                       <h4 class="card-title">Sliders</h4>
                     </div>
+                    <% if (hasPermission('Add Slider')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-slider"
                         >Add Slider</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -44,7 +46,10 @@
                           <th>Index</th>
                           <th>Slider Images</th>
                           <th>Slider Name</th>
+                          <% if (hasPermission('Delete Slider') || 
+                          hasPermission('Edit Slider')) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -65,14 +70,17 @@
                           </td>
                           <td><%= data[i].key %></td>
                           <td>
+                            <% if (hasPermission('Edit Slider')) { %>
                             <a
                               class="mr-3"
                               style="font-size: 18px"
                               href="/admin/get-edit-slider/<%= data[i]._id %>"
                             >
-                              <i class="fa-solid fa-pen-to-square text-primary">
-                              </i>
+                              <i
+                                class="fa-solid fa-pen-to-square text-primary"
+                              ></i>
                             </a>
+                            <% } %> <% if (hasPermission('Delete Slider')) { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -80,6 +88,7 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
                           </td>
                         </tr>
                         <% } %>
