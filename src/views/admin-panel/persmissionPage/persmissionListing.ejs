@@ -29,34 +29,53 @@
                   <div
                     class="d-flex justify-content-between align-items-center"
                   >
-                    <h4 class="card-title">Permission Listing</h4>
-                    <a class="btn btn-primary" href="/admin/add-permission-name"
-                      >Add Permission</a
-                    >
-                  </div>
-                  <div class="d-flex justify-content-end mt-3">
-                    <button
-                      id="delete-selected"
-                      class="btn btn-danger"
-                      disabled
-                    >
-                      Delete Selected
-                    </button>
+                    <div>
+                      <h4 class="card-title">Permission Listing</h4>
+                    </div>
+
+                    <div>
+                      <% if (hasPermission('Add Permissions')) { %>
+                      <div>
+                        <a
+                          class="btn btn-primary"
+                          href="/admin/add-permission-name"
+                        >
+                          Add Permission
+                        </a>
+                      </div>
+                      <% } %> <% if (hasPermission('Delete Permissions')) { %>
+                      <div>
+                        <button
+                          id="delete-selected"
+                          class="btn btn-danger mt-2"
+                          disabled
+                        >
+                          Delete Selected
+                        </button>
+                      </div>
+                      <% } %>
+                    </div>
                   </div>
                   <div class="table-responsive mt-3">
                     <table class="table table-striped">
                       <thead>
                         <tr>
+                          <% if (hasPermission('Delete Permissions')) { %>
                           <th><input type="checkbox" id="select-all" /></th>
+                          <% } %>
                           <th>Index</th>
                           <th>Permission Name</th>
                           <th>Permission Description</th>
+                          <% if (hasPermission('Edit Permissions') ||
+                          hasPermission('Delete Permissions')) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
                         <% for (var i = 0; i < data.length; i++) { %>
                         <tr>
+                          <% if (hasPermission('Delete Permissions')) { %>
                           <td>
                             <input
                               type="checkbox"
@@ -64,10 +83,14 @@
                               value="<%= data[i]._id %>"
                             />
                           </td>
+                          <% } %>
                           <td style="width: 5%"><%= i + 1 %></td>
                           <td><%= data[i].permissionName %></td>
                           <td><%= data[i].permissionDescription %></td>
+                          <% if (hasPermission('Edit Permissions') ||
+                          hasPermission('Delete Permissions')) { %>
                           <td>
+                            <% if (hasPermission('Edit Permissions')) { %>
                             <a
                               class="mr-3"
                               style="font-size: 18px"
@@ -77,6 +100,8 @@
                                 class="fa-solid fa-pen-to-square text-primary"
                               ></i>
                             </a>
+                            <% } %> <% if (hasPermission('Delete Permissions'))
+                            { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -84,7 +109,9 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %>
                       </tbody>

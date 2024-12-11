@@ -73,8 +73,12 @@
                           <th class="description">Review Description</th>
                           <th class="description">Status</th>
                           <th class="description">Number Of Review</th>
+                          <% if (hasPermission('Action Testimonials')) { %>
                           <th class="action">Action</th>
-                          <th class="action">Status</th>
+                          <% } %> <% if (hasPermission('Delete Testimonials')) {
+                          %>
+                          <th class="action">Delete</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -96,6 +100,7 @@
                           <td class="description">
                             <%= data[i].numberOfReview %>
                           </td>
+                          <% if (hasPermission('Action Testimonials')) { %>
                           <td class="action">
                             <div class="form-check form-check-primary">
                               <input class="checkbox" type="checkbox"
@@ -105,6 +110,8 @@
                               />
                             </div>
                           </td>
+                          <% } %> <% if (hasPermission('Delete Testimonials')) {
+                          %>
                           <td>
                             <a
                               href="/admin/delete-testimonial/<%= data[i]._id %>"
@@ -116,6 +123,7 @@
                               ></i>
                             </a>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %> <% } else { %>
                         <tr>

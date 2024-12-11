@@ -75,10 +75,10 @@ app.use('/', authRoute)
 //   }
 // });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).send('Something broke!');
+// });
 
 cron.schedule('0 0 * * *', () => {
   console.log('Running regenerateFlight every 24 hours');

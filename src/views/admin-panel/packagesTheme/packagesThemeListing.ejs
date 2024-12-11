@@ -3,7 +3,6 @@
   <head>
     <%- include("../partials/head.ejs") %>
   </head>
-
   <body>
     <div class="container-scroller">
       <%- include("../partials/_sidebar.ejs") %>
@@ -28,14 +27,10 @@
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex justify-content-between">
-                    <div>
-                      <h4 class="card-title">Package Themes</h4>
-                    </div>
-                    <div>
-                      <a class="btn btn-primary" href="/admin/add-package-theme"
-                        >Add Package Themes</a
-                      >
-                    </div>
+                    <h4 class="card-title">Package Themes</h4>
+                    <% if (hasPermission('Add Package Themes')) { %>
+                      <a class="btn btn-primary" href="/admin/add-package-theme">Add Package Themes</a>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -44,55 +39,63 @@
                           <th>Index</th>
                           <th>Package Themes Name</th>
                           <th>Package Themes Images</th>
+                          <% if (hasPermission('Status Package Themes')) { %>
                           <th>Status</th>
+                          <% } %>
+                          <% if (hasPermission('Edit Package Themes') || hasPermission('Delete Package Themes')) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
-                        <% for (var i=0; i < data.length; i++) { %>
-                        <tr>
-                          <td style="width: 5%"><%= i + 1 %></td>
-                          <td style="width: 30%" class="py-1">
-                            <img
-                              src="/uploads/package-theme/<%= data[i].packageThemeImage %>"
-                              alt="image"
-                              style="
-                                width: 80px;
-                                height: 80px;
-                                border-radius: 100px;
-                                object-fit: cover;
-                                margin: 10px 0px;
-                              "
-                            />
-                          </td>
-                          <td><%= data[i].packageName %></td>
-                          <td class="action">
-                            <div class="form-check form-check-primary">
-                              <input class="checkbox" type="checkbox"
-                              data-id="<%= data[i]._id %>"
-                              <%=data[i].status==='Active' ? 'checked' : '' %>
-                              onchange="packageToggleStatus(this)" />
-                            </div>
-                          </td>
-                          <td>
-                            <a
-                              class="mr-3"
-                              style="font-size: 18px"
-                              href="/admin/"
-                            >
-                              <i class="fa-solid fa-pen-to-square text-primary">
-                              </i>
-                            </a>
-                            <a
-                              class="mr-2"
-                              style="font-size: 18px"
-                              href="/admin/delete-package-theme/<%= data[i]._id %>"
-                            >
-                              <i class="fa-solid fa-trash text-danger"></i>
-                            </a>
-                          </td>
-                          <% } %>
-                        </tr>
+                        <% data.forEach((item, index) => { %>
+                          <tr>
+                            <td style="width: 5%;"><%= index + 1 %></td>
+                            <td style="width: 30%;" class="py-1">
+                              <img
+                                src="/uploads/package-theme/<%= item.packageThemeImage %>"
+                                alt="image"
+                                style="width: 80px; height: 80px; border-radius: 100px; object-fit: cover; margin: 10px 0;"
+                              />
+                            </td>
+                            <td><%= item.packageName %></td>
+                            <% if (hasPermission('Status Package Themes')) { %>
+                            <td>
+                              <div class="form-check form-check-primary">
+                                <input 
+                                  class="checkbox" 
+                                  type="checkbox" 
+                                  data-id="<%= item._id %>" 
+                                  <%= item.status === 'Active' ? 'checked' : '' %> 
+                                  onchange="packageToggleStatus(this)"
+                                />
+                              </div>
+                            </td>
+                            <% } %>
+                            <% if (hasPermission('Edit Package Themes') || hasPermission('Delete Package Themes')) { %>
+                              <td>
+                                <% if (hasPermission('Edit Package Themes')) { %>
+                                  <a
+                                    class="mr-3"
+                                    style="font-size: 18px;"
+                                    href="/admin/edit-package-theme/<%= item._id %>"
+                                  >
+                                    <i class="fa-solid fa-pen-to-square text-primary"></i>
+                                  </a>
+                                <% } %>
+                                <% if (hasPermission('Delete Package Themes')) { %>
+                                  <a
+                                    class="mr-2"
+                                    style="font-size: 18px;"
+                                    href="/admin/delete-package-theme/<%= item._id %>"
+                                  >
+                                    <i class="fa-solid fa-trash text-danger"></i>
+                                  </a>
+                                <% } %>
+                              </td>
+                            <% } %>
+                          </tr>
+                        <% }); %>
                       </tbody>
                     </table>
                   </div>

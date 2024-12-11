@@ -277,19 +277,26 @@
       <div class="modal-content">
         <span class="modal-close" id="closeEditProfile">&times;</span>
         <h2 class="modal-header">Edit Profile</h2>
-        <form id="editProfileForm">
+        <form
+          action="/admin/edit-user-personal-profile-details"
+          method="post"
+          id="editProfileForm"
+          enctype="multipart/form-data"
+        >
           <div class="form-group">
             <label for="editPhone">Phone Number</label>
             <input
               type="text"
               id="editPhone"
+              name="employeeNumber"
               placeholder="Enter new phone number"
               value=""
             />
+            <input type="hidden" name="userId" value="<%= user?._id %>" />
           </div>
           <div class="form-group">
             <label for="editImage">Profile Image</label>
-            <input type="file" id="editImage" />
+            <input type="file" id="editImage" name="employeeImage" />
           </div>
           <div class="form-group">
             <button type="submit">Save Changes</button>
@@ -303,20 +310,23 @@
       <div class="modal-content">
         <span class="modal-close" id="closeChangePassword">&times;</span>
         <h2 class="modal-header">Change Password</h2>
-        <form>
+        <form action="/admin/employee-password-change" method="post">
           <div class="form-group">
             <label for="currentPassword">Current Password</label>
             <input
               type="password"
               id="currentPassword"
+              name="currentPassword"
               placeholder="Enter current password"
             />
+            <input type="hidden" name="userId" value="<%= user?._id %>" />
           </div>
           <div class="form-group">
             <label for="newPassword">New Password</label>
             <input
               type="password"
               id="newPassword"
+              name="newPassword"
               placeholder="Enter new password"
             />
           </div>
@@ -325,6 +335,7 @@
             <input
               type="password"
               id="confirmPassword"
+              name="confirmPassword"
               placeholder="Confirm new password"
             />
           </div>

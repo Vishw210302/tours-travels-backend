@@ -58,6 +58,7 @@
                     <div>
                       <h4 style="margin: 0">All Discount Coupon</h4>
                     </div>
+                    <% if (hasPermission('Add Discount Coupon')) { %>
                     <div>
                       <a
                         class="btn btn-primary"
@@ -65,6 +66,7 @@
                         >Add Discount Coupon</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -75,8 +77,12 @@
                           <th class="name">Description</th>
                           <th class="name">Amount</th>
                           <th class="description">Status</th>
+                          <% if (hasPermission('Delete Discount Coupon')) { %>
                           <th class="action">Action</th>
+                          <% } %>
+                          <% if (hasPermission('Status Discount Coupon')) { %>
                           <th class="action">Status</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -98,6 +104,7 @@
                               <%= data[i].status %>
                             </div>
                           </td>
+                          <% if (hasPermission('Status Discount Coupon')) { %>
                           <td class="action">
                             <div class="form-check form-check-primary">
                               <input class="checkbox" type="checkbox"
@@ -106,6 +113,8 @@
                               onchange="dicountCouponToggleStatus(this)" />
                             </div>
                           </td>
+                          <% } %>
+                          <% if (hasPermission('Delete Discount Coupon')) { %>
                           <td>
                             <a
                               href="/admin/delete-discount-coupon/<%= data[i]._id %>"
@@ -117,6 +126,7 @@
                               ></i>
                             </a>
                           </td>
+                          <% } %>
                         </tr>
                         <% } %> <% } else { %>
                         <tr style="width: 100%">

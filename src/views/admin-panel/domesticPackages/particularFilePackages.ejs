@@ -45,7 +45,10 @@
                           <th>Categories</th>
                           <th>Days</th>
                           <th>Nights</th>
+                          <% if (hasPermission('Edit Particular Package') || 
+                          hasPermission('Delete Particular Package')) { %>
                           <th>Action</th>
+                          <% } %>
                         </tr>
                       </thead>
                       <tbody>
@@ -58,7 +61,10 @@
                           <td><%= itinerary.categories %></td>
                           <td><%= itinerary.days.length %></td>
                           <td><%= itinerary.days.length - 1%></td>
+                          <% if (hasPermission('Edit Particular Package') || 
+                          hasPermission('Delete Particular Package')) { %>
                           <td>
+                            <% if (hasPermission('Edit Particular Package')) { %>
                             <a
                               href="edit-link.html"
                               style="
@@ -73,6 +79,8 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
+                            <% if (hasPermission('Delete Particular Package')) { %>
                             <a
                               href="delete-link.html"
                               style="text-decoration: none"
@@ -83,7 +91,9 @@
                                 style="font-size: 18px"
                               ></i>
                             </a>
+                            <% } %>
                           </td>
+                          <% } %>
                         </tr>
                         <% }); %>
                       </tbody>

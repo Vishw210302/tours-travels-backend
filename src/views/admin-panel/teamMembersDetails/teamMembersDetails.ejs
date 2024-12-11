@@ -31,11 +31,13 @@
                     <div>
                       <h4 class="card-title">Team Members</h4>
                     </div>
+                    <% if (hasPermission('Add Team Members')) { %>
                     <div>
                       <a class="btn btn-primary" href="/admin/add-team-members"
                         >Add team-members</a
                       >
                     </div>
+                    <% } %>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-striped">
@@ -67,6 +69,7 @@
                           <td><%= data[i].teamMemberName %></td>
                           <td><%= data[i].teamMemberRole %></td>
                           <td>
+                            <% if (hasPermission('Edit Team Members')) { %>
                             <a
                               class="mr-3"
                               style="font-size: 18px"
@@ -75,6 +78,8 @@
                               <i class="fa-solid fa-pen-to-square text-primary">
                               </i>
                             </a>
+                            <% } %> <% if (hasPermission('Delete Team Members'))
+                            { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -82,6 +87,7 @@
                             >
                               <i class="fa-solid fa-trash text-danger"></i>
                             </a>
+                            <% } %>
                           </td>
                         </tr>
                         <% } %>
