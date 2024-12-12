@@ -2236,4 +2236,13 @@ adminController.getErrorPage = (req, res) => {
     res.render('admin-panel/404page/404page')
 }
 
+adminController.flightPaymentDetails = async (req, res) => {
+    try {
+        res.render("admin-panel/flightPaymentDetails/flightPaymentDetailsListing")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+
 module.exports = adminController;
