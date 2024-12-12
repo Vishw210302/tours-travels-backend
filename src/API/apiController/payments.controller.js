@@ -16,7 +16,7 @@ exports.createPaymentIntent = async (req, res) => {
         res.status(200).json({
             paymentIntent,
         });
-        
+
     } catch (error) {
         console.error('Error creating PaymentIntent:', error);
         res.status(500).json({ error: error.message });
@@ -69,5 +69,13 @@ exports.verifyPayment = async (req, res) => {
     } catch (error) {
         console.error('Error verifying payment:', error);
         res.status(500).json({ error: error.message });
+    }
+}
+
+exports.getFlightPayment = async (req, res) => {
+    try {
+
+    } catch (error) {
+        console.log("error", error)
     }
 }

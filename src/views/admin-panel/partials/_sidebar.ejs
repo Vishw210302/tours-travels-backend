@@ -345,6 +345,35 @@
       </li>
       <% } %>
 
+      <li class="nav-item menu-items mt-2">
+        <a
+          class="nav-link"
+          data-toggle="collapse"
+          href="#paymentStatus"
+          aria-expanded="false"
+          aria-controls="paymentStatus"
+        >
+          <span class="menu-icon">
+            <i class="mdi mdi-laptop"></i>
+          </span>
+          <span class="menu-title">All Payment Status</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse" id="paymentStatus">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item menu-items mt-2">
+              <a class="nav-link" href="/admin/flight-payment-details">
+                <span class="menu-icon">
+                  <i class="mdi mdi-playlist-play"></i>
+                </span>
+                <span class="menu-title">Flight Payment</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+
       <% if (hasPermission('View Promo Codes') || hasPermission('View Discount Coupon')) { %>
       <li class="nav-item menu-items mt-2">
         <a

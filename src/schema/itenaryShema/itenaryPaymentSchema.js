@@ -45,11 +45,11 @@ const itenaryPaymentSchema = new mongoose.Schema({
         default: null,
         trim: true,
     },
-    payPrice:{
+    payPrice: {
         type: Number,
     },
     remainingBalance: {
-        
+        type: Number,
         default: 0,
         min: [0, 'Remaining balance cannot be negative'],
     },

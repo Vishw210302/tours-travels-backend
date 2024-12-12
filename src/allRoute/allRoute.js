@@ -210,6 +210,9 @@ router.post('/edit-user-personal-profile-details', upload('/employee-image').sin
 // Password Change API
 router.post("/employee-password-change", adminController.employeeChangePassword)
 
+// All Payment Details API
+router.get("/flight-payment-details", adminController.flightPaymentDetails)
+
 // 404 Error API 
 router.get('*', adminController.getErrorPage)
 module.exports = router;

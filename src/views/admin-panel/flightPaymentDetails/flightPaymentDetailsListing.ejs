@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/head.ejs") %>
+    <!-- DataTables CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css"
+    />
+    <style>
+      /* Professional Design Overhaul */
+      :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --success-color: #28a745;
+        --dark-text: #343a40;
+      }
+
+      .content-wrapper {
+        padding: 1.5rem;
+      }
+
+      .page-header {
+        background-color: #191c24;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+      }
+
+      .page-title {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1.5rem;
+      }
+
+      .card-body {
+        padding: 1.5rem;
+      }
+
+      .table-responsive {
+        border-radius: 10px;
+        overflow: hidden;
+      }
+
+      .table {
+        margin-bottom: 0;
+      }
+
+      .table thead {
+        background-color: #f1f3f6;
+        border-bottom: 2px solid #e2e6ea;
+      }
+
+      .table thead th {
+        color: var(--dark-text);
+        font-weight: 600;
+        border: none;
+        padding: 1rem;
+        vertical-align: middle;
+      }
+
+      .table tbody tr {
+        transition: background-color 0.2s ease;
+      }
+
+      .table tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+      }
+
+      .table tbody td {
+        vertical-align: middle;
+        padding: 1rem;
+        border-color: #e9ecef;
+      }
+
+      .status-badge {
+        padding: 0.375rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+      }
+
+      .status-pending {
+        background-color: rgba(255, 193, 7, 0.15);
+        color: #ffc107;
+      }
+
+      .status-completed {
+        background-color: rgba(40, 167, 69, 0.15);
+        color: #28a745;
+      }
+
+      .modal-content {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal-header {
+        background-color: #f1f3f6;
+        border-bottom: none;
+        padding: 1.25rem;
+      }
+
+      .modal-header .close {
+        margin-left: auto;
+        padding: 1rem;
+      }
+
+      .form-control {
+        border-radius: 6px;
+        padding: 0.75rem 1rem;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        transition: all 0.2s ease;
+      }
+
+      .header-color{
+        background-color: #343a40;
+        color: white !important;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .page-header {
+          text-align: center;
+        }
+        .action-column {
+          min-width: 150px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-scroller">
+      <%- include("../partials/_sidebar.ejs") %>
+      <div class="container-fluid page-body-wrapper">
+        <%- include("../partials/_navbar.ejs") %>
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title">Basic Tables</h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">
+                    <a href="/admin">Dashboard</a>
+                  </li>
+                  <li class="breadcrumb-item active" aria-current="page">
+                    Siteseen
+                  </li>
+                </ol>
+              </nav>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table
+                        id="paymentTable"
+                        class="table"
+                        style="width: 100%"
+                      >
+                        <thead>
+                          <tr>
+                            <th class="header-color">Payment ID</th>
+                            <th class="header-color">Flight Route</th>
+                            <th class="header-color">Passenger Name</th>
+                            <th class="header-color">Payment Amount</th>
+                            <th class="header-color">Payment Date</th>
+                            <th class="header-color">Status</th>
+                            <th class="text-center header-color">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>132</td>
+                            <td>Ahm-Del</td>
+                            <td>Vishw Prajapati</td>
+                            <td>₹ 21,000</td>
+                            <td>21/03/2002</td>
+                            <td>
+                              <span class="status-badge status-pending"
+                                >Pending</span
+                              >
+                            </td>
+                            <td>
+                              <a
+                                href="/admin/get-particular-meal-listing/"
+                                style="
+                                  margin-right: 1rem;
+                                  text-decoration: none;
+                                "
+                              >
+                                <i
+                                  class="fa-solid fa-eye"
+                                  style="font-size: 15px"
+                                ></i
+                              ></a>
+                              <a
+                                href="/admin/admin-delete-package/"
+                                style="text-decoration: none"
+                              >
+                                <i
+                                  class="fa-solid fa-trash text-danger"
+                                  style="font-size: 18px"
+                                ></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%- include("../partials/_footer.ejs") %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Payment Modal -->
+    <div
+      class="modal fade"
+      id="addPaymentModal"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add New Payment</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="addPaymentForm" action="/admin/payment/add" method="POST">
+            <div class="modal-body">
+              <div class="form-group">
+                <label>Flight Route</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="flightRoute"
+                  placeholder="Enter flight route"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Passenger Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="passengerName"
+                  placeholder="Enter passenger name"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Payment Amount</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">₹</span>
+                  </div>
+                  <input
+                    type="number"
+                    class="form-control"
+                    name="paymentAmount"
+                    placeholder="Enter amount"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Payment Status</label>
+                <select class="form-control" name="paymentStatus" required>
+                  <option value="">Select Status</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">Add Payment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <%- include("../partials/_script.ejs") %>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#paymentTable").DataTable({
+          responsive: true,
+          pageLength: 10,
+          language: {
+            searchPlaceholder: "Search payments...",
+            paginate: {
+              previous: '<i class="mdi mdi-chevron-left"></i>',
+              next: '<i class="mdi mdi-chevron-right"></i>',
+            },
+          },
+          columnDefs: [
+            {
+              targets: [-1],
+              orderable: false,
+              className: "text-center",
+            },
+          ],
+        });
+      });
+    </script>
+  </body>
+</html>
