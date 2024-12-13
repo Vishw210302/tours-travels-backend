@@ -26,7 +26,13 @@ router.get('/auth/google/callback', (req, res, next) => {
 	})(req, res, next);
 });
 
-router.post("/employee-loginPage" , authController.employeeLogin)
+router.post("/employee-loginPage", authController.employeeLogin)
+
+// Forgot Password API
+router.get("/get-forgot-password", authController.getForgotPassword)
+router.post("/otp-send-email", authController.OTPSendEmail)
+router.post("/verify-otp-password", authController.verifyOTPPassword)
+router.post("/reset-password", authController.resetPassword)
 
 router.get('/success', authController.successGoogleLogin);
 

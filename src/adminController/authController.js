@@ -3,6 +3,7 @@ const OTP = require("../schema/adminLoginSchema/adminOtpSchema");
 const employees = require("../schema/allEmployeeSchema/allEmployeeSchema");
 const genarateToken = require("../utils/genarateToken");
 const { sendOTP } = require("../utils/sendOtp");
+const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 
 const authController = {};
@@ -72,7 +73,7 @@ authController.employeeLogin = async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(employeePassword, employee.employeePassword);
         if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid credentials" });
+            return res.render('admin-panel/404page/404page')
         }
         const token = genarateToken(employee, 'employee')
 
@@ -82,6 +83,97 @@ authController.employeeLogin = async (req, res) => {
         res.redirect("/admin")
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+authController.getForgotPassword = async (req, res) => {
+    try {
+        res.render("admin-panel/forgotPasswordPage/forgotPasswordPage")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'meetnode@gmail.com',
+        pass: 'wuafmrngtspmdiwo'
+    }
+});
+
+authController.OTPSendEmail = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await employees.findOne({ employeeEmail: email });
+
+        if (!user) {
+            return res.render('admin-panel/404page/404page')
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
+        user.otp = otp;
+        user.otpExpiry = otpExpiry;
+        await user.save();
+
+        const mailOptions = {
+            from: 'meetnode@gmail.com',
+            to: email,
+            subject: 'Your OTP for Password Reset',
+            text: `Your OTP is ${otp}. It is valid for 10 minutes.`
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.render('admin-panel/forgotPasswordPage/checkOTPResetPassword', { userData: user })
+    } catch (error) {
+        console.error('Error sending OTP:', error);
+        res.status(500).send('Failed to send OTP.');
+    }
+};
+
+authController.verifyOTPPassword = async (req, res) => {
+    try {
+        const { userId, otp } = req.body
+        const response = await employees.findById(userId)
+        if (otp == response.otp) {
+            res.render('admin-panel/forgotPasswordPage/resetPassword', { userId: userId })
+        } else {
+            res.render('admin-panel/404page/404page')
+        }
+    } catch (error) {
+        console.log("error", error)
+    }
+};
+
+authController.resetPassword = async (req, res) => {
+    try {
+        const { userId, newPassword, confirmPassword } = req.body;
+
+        if (!userId || !newPassword || !confirmPassword) {
+            return res.status(400).json({ message: "All fields are required." });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ message: "Passwords do not match." });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        const updatedEmployee = await employees.findByIdAndUpdate(
+            userId,
+            { employeePassword: hashedPassword },
+            { new: true }
+        );
+
+        if (!updatedEmployee) {
+            return res.status(404).json({ message: "User not found." });
+        }
+        res.redirect('/')
+    } catch (error) {
+        console.error("Error resetting password:", error);
     }
 };
 
