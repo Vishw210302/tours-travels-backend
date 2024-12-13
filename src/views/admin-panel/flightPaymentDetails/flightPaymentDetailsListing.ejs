@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <%- include("../partials/head.ejs") %>
-    <!-- DataTables CSS -->
     <link
       rel="stylesheet"
       href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css"
@@ -12,7 +11,6 @@
       href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css"
     />
     <style>
-      /* Professional Design Overhaul */
       :root {
         --primary-color: #007bff;
         --secondary-color: #6c757d;
@@ -130,7 +128,7 @@
         transition: all 0.2s ease;
       }
 
-      .header-color{
+      .header-color {
         background-color: #343a40;
         color: white !important;
       }
@@ -140,7 +138,6 @@
         border-color: #0056b3;
       }
 
-      /* Responsive Adjustments */
       @media (max-width: 768px) {
         .page-header {
           text-align: center;
@@ -158,6 +155,9 @@
       <div class="container-fluid page-body-wrapper">
         <%- include("../partials/_navbar.ejs") %>
         <div class="main-panel">
+          <%-
+          console.log("paymentDetailspaymentDetailspaymentDetails",paymentDetails)
+          %>
           <div class="content-wrapper">
             <div class="page-header">
               <h3 class="page-title">Basic Tables</h3>
@@ -194,12 +194,13 @@
                             <th class="text-center header-color">Actions</th>
                           </tr>
                         </thead>
+                        <% for (var i = 0; i < paymentDetails.length; i++) { %>
                         <tbody>
                           <tr>
-                            <td>132</td>
+                            <td><%= i + 1 %></td>
                             <td>Ahm-Del</td>
                             <td>Vishw Prajapati</td>
-                            <td>₹ 21,000</td>
+                            <td>₹ <%= paymentDetails[i].amount %></td>
                             <td>21/03/2002</td>
                             <td>
                               <span class="status-badge status-pending"
@@ -231,6 +232,7 @@
                             </td>
                           </tr>
                         </tbody>
+                        <% } %>
                       </table>
                     </div>
                   </div>
@@ -243,7 +245,6 @@
       </div>
     </div>
 
-    <!-- Add Payment Modal -->
     <div
       class="modal fade"
       id="addPaymentModal"
@@ -327,7 +328,6 @@
 
     <%- include("../partials/_script.ejs") %>
 
-    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
