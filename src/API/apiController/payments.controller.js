@@ -74,8 +74,26 @@ exports.verifyPayment = async (req, res) => {
 
 exports.getFlightPayment = async (req, res) => {
     try {
+        const paymentIntents = await stripe.paymentIntents.list({
+            limit: 100,
+        });
 
+        const paymentDetails = paymentIntents.data
+            .filter(intent => intent.description && intent.description.includes("Payment for flight ticket booking"))
+            .map(intent => ({
+                id: intent.id,
+                amount: intent.amount,
+                currency: intent.currency,
+                customer: intent.customer,
+                payment_method: intent.payment_method,
+                status: intent.status,
+                description: intent.description,
+                created: new Date(intent.created * 1000),
+            }));
+
+        return paymentDetails;
     } catch (error) {
-        console.log("error", error)
+        console.error('Error fetching payment intents:', error);
+        res.status(500).send({ error: 'Failed to fetch payment details' });
     }
-}
+};

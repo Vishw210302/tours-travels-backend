@@ -42,6 +42,7 @@ const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 const { setEmployeePasswordEmail } = require('../utils/sendMail');
 const bcrypt = require('bcrypt');
 const userAndPermission = require('../schema/userAndPermissionSchema/userAndPermissionSchema');
+const { getFlightPayment } = require('../API/apiController/payments.controller');
 
 adminController.index = async (req, res) => {
     try {
@@ -680,7 +681,7 @@ adminController.login = async (req, res) => {
         }
 
         if (password !== user.password) {
-            return res.status(400).json({ message: 'Invalid credentials' });
+            return res.render('admin-panel/404page/404page')
         }
         res.redirect("/admin")
     } catch (error) {
@@ -2238,11 +2239,14 @@ adminController.getErrorPage = (req, res) => {
 
 adminController.flightPaymentDetails = async (req, res) => {
     try {
-        res.render("admin-panel/flightPaymentDetails/flightPaymentDetailsListing")
-    } catch (error) {
-        console.log("error", error)
-    }
-}
+        const allFlightPaymentData = await getFlightPayment();
+        console.log("allFlightPaymentData", allFlightPaymentData);
 
+        res.render("admin-panel/flightPaymentDetails/flightPaymentDetailsListing", { paymentDetails: allFlightPaymentData });
+    } catch (error) {
+        console.log("Error:", error);
+        res.status(500).send({ error: 'Failed to load flight payment details' });
+    }
+};
 
 module.exports = adminController;

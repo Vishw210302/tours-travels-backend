@@ -26,6 +26,14 @@ const allEmployeeSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    otp: {
+        type: String,
+        default: null,
+    },
+    otpExpiry: {
+        type: Date,
+        default: null,
+    },
     createdAt: {
         type: Date,
         default: new Date(),
