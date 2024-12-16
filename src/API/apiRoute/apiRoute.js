@@ -165,5 +165,6 @@ apiRoute.delete('/delete-particular-employee/:id', apiController.deleteParticula
 
 //itenaryPayment
 apiRoute.post("/itenary-payment", apiController.itenaryPayment)
+apiRoute.post("/hotel-payment", apiController.processHotelPayments)
 
 module.exports = apiRoute;
