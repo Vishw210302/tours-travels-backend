@@ -41,6 +41,7 @@ const permission = require("../../schema/permissionNameSchema/permissionNameSche
 const employees = require("../../schema/allEmployeeSchema/allEmployeeSchema");
 const { default: axios } = require("axios");
 const ItenaryPaymentDetails = require("../../schema/itenaryShema/itenaryPaymentSchema");
+const HotelBookingPayment = require("../../schema/HotelBookingPaymentSchema/HotelBookingPaymentSchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -1968,6 +1969,47 @@ apicontroller.itenaryPayment = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });
+  }
+}
+
+apicontroller.processHotelPayments = async (req, res) => {
+  try {
+    const {
+      hotelBookingDetails,
+      personDetails,
+      bookingAmount,
+      paymentId
+    } = req.body;
+
+    const savedBooking = await HotelBookingPayment.create({
+      hotelName: hotelBookingDetails.hotelName,
+      cityName: hotelBookingDetails.cityName,
+      checkInDate: hotelBookingDetails.checkInDate,
+      checkOutDate: hotelBookingDetails.checkOutDate,
+      numberOfNights: hotelBookingDetails.numberOfNights.toString(),
+      numberOfRooms: hotelBookingDetails.numberOfRooms.toString(),
+      totalGuests: hotelBookingDetails.totalGuests.toString(),
+      accommodationType: hotelBookingDetails.roomType,
+      bookingAmount: bookingAmount,
+      transactionId: paymentId,
+      bookerFullName: personDetails.name,
+      bookerEmail: personDetails.email,
+      bookerPhone: personDetails.phone,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Booking details saved successfully!',
+      data: savedBooking,
+    });
+
+  } catch (error) {
+    console.error('Error saving booking details:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save booking details.',
+      error: error.message,
+    });
   }
 }
 
