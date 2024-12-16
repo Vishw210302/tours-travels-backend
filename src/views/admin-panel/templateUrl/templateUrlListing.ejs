@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprehensive Travel Itinerary Details</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f4f8;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .email-container {
+        max-width: 900px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #000000, #1976d2);
+        color: #ffffff;
+        padding: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+
+      .header-logo {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 80px;
+        height: 80px;
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #2196f3;
+      }
+
+      .header_title {
+        font-size: 21px;
+        font-weight: 700;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .traveler-info {
+        display: flex;
+        justify-content: space-between;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .traveler-details {
+        flex: 1;
+      }
+
+      .booking-code {
+        font-weight: bold;
+        color: #2196f3;
+      }
+
+      .section-header {
+        background-color: #2196f3;
+        color: white;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .itinerary-item {
+        background-color: #e3f2fd;
+        border-left: 5px solid #2196f3;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 0 8px 8px 0;
+        position: relative;
+      }
+
+      .itinerary-item::before {
+        content: attr(data-day);
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #2196f3;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      .itinerary-details {
+        display: flex;
+        align-items: center;
+      }
+
+      .location-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        margin-right: 15px;
+        object-fit: cover;
+      }
+
+      .additional-info {
+        background-color: #f0f8ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .travel-tips {
+        background-color: #fffde7;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .visa-requirements {
+        background-color: #f1f8e9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .packing-list {
+        background-color: #f3e5f5;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .currency-info {
+        background-color: #e8eaf6;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .local-guidelines {
+        background-color: #e0f2f1;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 15px;
+        font-size: 12px;
+        color: #777;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .contact-info {
+        margin-top: 15px;
+        font-size: 12px;
+        color: #666;
+      }
+
+      ul {
+        padding-left: 20px;
+        margin: 0;
+      }
+
+      li {
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">
+        <img src="/uploads/setting-image/assgardTravels.png" alt="main_logo" />
+        <p class="header_title">Assgard Tours and Travels</p>
+      </div>
+
+      <div class="content">
+        <div class="traveler-info">
+          <div class="traveler-details">
+            <strong>Traveler Name:</strong> Vishw Kumar<br />
+            <strong>Booking Code:</strong>
+            <span class="booking-code">DTI2024XYZ</span>
+          </div>
+          <div class="traveler-details">
+            <strong>Travel Dates:</strong> 15 Dec 2024 - 22 Dec 2024<br />
+            <strong>Destination:</strong> Dubai, United Arab Emirates
+          </div>
+        </div>
+
+        <div class="section-header">Detailed Itinerary</div>
+
+        <div class="itinerary-item" data-day="Day 1">
+          <h3>Arrival and City Tour</h3>
+          <div class="itinerary-details">
+            <img
+              src="/api/placeholder/120/120"
+              alt="Dubai Airport"
+              class="location-image"
+            />
+            <div class="details-text">
+              <p><strong>Location:</strong> Dubai International Airport</p>
+              <p><strong>Time:</strong> 10:00 AM - 06:00 PM</p>
+              <p>
+                <strong>Activities:</strong> Airport pickup, hotel check-in,
+                afternoon city tour including Burj Khalifa and Dubai Mall
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="itinerary-item" data-day="Day 2">
+          <h3>Desert Safari Adventure</h3>
+          <div class="itinerary-details">
+            <img
+              src="/api/placeholder/120/120"
+              alt="Desert Safari"
+              class="location-image"
+            />
+            <div class="details-text">
+              <p>
+                <strong>Location:</strong> Dubai Desert Conservation Reserve
+              </p>
+              <p><strong>Time:</strong> 03:00 PM - 10:00 PM</p>
+              <p>
+                <strong>Activities:</strong> Dune bashing, camel riding,
+                traditional BBQ dinner, cultural performances
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">Additional Travel Information</div>
+
+        <div class="additional-info">
+          <h3>Important Travel Details</h3>
+          <p>✈️ Flight Details: Emirates Airlines EK123</p>
+          <p>🏨 Hotel: Luxury Dubai Downtown Hotel</p>
+          <p>🚗 Airport Transfers: Included</p>
+        </div>
+
+        <div class="travel-tips">
+          <h3>Travel Tips for Dubai</h3>
+          <ul>
+            <li>Dress modestly, especially in public and religious areas</li>
+            <li>Carry a copy of your passport at all times</li>
+            <li>Stay hydrated and use sun protection</li>
+            <li>Respect local customs and traditions</li>
+            <li>Be aware of photography restrictions in certain areas</li>
+          </ul>
+        </div>
+
+        <div class="visa-requirements">
+          <h3>Visa Requirements</h3>
+          <ul>
+            <li>Passport valid for at least 6 months from travel date</li>
+            <li>Tourist visa required for most nationalities</li>
+            <li>Visa can be obtained on arrival for many countries</li>
+            <li>Minimum passport validity: 6 months</li>
+            <li>Recommended to check latest visa regulations</li>
+          </ul>
+        </div>
+
+        <div class="packing-list">
+          <h3>Recommended Packing List</h3>
+          <ul>
+            <li>Light, breathable clothing</li>
+            <li>Sunscreen and sunglasses</li>
+            <li>Comfortable walking shoes</li>
+            <li>Power adapter for UAE electrical outlets</li>
+            <li>Light jacket for evenings</li>
+            <li>Swimwear for hotel pools</li>
+            <li>Personal medication</li>
+          </ul>
+        </div>
+
+        <div class="currency-info">
+          <h3>Currency and Money Matters</h3>
+          <ul>
+            <li>Official Currency: UAE Dirham (AED)</li>
+            <li>Major credit cards widely accepted</li>
+            <li>ATMs available in most areas</li>
+            <li>Recommended to carry some cash for small purchases</li>
+            <li>Currency exchange available at airports and banks</li>
+          </ul>
+        </div>
+
+        <div class="local-guidelines">
+          <h3>Local Guidelines and Etiquette</h3>
+          <ul>
+            <li>Alcohol consumption restricted to licensed venues</li>
+            <li>Public displays of affection are discouraged</li>
+            <li>Dress code is conservative in public spaces</li>
+            <li>Ramadan: Special rules apply during this period</li>
+            <li>Tipping is appreciated but not mandatory</li>
+          </ul>
+        </div>
+
+        <div class="footer">
+          <p>© 2024 Travel Experts Dubai. All Rights Reserved.</p>
+          <div class="contact-info">
+            <p>
+              Customer Support: +971 50 123 4567 |
+              support@travelexpertsdubai.com
+            </p>
+            <p>Emergency Contact: +971 52 987 6543</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

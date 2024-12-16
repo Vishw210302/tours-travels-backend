@@ -43,6 +43,7 @@ const { setEmployeePasswordEmail } = require('../utils/sendMail');
 const bcrypt = require('bcrypt');
 const userAndPermission = require('../schema/userAndPermissionSchema/userAndPermissionSchema');
 const { getFlightPayment } = require('../API/apiController/payments.controller');
+const querySend = require('../schema/querySendSchema/querySendSchema');
 
 adminController.index = async (req, res) => {
     try {
@@ -1134,6 +1135,25 @@ adminController.deleteInqueries = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+adminController.updateInqueries = async (req, res) => {
+    try {
+        const inqueriesId = req.params.id;
+        const { status } = req.body;
+        const inqueriesUser = await querySend.findById(inqueriesId);
+
+        if (!inqueriesUser) {
+            return res.status(404).json({ message: "Inqueries Theme not found" });
+        }
+
+        inqueriesUser.status = status;
+        await inqueriesUser.save();
+
+        res.status(200).json({ message: "Status updated successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
 
 adminController.promoListing = async (req, res) => {
     try {
@@ -2248,5 +2268,13 @@ adminController.flightPaymentDetails = async (req, res) => {
         res.status(500).send({ error: 'Failed to load flight payment details' });
     }
 };
+
+adminController.getTestTemplete = async (req, res) => {
+    try {
+        res.render("admin-panel/templateUrl/templateUrlListing")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
 
 module.exports = adminController;

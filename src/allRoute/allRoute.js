@@ -108,6 +108,7 @@ router.get('/delete-about-us-content/:id', adminController.deleteAboutUsContent)
 // All Inquery API
 router.get('/inqueriesListing', adminController.inqueriesListing);
 router.get('/delete-inqueries/:id', adminController.deleteInqueries);
+router.put('/updateInqueries/status/:id', adminController.updateInqueries);
 
 // Promo codes API
 router.get('/promoListing', adminController.promoListing);
@@ -213,6 +214,10 @@ router.post("/employee-password-change", adminController.employeeChangePassword)
 // All Payment Details API
 router.get("/flight-payment-details", adminController.flightPaymentDetails)
 
+// Test Route
+router.get("/test-template", adminController.getTestTemplete)
+
 // 404 Error API 
 router.get('*', adminController.getErrorPage)
+
 module.exports = router;

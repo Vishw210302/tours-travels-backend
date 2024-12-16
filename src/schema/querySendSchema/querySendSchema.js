@@ -17,6 +17,10 @@ const querySendSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
+    packageName: {
+        type: String,
+        required: true,
+    },
     numberOfAdult: {
         type: [String],
         required: true,
@@ -28,6 +32,10 @@ const querySendSchema = new mongoose.Schema({
     numberOfChildWithoutBed: {
         type: [String],
         required: true,
+    },
+    status: {
+        type: String,
+        default: 'UnAssigned'
     },
     createdAt: {
         type: Date,
