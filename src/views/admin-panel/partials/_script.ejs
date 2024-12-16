@@ -169,3 +169,28 @@
       });
   }
 </script>
+
+<script>
+  function updateInqueriesToggleStatus(checkbox) {
+    const inqueriesId = checkbox.getAttribute("data-id");
+    const status = checkbox.checked ? "Assigned" : "UnAssigned";
+
+    fetch(`/admin/updateInqueries/status/${inqueriesId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          alert(data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("error", error);
+        alert("Failed to update status.");
+      });
+  }
+</script>

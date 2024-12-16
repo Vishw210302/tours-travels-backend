@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <%- include("../partials/head.ejs") %>
@@ -34,30 +33,74 @@
                       <h4 class="card-title">All Inqueries Listing</h4>
                     </div>
                   </div>
+
+                  <!-- Filters Section -->
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <input
+                        type="text"
+                        id="searchInput"
+                        class="form-control"
+                        placeholder="Search by Name, Email, or Number"
+                        onkeyup="filterTable()"
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <input
+                        type="date"
+                        id="startDate"
+                        class="form-control"
+                        onchange="filterByDate()"
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <input
+                        type="date"
+                        id="endDate"
+                        class="form-control"
+                        onchange="filterByDate()"
+                      />
+                    </div>
+                  </div>
+
                   <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" id="inqueriesTable">
                       <thead>
                         <tr>
+                          <th>Select</th>
                           <th>Index</th>
                           <th>Customer Name</th>
                           <th>Email</th>
                           <th>Mobile Number</th>
-                          <th>Departure Date</th>
+                          <th>Travel place</th>
+                          <th>Number of Adult</th>
+                          <th>Inquery Date</th>
                           <% if (hasPermission('Delete Inqueries')) { %>
                           <th>Status</th>
                           <% } %>
+                          <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
                         <% for (var i = 0; i < data.length; i++) { var
-                        departureDate = new Date(data[i].travelDate); var
+                        departureDate = new Date(data[i].createdAt); var
                         formattedDate =
                         departureDate.toLocaleDateString("en-GB"); %>
                         <tr>
+                          <td>
+                            <div class="form-check form-check-primary">
+                              <input class="checkbox" type="checkbox"
+                              data-id="<%= data[i]._id %>"
+                              <%=data[i].status==='Assigned' ? 'checked' : '' %>
+                              onchange="updateInqueriesToggleStatus(this)" />
+                            </div>
+                          </td>
                           <td class="py-1"><%= i + 1 %></td>
                           <td><%= data[i].customerName %></td>
                           <td><%= data[i].customerEmail %></td>
                           <td><%= data[i].mobileNumber %></td>
+                          <td><%= data[i].packageName %></td>
+                          <td><%= data[i].numberOfAdult %></td>
                           <td><%= formattedDate %></td>
                           <% if (hasPermission('Delete Inqueries')) { %>
                           <td>
@@ -69,8 +112,15 @@
                                 class="fa-solid fa-trash text-danger"
                                 style="font-size: 18px"
                               ></i>
-                              <% } %>
                             </a>
+                          </td>
+                          <% } %>
+                          <td>
+                            <div
+                              class="<%= data[i].status === 'Assigned' ? 'badge badge-outline-success' : 'badge badge-outline-danger' %>"
+                            >
+                              <%= data[i].status %>
+                            </div>
                           </td>
                         </tr>
                         <% } %>
@@ -86,5 +136,51 @@
       </div>
     </div>
     <%- include("../partials/_script.ejs") %>
+
+    <script>
+      function filterTable() {
+        const input = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const rows = document.querySelectorAll("#inqueriesTable tbody tr");
+
+        rows.forEach((row) => {
+          const name = row.children[2].textContent.toLowerCase();
+          const email = row.children[3].textContent.toLowerCase();
+          const number = row.children[4].textContent.toLowerCase();
+
+          if (
+            name.includes(input) ||
+            email.includes(input) ||
+            number.includes(input)
+          ) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
+
+      function filterByDate() {
+        const startDate = new Date(document.getElementById("startDate").value);
+        const endDate = new Date(document.getElementById("endDate").value);
+        const rows = document.querySelectorAll("#inqueriesTable tbody tr");
+
+        rows.forEach((row) => {
+          const dateText = row.children[7].textContent;
+          const [day, month, year] = dateText.split("/");
+          const rowDate = new Date(`${year}-${month}-${day}`);
+
+          if (
+            (!isNaN(startDate) && rowDate < startDate) ||
+            (!isNaN(endDate) && rowDate > endDate)
+          ) {
+            row.style.display = "none";
+          } else {
+            row.style.display = "";
+          }
+        });
+      }
+    </script>
   </body>
 </html>

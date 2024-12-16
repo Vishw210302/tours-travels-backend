@@ -635,6 +635,7 @@ apicontroller.postInqueryAPI = async (req, res) => {
       customerName: req.body.customerName,
       mobileNumber: req.body.mobileNumber,
       customerEmail: req.body.customerEmail,
+      packageName: req.body.packageName,
       travelDate: req.body.travelDate,
       numberOfAdult: req.body.numberOfAdult,
       numberOfChildWithBed: req.body.numberOfChildWithBed,

@@ -113,11 +113,6 @@ apiRoute.get('/get-all-flight-booking-details', apiController.getFlightAllBookin
 apiRoute.get('/get-social-media-link', apiController.getSocialMediaLink);
 apiRoute.delete('/delete-social-media-link/:id', apiController.deleteSocialMediaLink);
 
-// Inquery API
-apiRoute.post('/inquery-post', apiController.postInqueryAPI)
-apiRoute.get('/get-inqueries-details', apiController.getInqueriesDetails);
-apiRoute.delete('/delete-inqueries/:id', apiController.deleteInqueries);
-
 // Contact us Hotel API
 apiRoute.post('/contact-us-post-hotel', apiController.postContactUsHotelAPI);
 apiRoute.get('/get-contact-us-review-hotel', apiController.getContactUsReviewHotel);
