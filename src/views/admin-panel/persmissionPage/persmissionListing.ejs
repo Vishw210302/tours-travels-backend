@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <%- include("../partials/head.ejs") %>
+    <!-- Add DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
   </head>
   <body>
     <div class="container-scroller">
@@ -26,9 +28,7 @@
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <div
-                    class="d-flex justify-content-between align-items-center"
-                  >
+                  <div class="d-flex justify-content-between align-items-center">
                     <div>
                       <h4 class="card-title">Permission Listing</h4>
                     </div>
@@ -36,20 +36,15 @@
                     <div>
                       <% if (hasPermission('Add Permissions')) { %>
                       <div>
-                        <a
-                          class="btn btn-primary"
-                          href="/admin/add-permission-name"
-                        >
+                        <a class="btn btn-primary" href="/admin/add-permission-name">
                           Add Permission
                         </a>
                       </div>
-                      <% } %> <% if (hasPermission('Delete Permissions')) { %>
+                      <% } %> 
+                      
+                      <% if (hasPermission('Delete Permissions')) { %>
                       <div>
-                        <button
-                          id="delete-selected"
-                          class="btn btn-danger mt-2"
-                          disabled
-                        >
+                        <button id="delete-selected" class="btn btn-danger mt-2" disabled>
                           Delete Selected
                         </button>
                       </div>
@@ -57,7 +52,7 @@
                     </div>
                   </div>
                   <div class="table-responsive mt-3">
-                    <table class="table table-striped">
+                    <table id="permissionTable" class="table table-striped">
                       <thead>
                         <tr>
                           <% if (hasPermission('Delete Permissions')) { %>
@@ -66,8 +61,7 @@
                           <th>Index</th>
                           <th>Permission Name</th>
                           <th>Permission Description</th>
-                          <% if (hasPermission('Edit Permissions') ||
-                          hasPermission('Delete Permissions')) { %>
+                          <% if (hasPermission('Edit Permissions') || hasPermission('Delete Permissions')) { %>
                           <th>Action</th>
                           <% } %>
                         </tr>
@@ -87,8 +81,7 @@
                           <td style="width: 5%"><%= i + 1 %></td>
                           <td><%= data[i].permissionName %></td>
                           <td><%= data[i].permissionDescription %></td>
-                          <% if (hasPermission('Edit Permissions') ||
-                          hasPermission('Delete Permissions')) { %>
+                          <% if (hasPermission('Edit Permissions') || hasPermission('Delete Permissions')) { %>
                           <td>
                             <% if (hasPermission('Edit Permissions')) { %>
                             <a
@@ -96,12 +89,10 @@
                               style="font-size: 18px"
                               href="/admin/get-edit-slider/"
                             >
-                              <i
-                                class="fa-solid fa-pen-to-square text-primary"
-                              ></i>
+                              <i class="fa-solid fa-pen-to-square text-primary"></i>
                             </a>
-                            <% } %> <% if (hasPermission('Delete Permissions'))
-                            { %>
+                            <% } %> 
+                            <% if (hasPermission('Delete Permissions')) { %>
                             <a
                               class="mr-2"
                               style="font-size: 18px"
@@ -125,62 +116,91 @@
         </div>
       </div>
     </div>
+    
     <%- include("../partials/_script.ejs") %>
+    
+    <!-- Add DataTables JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+    
     <script>
-      const selectAllCheckbox = document.getElementById("select-all");
-      const rowCheckboxes = document.querySelectorAll(".row-checkbox");
-      const deleteSelectedButton = document.getElementById("delete-selected");
-
-      selectAllCheckbox.addEventListener("change", () => {
-        rowCheckboxes.forEach((checkbox) => {
-          checkbox.checked = selectAllCheckbox.checked;
-        });
-        toggleDeleteButton();
-      });
-
-      function toggleDeleteButton() {
-        const anyChecked = Array.from(rowCheckboxes).some(
-          (checkbox) => checkbox.checked
-        );
-        deleteSelectedButton.disabled = !anyChecked;
-      }
-
-      rowCheckboxes.forEach((checkbox) => {
-        checkbox.addEventListener("change", toggleDeleteButton);
-      });
-
-      deleteSelectedButton.addEventListener("click", async () => {
-        const selectedIds = Array.from(rowCheckboxes)
-          .filter((checkbox) => checkbox.checked)
-          .map((checkbox) => checkbox.value);
-
-        if (
-          selectedIds.length > 0 &&
-          confirm("Are you sure you want to delete the selected items?")
-        ) {
-          try {
-            const response = await fetch(
-              "/admin/post-multiple-permission-delete",
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ ids: selectedIds }),
-              }
-            );
-
-            if (response.ok) {
-              alert("Selected permissions deleted successfully.");
-              location.reload();
-            } else {
-              alert("Failed to delete selected permissions.");
+      // DataTables Initialization
+      $(document).ready(function() {
+        const permissionTable = $('#permissionTable').DataTable({
+          pageLength: 10,
+          lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+          responsive: true,
+          language: {
+            searchPlaceholder: "Search permissions...",
+            search: "",
+          },
+          columnDefs: [
+            { 
+              // Disable sorting on the checkbox and action columns
+              targets: [0, -1], 
+              orderable: false 
             }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("An error occurred while deleting selected permissions.");
-          }
+          ]
+        });
+
+        // Select All Checkbox
+        const selectAllCheckbox = document.getElementById("select-all");
+        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+        const deleteSelectedButton = document.getElementById("delete-selected");
+
+        selectAllCheckbox.addEventListener("change", () => {
+          rowCheckboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+          });
+          toggleDeleteButton();
+        });
+
+        function toggleDeleteButton() {
+          const anyChecked = Array.from(rowCheckboxes).some(
+            (checkbox) => checkbox.checked
+          );
+          deleteSelectedButton.disabled = !anyChecked;
         }
+
+        rowCheckboxes.forEach((checkbox) => {
+          checkbox.addEventListener("change", toggleDeleteButton);
+        });
+
+        // Multi-Delete Functionality
+        deleteSelectedButton.addEventListener("click", async () => {
+          const selectedIds = Array.from(rowCheckboxes)
+            .filter((checkbox) => checkbox.checked)
+            .map((checkbox) => checkbox.value);
+
+          if (
+            selectedIds.length > 0 &&
+            confirm("Are you sure you want to delete the selected items?")
+          ) {
+            try {
+              const response = await fetch(
+                "/admin/post-multiple-permission-delete",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ ids: selectedIds }),
+                }
+              );
+
+              if (response.ok) {
+                alert("Selected permissions deleted successfully.");
+                location.reload();
+              } else {
+                alert("Failed to delete selected permissions.");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert("An error occurred while deleting selected permissions.");
+            }
+          }
+        });
       });
     </script>
   </body>

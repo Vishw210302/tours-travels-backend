@@ -1503,7 +1503,7 @@ apicontroller.addFlightTicketsData = async (req, res) => {
     const allFilghtRelatedDetails = contactDetailsArray[0]
     // res.send(allFilghtRelatedDetails)
 
-    await seatUpdate()
+    // await seatUpdate()
 
     const mealTotalPrice = allFilghtRelatedDetails.mealDetails.reduce((total, meal) => {
       return total + meal.mealPrice * meal.mealCount;
