@@ -755,6 +755,18 @@ adminController.addInclusionAndExclusion = async (req, res) => {
     }
 };
 
+adminController.deleteParticularPackages = async (req, res) => {
+    try {
+        console.log("calledddddd")
+        const allParticularPackages = await itenary.findById(req.params.id);
+
+        await allParticularPackages.remove();
+        res.redirect('/admin/internationalPackagesListing')
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 adminController.allCitiesListing = async (req, res) => {
     try {
         const citiesList = await airport_cities.find();
@@ -2398,6 +2410,14 @@ adminController.flightPaymentDelete = async (req, res) => {
 adminController.getTestTemplete = async (req, res) => {
     try {
         res.render("admin-panel/templateUrl/templateUrlListing")
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+adminController.getTestHotelTemplate = async (req, res) => {
+    try {
+        res.render("admin-panel/templateUrl/hotelTemplateListing")
     } catch (error) {
         console.log("error", error)
     }

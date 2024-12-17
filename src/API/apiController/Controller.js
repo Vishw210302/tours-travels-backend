@@ -272,9 +272,9 @@ apicontroller.getParticularItenary = async (req, res) => {
 }
 
 apicontroller.allDetailsOfItenaty = async (req, res) => {
-
   try {
     const id = new mongoose.Types.ObjectId(req.params.id);
+    
     const itenaryData = await itenary.aggregate([
       {
         $match: { _id: id }
@@ -322,6 +322,7 @@ apicontroller.allDetailsOfItenaty = async (req, res) => {
           departureTo: { $first: '$departureTo' },
           fileUpload: { $first: '$fileUpload' },
           categories: { $first: '$categories' },
+          flightsDetailsId: { $first: '$flightsDetailsId' },
           createdAt: { $first: '$createdAt' },
           days: { $push: '$days' }
         }
@@ -353,26 +354,65 @@ apicontroller.allDetailsOfItenaty = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'itenaryflightdetails',
+          let: {
+            onwardFlightId: '$flightsDetailsId.onwardFlightId',
+            returnFlightId: '$flightsDetailsId.returnFlightId'
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [
+                    { $eq: ['$_id', '$$onwardFlightId'] },
+                    { $eq: ['$_id', '$$returnFlightId'] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'flightDetails'
+        }
+      },
+      {
         $project: {
-          priceArray: 0,
-          'price._id': 0,
-          'price.itenaryId': 0,
-          'price.__v': 0,
-          'days.__v': 0,
-          'inclusionExclusion.deletedAt': 0,
-          'inclusionExclusion._id': 0,
-          'inclusionExclusion.createdAt': 0,
-          'inclusionExclusion.itenaryId': 0,
-          'inclusionExclusion.__v': 0
+          bannerImage: 1,
+          mainPackageId: 1,
+          packageTitle: 1,
+          smallDescription: 1,
+          departureDates: 1,
+          perPersonCost: 1,
+          departureFrom: 1,
+          departureTo: 1,
+          fileUpload: 1,
+          categories: 1,
+          createdAt: 1,
+          days: 1,
+          price: 1,
+          inclusionExclusion: 1,
+          flightDetails: 1,
         }
       }
     ]);
 
-    res.status(200).json({ 'itenaryData': itenaryData[0] })
+    if (!itenaryData || itenaryData.length === 0) {
+      return res.status(404).json({ message: 'No itinerary found' });
+    }
+
+    res.status(200).json({ 
+      itenaryData: itenaryData[0],
+    });
+
   } catch (error) {
-    console.log("error", error)
+    console.error('Detailed Error in allDetailsOfItenaty:', error);
+    res.status(500).json({ 
+      error: 'An error occurred while fetching itinerary details',
+      errorMessage: error.message,
+      errorStack: error.stack
+    });
   }
-}
+};
 
 apicontroller.getContactUsReview = async (req, res) => {
   try {
