@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Hotel Booking Confirmation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Reset and global styles */
+      body,
+      table,
+      td,
+      a {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+      table,
+      td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        max-width: 100%;
+      }
+
+      /* Email body styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", Arial, sans-serif;
+        line-height: 1.6;
+        background-color: #f4f7f6;
+      }
+
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .email-header {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        text-align: center;
+        padding: 30px 20px;
+      }
+
+      .email-header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .email-header p {
+        margin: 10px 0 0;
+        font-size: 16px;
+        opacity: 0.8;
+      }
+
+      .hotel-image {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .booking-details {
+        padding: 30px 20px;
+      }
+
+      .detail-section {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .detail-section h2 {
+        color: #2c3e50;
+        border-bottom: 2px solid #2ac4c4;
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+        font-size: 18px;
+      }
+
+      .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: white;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .detail-item strong {
+        color: #34495e;
+        opacity: 0.7;
+      }
+
+      .amenities {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .amenity-tag {
+        background-color: #2ac4c4;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+      }
+
+      .action-section {
+        background-color: #f4f7f6;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .action-button {
+        display: inline-block;
+        background-color: #2c3e50;
+        color: white;
+        padding: 12px 25px;
+        text-decoration: none;
+        border-radius: 25px;
+        margin: 0 10px;
+        transition: background-color 0.3s ease;
+      }
+
+      .action-button:hover {
+        background-color: #34495e;
+      }
+
+      .footer {
+        background-color: #2c3e50;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        font-size: 12px;
+      }
+
+      @media screen and (max-width: 600px) {
+        .email-container {
+          width: 100% !important;
+        }
+        .detail-item {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <table class="email-container" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td class="email-header">
+          <h1>Exclusive Stay Confirmed</h1>
+          <p>Your Luxury Experience Awaits</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <!-- Hotel Image Section -->
+          <img
+            src="/api/placeholder/600/300"
+            alt="Luxury Hotel Room"
+            class="hotel-image"
+            width="600"
+            height="300"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td class="booking-details">
+          <table width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="detail-section">
+                <h2>Booking Information</h2>
+                <div class="detail-item">
+                  <strong>Booking Reference</strong>
+                  <span>LUX-2024-9876</span>
+                </div>
+                <div class="detail-item">
+                  <strong>Check-In Date</strong>
+                  <span>September 15, 2024</span>
+                </div>
+                <div class="detail-item">
+                  <strong>Check-Out Date</strong>
+                  <span>September 20, 2024</span>
+                </div>
+                <div class="detail-item">
+                  <strong>Room Type</strong>
+                  <span>Ocean View Suite</span>
+                </div>
+                <div class="detail-item">
+                  <strong>Total Cost</strong>
+                  <span>$1,500.00 USD</span>
+                </div>
+                <div class="detail-item">
+                  <strong>Payment Status</strong>
+                  <span>Paid</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="detail-section">
+                <h2>Hotel Amenities</h2>
+                <div class="amenities">
+                  <span class="amenity-tag">Infinity Pool</span>
+                  <span class="amenity-tag">Private Spa</span>
+                  <span class="amenity-tag">Gourmet Restaurant</span>
+                  <span class="amenity-tag">Ocean Access</span>
+                  <span class="amenity-tag">24/7 Concierge</span>
+                  <span class="amenity-tag">Fitness Center</span>
+                  <span class="amenity-tag">Free Wi-Fi</span>
+                  <span class="amenity-tag">Valet Parking</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="detail-section">
+                <h2>Guest Details</h2>
+                <div class="detail-item">
+                  <strong>Guest Name</strong>
+                  <span>John Doe</span>
+                </div>
+                <div class="detail-item">
+                  <strong>Email</strong>
+                  <span>johndoe@example.com</span>
+                </div>
+                <div class="detail-item">
+                  <strong>Phone</strong>
+                  <span>+1 234 567 890</span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="footer">© 2024 Luxury Hotels. All Rights Reserved.</td>
+      </tr>
+    </table>
+  </body>
+</html>

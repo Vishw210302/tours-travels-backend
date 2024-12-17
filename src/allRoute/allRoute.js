@@ -55,6 +55,7 @@ router.post('/add-price-details', adminController.addPriceDetails);
 router.get("/all-itenaries-packagesvise/:id", adminController.getAllDetailsOfItenaty)
 router.get('/allInclusionAndExclusion/:id', adminController.allInclusionAndExclusion);
 router.post('/add-inclusion-exclusion', adminController.addInclusionAndExclusion);
+router.get('/delete-particular-package/:id', adminController.deleteParticularPackages);
 
 // All Testimonial API
 router.get('/allTestimonialListing', adminController.allTestimonialListing);
@@ -216,6 +217,7 @@ router.get("/flight-payment-details", adminController.flightPaymentDetails)
 
 // Test Route
 router.get("/test-template", adminController.getTestTemplete)
+router.get("/test-hotel-template", adminController.getTestHotelTemplate)
 
 // 404 Error API 
 router.get('*', adminController.getErrorPage)

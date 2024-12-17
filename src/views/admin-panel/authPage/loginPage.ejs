@@ -40,15 +40,8 @@
         border: 1px solid var(--border-color);
         position: relative;
         overflow: hidden;
-        transform: perspective(1000px) rotateX(-10deg) rotateY(10deg) scale(0.9);
         opacity: 0.9;
         transition: all 0.5s ease;
-      }
-
-      .container:hover {
-        transform: perspective(1000px) rotateX(0) rotateY(0) scale(1);
-        opacity: 1;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       }
 
       .tab-buttons {
@@ -343,7 +336,9 @@
             required
           />
           <div class="forgot-password">
-            <a href="/get-forgot-password" class="forgot-password-text">Forgot Password</a>
+            <a href="/get-forgot-password" class="forgot-password-text"
+              >Forgot Password</a
+            >
           </div>
           <button type="submit" class="submit-button">Login</button>
         </form>

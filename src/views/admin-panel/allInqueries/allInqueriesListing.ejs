@@ -36,7 +36,7 @@
 
                   <!-- Filters Section -->
                   <div class="row mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <input
                         type="text"
                         id="searchInput"
@@ -45,7 +45,7 @@
                         onkeyup="filterTable()"
                       />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <input
                         type="date"
                         id="startDate"
@@ -53,13 +53,34 @@
                         onchange="filterByDate()"
                       />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <input
                         type="date"
                         id="endDate"
                         class="form-control"
                         onchange="filterByDate()"
                       />
+                    </div>
+                    <div class="col-md-3">
+                      <select
+                        id="monthFilter"
+                        class="form-control"
+                        onchange="filterByMonth()"
+                      >
+                        <option value="">All Months</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                      </select>
                     </div>
                   </div>
 
@@ -175,6 +196,22 @@
             (!isNaN(startDate) && rowDate < startDate) ||
             (!isNaN(endDate) && rowDate > endDate)
           ) {
+            row.style.display = "none";
+          } else {
+            row.style.display = "";
+          }
+        });
+      }
+
+      function filterByMonth() {
+        const month = document.getElementById("monthFilter").value;
+        const rows = document.querySelectorAll("#inqueriesTable tbody tr");
+
+        rows.forEach((row) => {
+          const dateText = row.children[7].textContent;
+          const [day, monthInRow, year] = dateText.split("/");
+
+          if (month && parseInt(monthInRow) !== parseInt(month)) {
             row.style.display = "none";
           } else {
             row.style.display = "";
