@@ -26,12 +26,10 @@ const contactUsTicketsSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-
     paymentStatus: {
         type: Boolean,
         default: false
     },
-
     fullName: {
         type: String,
         required: true,

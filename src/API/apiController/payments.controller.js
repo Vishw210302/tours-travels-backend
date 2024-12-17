@@ -72,28 +72,40 @@ exports.verifyPayment = async (req, res) => {
     }
 }
 
-exports.getFlightPayment = async (req, res) => {
+exports.getFlightPayment = async (paymentId) => {
     try {
-        const paymentIntents = await stripe.paymentIntents.list({
-            limit: 100,
-        });
+        if (!paymentId || typeof paymentId !== "string") {
+            return null;
+        }
 
-        const paymentDetails = paymentIntents.data
-            .filter(intent => intent.description && intent.description.includes("Payment for flight ticket booking"))
-            .map(intent => ({
-                id: intent.id,
-                amount: intent.amount,
-                currency: intent.currency,
-                customer: intent.customer,
-                payment_method: intent.payment_method,
-                status: intent.status,
-                description: intent.description,
-                created: new Date(intent.created * 1000),
-            }));
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentId);
 
-        return paymentDetails;
+        if (paymentIntent) {
+            return {
+                id: paymentIntent.id,
+                amount: paymentIntent.amount / 100, 
+                currency: paymentIntent.currency,
+                customer: paymentIntent.customer || null,
+                payment_method: paymentIntent.payment_method || null,
+                status: paymentIntent.status,
+                description: paymentIntent.description || "No description available",
+                created: new Date(paymentIntent.created * 1000), 
+            };
+        }
+
+        return null;
     } catch (error) {
-        console.error('Error fetching payment intents:', error);
-        res.status(500).send({ error: 'Failed to fetch payment details' });
+        console.error('Error fetching payment details:', error);
+        return null;
     }
 };
+
+exports.deletePaymentIntent = async (paymentId) => {
+    try {
+        await stripe.paymentIntents.cancel(paymentId);
+        return true
+    } catch (error) {
+        console.error('Error canceling payment intent:', error);
+        return false
+    }
+}

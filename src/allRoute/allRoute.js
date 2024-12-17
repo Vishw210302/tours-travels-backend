@@ -214,7 +214,7 @@ router.post("/employee-password-change", adminController.employeeChangePassword)
 
 // All Payment Details API
 router.get("/flight-payment-details", adminController.flightPaymentDetails)
-
+router.get("/flight-payment-delete/:id", adminController.flightPaymentDelete)
 // Test Route
 router.get("/test-template", adminController.getTestTemplete)
 router.get("/test-hotel-template", adminController.getTestHotelTemplate)

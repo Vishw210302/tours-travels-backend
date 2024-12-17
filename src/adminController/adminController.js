@@ -42,8 +42,10 @@ const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 const { setEmployeePasswordEmail } = require('../utils/sendMail');
 const bcrypt = require('bcrypt');
 const userAndPermission = require('../schema/userAndPermissionSchema/userAndPermissionSchema');
-const { getFlightPayment } = require('../API/apiController/payments.controller');
+const { getFlightPayment, deletePaymentIntent, getFlightPayments } = require('../API/apiController/payments.controller');
 const querySend = require('../schema/querySendSchema/querySendSchema');
+const flightContactUs = require('../schema/passengerDetailsSchema/contactUsTicketsSchema');
+const passengerDetails = require('../schema/passengerDetailsSchema/passengerDetailsSchema');
 
 adminController.index = async (req, res) => {
     try {
@@ -1866,12 +1868,17 @@ adminController.permissionListing = async (req, res) => {
     try {
         const response = await axios.get(`${process.env.baseUrl}/api/get-all-permission-listing`)
         if (response.data.status == true) {
-            res.render("admin-panel/persmissionPage/persmissionListing", { data: response.data.data })
+            res.render("admin-panel/persmissionPage/persmissionListing", { 
+                data: response.data.data 
+            })
         } else {
-            console.log("Error get in listing in packages")
+            req.flash('error', 'Unable to fetch permission listings')
+            res.redirect('/admin/dashboard')
         }
     } catch (error) {
-        console.log("error", error)
+        console.error("Error in permission listing:", error)
+        req.flash('error', 'An error occurred while fetching permissions')
+        res.redirect('/admin/dashboard')
     }
 }
 
@@ -2271,15 +2278,134 @@ adminController.getErrorPage = (req, res) => {
 
 adminController.flightPaymentDetails = async (req, res) => {
     try {
-        const allFlightPaymentData = await getFlightPayment();
-        console.log("allFlightPaymentData", allFlightPaymentData);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
 
-        res.render("admin-panel/flightPaymentDetails/flightPaymentDetailsListing", { paymentDetails: allFlightPaymentData });
+        let flightContactDetails = await flightContactUs.find();
+
+        const processedPaymentDetails = await Promise.all(
+            flightContactDetails.map(async details => {
+                let paymentIntent = null;
+                if (details.paymentId) {
+                    paymentIntent = await getFlightPayment(details.paymentId);
+                }
+
+                const passenger = await passengerDetails.findOne({ _id: details.passengerId[0] }).lean();
+                const flight = await FlightsDetails.findOne({ _id: passenger.flightId }, 'departure.city arrival.city').lean();
+
+                return {
+                    paymentIntent,
+                    contactDetails: {
+                        fullName: details.fullName,
+                        mobileNumber: details.mobileNumber,
+                    },
+                    flightDetails: flight
+                        ? {
+                            departureCity: flight.departure.city,
+                            arrivalCity: flight.arrival.city,
+                        }
+                        : null,
+                };
+            })
+        );
+
+        function formatDateToDMY(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getUTCDate()).padStart(2, '0');
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+            const year = date.getUTCFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        const filteredPaymentDetails = processedPaymentDetails.filter(detail => {
+
+            const searchTerm = search.toLowerCase();
+            const paymentStatus = detail.paymentIntent
+                ? detail.paymentIntent.status
+                : "Pending";
+            const paymentDate = detail.paymentIntent
+                ? formatDateToDMY(detail.paymentIntent.created)
+                : "Pending";
+            
+            return (
+                detail.contactDetails.fullName.toLowerCase().includes(searchTerm) ||
+                detail.contactDetails.mobileNumber.includes(searchTerm) ||
+                (detail.flightDetails &&
+                    (detail.flightDetails.departureCity.toLowerCase().includes(searchTerm) ||
+                        detail.flightDetails.arrivalCity.toLowerCase().includes(searchTerm))
+                ) ||
+                (detail.paymentIntent &&
+                    (
+                        detail.paymentIntent.id?.toLowerCase().includes(searchTerm) ||
+                        detail.paymentIntent.status?.toLowerCase().includes(searchTerm) ||
+                        detail.paymentIntent.description?.toLowerCase().includes(searchTerm) ||
+                        detail.paymentIntent.amount?.toString().includes(searchTerm) || 
+                        formatDateToDMY(detail.paymentIntent.created).includes(searchTerm)
+                    )
+                )||
+                paymentStatus.toLowerCase().includes(searchTerm) ||
+                paymentDate.toLowerCase().includes(searchTerm)
+            );
+        });
+
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+        const paginatedPaymentDetails = filteredPaymentDetails.slice(startIndex, endIndex);
+
+        if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+            return res.json({
+                draw: req.query.draw,
+                recordsTotal: filteredPaymentDetails.length,
+                recordsFiltered: filteredPaymentDetails.length,
+                data: paginatedPaymentDetails.map((detail, index) => ({
+                    DT_RowIndex: startIndex + index + 1,
+                    paymentId: detail.paymentIntent?.id || 'N/A',
+                    flightRoute: detail.flightDetails
+                        ? `${detail.flightDetails.departureCity} to ${detail.flightDetails.arrivalCity}`
+                        : 'N/A',
+                    passengerName: detail.contactDetails.fullName,
+                    phoneNumber: detail.contactDetails.mobileNumber,
+                    amount: detail.paymentIntent?.amount || 0,
+                    paymentDate: detail.paymentIntent?.created
+                        ? new Date(detail.paymentIntent.created).toLocaleDateString()
+                        : 'N/A',
+                    status: detail.paymentIntent ? detail.paymentIntent.status : 'Pending',
+                }))
+            });
+        }
+
+        res.render("admin-panel/flightPaymentDetails/flightPaymentDetailsListing");
+
     } catch (error) {
         console.log("Error:", error);
         res.status(500).send({ error: 'Failed to load flight payment details' });
     }
 };
+
+adminController.flightPaymentDelete = async (req, res) => {
+    try {
+
+        const paymentId = req.params.id
+
+        if (paymentId == 'N/A') {
+            res.redirect('/admin/flight-payment-details')
+        }
+
+        const response = await deletePaymentIntent(paymentId)
+
+        if (response) {
+            res.redirect('/admin/flight-payment-details')
+        }
+
+    } catch (error) {
+        console.log("Error:", error);
+        res.status(500).send({ error: 'Failed to delete payment intent' });
+    }
+};
+
+
 
 adminController.getTestTemplete = async (req, res) => {
     try {
