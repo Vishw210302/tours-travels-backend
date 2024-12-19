@@ -475,9 +475,9 @@ const getSiteSeenByName = async (name) => {
 
 adminController.adddDayWiseItenary = async (req, res) => {
     try {
-
+       
         let deFaultImage = null;
-        let { title, siteSeenId, itenaryId, description, meal } = req.body;
+        let { title, siteSeenId, itenaryId, description, meal, arrivalTransfer, pickupTransfer,roadType, hotelName, mealPlan, hotelRoomType } = req.body;
 
         let errors = {};
         if (!title || title.trim() === '') {
@@ -492,9 +492,34 @@ adminController.adddDayWiseItenary = async (req, res) => {
             errors.meal = 'At least one meal selection is required.';
         }
 
+        if (!arrivalTransfer || arrivalTransfer.trim() === '' || arrivalTransfer == 'undefined') {
+            errors.arrivalTransfer = 'Arrival transfer selection is required.';
+        }
+        
+        if (!pickupTransfer || pickupTransfer.trim() === '' || pickupTransfer == 'undefined') {
+            errors.pickupTransfer = 'Pickup transfer selection is required.';
+        }
+        
+        if (!roadType || roadType.trim() === '') {
+            errors.roadType = 'Road type is required.';
+        }
+        
+        if (!hotelName || hotelName.trim() === '') {
+            errors.hotelName = 'Hotel name is required.';
+        }
+        
+        if (!mealPlan || mealPlan.trim() === '') {
+            errors.mealPlan = 'Meal plan is required.';
+        }
+        
+        if (!hotelRoomType || hotelRoomType.trim() === '') {
+            errors.hotelRoomType = 'Hotel room type is required.';
+        }
+
         if (Object.keys(errors).length > 0) {
             return res.status(400).json({ errors });
         }
+
         const itenaries = await itenary.findOne({ _id: itenaryId });
         if (!itenaries) {
             return res.status(404).json({ message: 'Itenary not found.' });
@@ -513,9 +538,15 @@ adminController.adddDayWiseItenary = async (req, res) => {
             deFaultImage,
             itenaryId,
             description,
-            meal
+            meal,
+            arrivalTransfer,
+            pickupTransfer,
+            roadType,
+            hotelName,
+            mealPlan,
+            hotelRoomType
         });
-
+        // data: addDayWiseItenary
         res.status(200).json({ message: 'Successfully added day', data: addDayWiseItenary });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -526,7 +557,7 @@ adminController.updateDayItenary = async (req, res) => {
     try {
 
         let deFaultImage = null;
-        let { title, siteSeenId, itenaryId, description, meal } = req.body;
+        let { title, siteSeenId, itenaryId, description, meal, arrivalTransfer, pickupTransfer,roadType, hotelName, mealPlan, hotelRoomType } = req.body;
 
         const itenaries = await itenary.findOne({ _id: itenaryId });
 
@@ -551,6 +582,12 @@ adminController.updateDayItenary = async (req, res) => {
                     deFaultImage: deFaultImage,
                     description: description,
                     meal: meal,
+                    arrivalTransfer: arrivalTransfer,
+                    pickupTransfer: pickupTransfer,
+                    roadType: roadType,
+                    hotelName: hotelName,
+                    hotelRoomType: hotelRoomType,
+                    mealPlan: mealPlan
                 },
             },
             { new: true }

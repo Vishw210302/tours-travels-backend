@@ -105,6 +105,7 @@
       border-bottom: 1px solid white;
       width: fit-content;
     }
+
     .hotel-transfer {
       font-size: 12px;
     }
@@ -149,8 +150,8 @@
                         </div>
                         <button
                           type="button"
-                          disabled
                           id="addDayButton"
+                          disabled
                           class="btn btn-primary"
                         >
                           Add Day
@@ -233,12 +234,12 @@
                                 <button
                                   type="button"
                                   class="btn btn-sm btn-primary"
-                                  id="addMealButton"
+                                  id="addMealButton1"
                                 >
                                   +
                                 </button>
                               </div>
-                              <div class="d-flex" id="mealContainer">
+                              <div class="d-flex" id="mealContainer1">
                                 <div class="form-check mr-2">
                                   <input
                                     class="form-check-input"
@@ -298,9 +299,9 @@
                                 id="mealValidation1"
                               ></div>
                             </div>
-                            <div id="customMealContainer" class="mt-2"></div>
+                            <div id="customMealContainer1" class="mt-2"></div>
                           </div>
-                          <!-- <div class="d-flex w-100" style="gap: 10px">
+                          <div class="d-flex w-100" style="gap: 10px">
                             <div class="border border-white p-2 w-50">
                               <div class="main-title-border mb-3">
                                 <h4 class="mb-2">Hotel Details</h4>
@@ -311,8 +312,8 @@
                                   <input
                                     list="hotelTypes"
                                     class="form-control"
-                                    id="selectHotelType"
-                                    name="selectHotelType"
+                                    id="hotelName"
+                                    name="hotelName"
                                     data-day="1"
                                     placeholder="Select or type Hotel Type"
                                   />
@@ -324,6 +325,15 @@
                                     <option value="Any 5 star Hotel"></option>
                                   </datalist>
                                 </div>
+                                <div
+                                  class="validation1"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="hotelNameValidation1"
+                                ></div>
                               </div>
 
                               <div>
@@ -332,8 +342,8 @@
                                   <input
                                     list="roomTypes"
                                     class="form-control"
-                                    id="selectRoomType"
-                                    name="selectRoomType"
+                                    id="hotelRoomType"
+                                    name="hotelRoomType"
                                     data-day="1"
                                     placeholder="Select or type Room Type"
                                   />
@@ -343,6 +353,15 @@
                                     <option value="Royal"></option>
                                   </datalist>
                                 </div>
+                                <div
+                                  class="validation1"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="hotelRoomTypeValidation1"
+                                ></div>
                               </div>
 
                               <div>
@@ -351,8 +370,9 @@
                                   <input
                                     list="mealPlans"
                                     class="form-control"
-                                    id="selectMealPlanType"
-                                    name="selectMealPlanType"
+                                    id="mealPlan"
+                                    name="mealPlan"
+                                    data-day="1"
                                     placeholder="Select or type Meal Plan Type"
                                   />
                                   <datalist id="mealPlans">
@@ -373,6 +393,15 @@
                                     <option value="EP - European Plan"></option>
                                   </datalist>
                                 </div>
+                                <div
+                                  class="validation1"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="mealPlanValidation1"
+                                ></div>
                               </div>
                             </div>
 
@@ -387,7 +416,7 @@
                                   <label class="d-flex" style="gap: 7px">
                                     <input
                                       type="radio"
-                                      name="airportToHotel"
+                                      name="arrivalTransfer"
                                       value="PVT"
                                     />
                                     <div class="hotel-transfer">PVT</div>
@@ -395,7 +424,7 @@
                                   <label class="d-flex" style="gap: 7px">
                                     <input
                                       type="radio"
-                                      name="airportToHotel"
+                                      name="arrivalTransfer"
                                       value="SIC"
                                     />
                                     <div class="hotel-transfer">SIC</div>
@@ -403,12 +432,21 @@
                                   <label class="d-flex" style="gap: 7px">
                                     <input
                                       type="radio"
-                                      name="airportToHotel"
+                                      name="arrivalTransfer"
                                       value="None"
                                     />
                                     <div class="hotel-transfer">None</div>
                                   </label>
                                 </div>
+                                <div
+                                  class="validation1"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="arrivalTransferValidation1"
+                                ></div>
                               </div>
 
                               <div class="mt-3">
@@ -421,7 +459,7 @@
                                   <label class="d-flex" style="gap: 7px">
                                     <input
                                       type="radio"
-                                      name="hotelToAirport"
+                                      name="pickupTransfer"
                                       value="PVT"
                                     />
                                     <div class="hotel-transfer">PVT</div>
@@ -429,7 +467,7 @@
                                   <label class="d-flex" style="gap: 7px">
                                     <input
                                       type="radio"
-                                      name="hotelToAirport"
+                                      name="pickupTransfer"
                                       value="SIC"
                                     />
                                     <div class="hotel-transfer">SIC</div>
@@ -437,12 +475,21 @@
                                   <label class="d-flex" style="gap: 7px">
                                     <input
                                       type="radio"
-                                      name="hotelToAirport"
+                                      name="pickupTransfer"
                                       value="None"
                                     />
                                     <div class="hotel-transfer">None</div>
                                   </label>
                                 </div>
+                                <div
+                                  class="validation1"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="pickupTransferValidation1"
+                                ></div>
                               </div>
 
                               <div class="mt-3">
@@ -450,8 +497,9 @@
                                 <input
                                   list="roadTypes"
                                   class="form-control"
-                                  id="selectRoadType"
-                                  name="selectRoadType"
+                                  id="roadType"
+                                  name="roadType"
+                                  data-day="1"
                                   placeholder="Select or type Road Type"
                                 />
                                 <datalist id="roadTypes">
@@ -460,8 +508,17 @@
                                   <option value="Hill"></option>
                                 </datalist>
                               </div>
+                              <div
+                                class="validation1"
+                                style="
+                                  color: red;
+                                  font-size: 13px;
+                                  margin-top: 5px;
+                                "
+                                id="roadTypeValidation1"
+                              ></div>
                             </div>
-                          </div> -->
+                          </div>
 
                           <div class="buttons">
                             <button
@@ -498,306 +555,567 @@
     <%- include("../partials/_script.ejs") %>
 
     <script>
-              var siteSeenData = <%- JSON.stringify(siteSeenData) %>;
-              var itenaryId = <%- JSON.stringify(itenaryId) %>;
-              var mealDayCount;
-                     document.addEventListener("DOMContentLoaded", function () {
-                       let dayCount = 1;
-                       mealDayCount= dayCount
-                       const addDayButton = document.getElementById("addDayButton");
-                       const daysContainer = document.getElementById("daysContainer");
-                       const nextBtn = document.getElementById("nextBtn");
-                       const saveBtn = document.getElementById(`saveBtn`);
-                       initializeSelect2();
+      var siteSeenData = <%- JSON.stringify(siteSeenData) %>;
+      var itenaryId = <%- JSON.stringify(itenaryId) %>;
+      var mealDayCount;
+      document.addEventListener("DOMContentLoaded", function() {
+        let dayCount = 1;
+        mealDayCount = dayCount
+        const addDayButton = document.getElementById("addDayButton");
+        const daysContainer = document.getElementById("daysContainer");
+        const nextBtn = document.getElementById("nextBtn");
+        const saveBtn = document.getElementById(`saveBtn`);
+        initializeSelect2();
 
-                       nextBtn.addEventListener("click", function (event) {
-                         event.preventDefault();
-                         window.location.href = `/admin/package-price-page/${itenaryId}`;
-                       });
+        nextBtn.addEventListener("click", function(event) {
+          event.preventDefault();
+          window.location.href = `/admin/package-price-page/${itenaryId}`;
+        });
 
-                       addDayButton.addEventListener("click", function (event) {
-                         createDays();
-                       });
+        addDayButton.addEventListener("click", function(event) {
+          createDays();
+        });
 
-                       daysContainer.addEventListener("click", function (event) {
-                         if (event.target && event.target.id === `saveBtn`) {
-                           formSubmit(event.target);
-                         }
-                       });
-
-                       const createDays = () => {
-                         const newDayBox = document.createElement("div");
-                         newDayBox.classList.add("main-box");
-                         dayCount++;
-                         mealDayCount= dayCount
-                         newDayBox.innerHTML = `
-                                   <div class="day-count">Day ${dayCount}</div>
-                                   <input type="hidden" id="interyDetailId${dayCount}" name="interyDetailId">
-                                      <input type="hidden" class="form-control l" id="itenaryId${dayCount}"  name="itenaryId" value="<%= itenaryId %>" data-day="${dayCount}" />
-                                   <div class="form-group row">
-                                     <div class="col-md-6 mb-4">
-                                       <label for="title${dayCount}">Title</label>
-                                       <input type="text" class="form-control l" id="title${dayCount}" name="title" data-day="${dayCount}" />
-                                        <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="titleValidation${dayCount}"></div>
-                                     </div>
-                                     <div class="col-md-6 mb-4">
-                                       <label for="siteSeenId${dayCount}">SiteSeen</label>
-                                       <select class="js-example-basic-multiple form-control" multiple="multiple" id="siteSeenId${dayCount}" name="siteSeenId[]" data-day="${dayCount}">
-                                         <option value="">Select a site</option>
-                                         <% siteSeenData.forEach(function(site) { %>
-                                           <option value="<%= site._id %>">
-                                             <%= site.SiteseenName %>
-                                           </option>
-                                         <% }) %>
-                                       </select>
-                                     </div>
-                                     <div class="col-md-6">
-                                       <label for="description${dayCount}">Description</label>
-                                       <input type="text" class="form-control" id="description${dayCount}" name="description" data-day="${dayCount}" />
-                                       <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="description1Validation${dayCount}"></div>
-                                     </div>
-                                         <div class="form-group">
-                                           <label for="${dayCount}">Meal</label>
-                                           <div class="d-flex">
-                                             <div class="form-check mr-2">
-                                               <input
-                                                 class="form-check-input"
-                                                 type="checkbox"
-                                                 id="breakfastMeal${dayCount}"
-                                                 name="meal[]"
-                                                 value="Breakfast"
-                                                 data-day="${dayCount}"
-                                               />
-                                               <label
-                                                 class="form-check-label m-0 p-0"
-                                                 for="breakfastMeal${dayCount}"
-                                               >
-                                                 Breakfast
-                                               </label>
-                                             </div>
-                                             <div class="form-check mr-2">
-                                               <input
-                                                 class="form-check-input"
-                                                 type="checkbox"
-                                                 id="lunchMeal${dayCount}"
-                                                 name="meal[]"
-                                                 value="Lunch"
-                                                 data-day="${dayCount}"
-                                               />
-                                               <label
-                                                 class="form-check-label m-0 p-0"
-                                                 for="lunchMeal${dayCount}"
-                                               >
-                                                 Lunch
-                                               </label>
-                                             </div>
-                                             <div class="form-check mr-2">
-                                               <input
-                                                 class="form-check-input"
-                                                 type="checkbox"
-                                                 id="dinnerMeal${dayCount}"
-                                                 name="meal[]"
-                                                 value="Dinner"
-                                                 data-day="${dayCount}"
-                                               />
-                                               <label
-                                                 class="form-check-label m-0 p-0"
-                                                 for="dinnerMeal${dayCount}"
-                                               >
-                                                 Dinner
-                                               </label>
-                                             </div>
-
-                                           </div>
-                                            <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="mealValidation${dayCount}"></div>
-                                         </div>
-                                   </div>
-                                   <div class="buttons">
-                                           <button type="button" id="saveBtn" class="btn btn-primary">
-                                             Save
-                                           </button>
-                                         </div>
-                                   `;
-                         daysContainer.appendChild(newDayBox);
-                         addDayButton.disabled = true;
-                         nextBtn.disabled = true;
-
-                         initializeSelect2();
-                       }
-
-                       const formSubmit = (saveButton) => {
-                         event.preventDefault();
-
-                         const currentDay = saveButton.closest('.main-box').querySelector('.day-count').textContent.split(' ')[1];
-
-                         const currentDayInputs = document.querySelectorAll(`[data-day="${currentDay}"]`);
-                         const formData = new FormData();
-
-                         currentDayInputs.forEach((input) => {
-                           if (input.type !== "checkbox" && input.type !== "select-multiple") {
-                             formData.append(input.name, input.value);
-                           }
-                         });
-
-                         const siteSeenSelect = document.getElementById(`siteSeenId${currentDay}`);
-                         const selectedOptions = Array.from(siteSeenSelect.selectedOptions).map((opt) => opt.value);
-                         selectedOptions.forEach((value) => {
-                           formData.append("siteSeenId[]", value);
-                         });
-
-
-                         const meals = document.querySelectorAll(`input[name="meal[]"][data-day="${currentDay}"]:checked`);
-                        //  console.log(meals, 'meals')
-                         meals.forEach((meal) => {
-                          
-                           formData.append("meal[]", meal.value);
-                         });
-
-                         const itenaryDetailId = document.getElementById(`interyDetailId${currentDay}`).value
-
-                         if(itenaryDetailId == ''){
-
-                          fetch("/admin/add-day-itenary", {
-                           method: "POST",
-                           body: formData,
-                          })
-                           .then((response) => {
-                             if (!response.ok) {
-                               return response.json().then((error) => {
-
-                                 const validationMessages = document.getElementsByClassName(`validation${currentDay}`);
-                                 for (let i = 0; i < validationMessages.length; i++) {
-                                   validationMessages[i].textContent = "";
-                                 }
-
-                                 const title = document.getElementById(`titleValidation${currentDay}`);
-                                 const description = document.getElementById(`description1Validation${currentDay}`);
-                                 const meal = document.getElementById(`mealValidation${currentDay}`);
-
-                                 const err = error.errors;
-                                 if (err?.title && title) {
-                                   title.textContent = err.title;
-                                 }
-                                 if (err?.description && description) {
-                                   description.textContent = err.description;
-                                 }
-                                 if (err?.meal && meal) {
-                                   meal.textContent = err.meal;
-                                 }
-                               });
-                             }
-                             return response.json();
-                           })
-                           .then((data) => {
-                             if (data) {
-                               const validationMessages = document.getElementsByClassName(`validation${currentDay}`);
-                               for (let i = 0; i < validationMessages.length; i++) {
-                                 validationMessages[i].textContent = "";
-                               }
-                               document.getElementById(`interyDetailId${currentDay}`).value = data.data._id;
-                               addDayButton.disabled = false;
-                               nextBtn.disabled = false;
-                               alert('Saved Data successfully');
-                             }
-                           })
-                           .catch((error) => {
-                             console.error("Error:", error);
-                             alert("There was an error creating the package.");
-                           });
-                         }
-                         else{
-
-                           fetch(`/admin/edit-day-itenary/${itenaryDetailId}`, {
-                           method: "POST",
-                           body: formData,
-                           })
-                           .then((response) => {
-                             if (!response.ok) {
-                               return response.json().then((error) => {
-                                console.log(error, 'updated Code')
-                               });
-                             }
-                             return response.json();
-                           })
-                           .then((data) => {
-                             if (data) {
-                               alert('Update Data successfully');
-                             }
-                           })
-                           .catch((error) => {
-                             console.error("Error:", error);
-                             alert("There was an error updating the package.");
-                           });
-                         }
-                        }
-                       function initializeSelect2() {
-                         $(".js-example-basic-multiple").select2({
-                           placeholder: "Select SiteSeen",
-                           allowClear: true
-                         });
-                       }
-                     });
-                     document.getElementById('addMealButton').addEventListener('click', function () {
-        // Create input field for custom meal
-        const customMealInput = document.createElement('input');
-        customMealInput.type = 'text';
-        customMealInput.placeholder = 'Enter custom meal';
-        customMealInput.className = 'form-control mb-2';
-        customMealInput.id = 'customMealInput';
-
-        // Create submit button for custom meal
-        const submitButton = document.createElement('button');
-        submitButton.textContent = 'Submit';
-        submitButton.className = 'btn btn-sm btn-success';
-        submitButton.id = 'submitCustomMealButton';
-
-        // Append input field and submit button
-        const customMealContainer = document.getElementById('customMealContainer');
-        customMealContainer.innerHTML = ''; // Clear previous elements
-        customMealContainer.appendChild(customMealInput);
-        customMealContainer.appendChild(submitButton);
-
-        // Add event listener for submit button
-        submitButton.addEventListener('click', function () {
-          const mealValue = customMealInput.value.trim();
-          if (mealValue) {
-            // Clear input and button after submission
-            customMealContainer.innerHTML = '';
-
-            // Add checkbox for custom meal
-            const customMealCheck = document.createElement('div');
-            customMealCheck.className = 'form-check mr-2';
-            const customMealCheckbox = document.createElement('input');
-            customMealCheckbox.className = 'form-check-input';
-            customMealCheckbox.type = 'checkbox';
-            customMealCheckbox.name = 'meal[]';
-            customMealCheckbox.value = mealValue;
-            customMealCheckbox.setAttribute('data-day', mealDayCount);
-            customMealCheck.appendChild(customMealCheckbox);
-
-            const customMealLabel = document.createElement('label');
-            customMealLabel.className = 'form-check-label m-0 p-0';
-            customMealLabel.textContent = mealValue;
-            customMealCheck.appendChild(customMealLabel);
-
-            mealContainer.appendChild(customMealCheck);
-
-            // Add event listener for the checkbox
-            customMealCheckbox.addEventListener('change', function () {
-              if (this.checked) {
-                // Checkbox checked - collect the value to the data
-                console.log('Meal added:', mealValue);
-                // You can perform any other action here
-              } else {
-                // Checkbox unchecked - remove the value from data if needed
-                console.log('Meal removed:', mealValue);
-                // You can perform any other action here
-              }
-            });
-          } else {
-            alert('Please enter a valid meal.');
+        daysContainer.addEventListener("click", function(event) {
+          if (event.target && event.target.id === `saveBtn`) {
+            formSubmit(event.target);
           }
         });
+
+        const createDays = () => {
+          const newDayBox = document.createElement("div");
+          newDayBox.classList.add("main-box");
+          dayCount++;
+          mealDayCount = dayCount
+          newDayBox.innerHTML = `
+                                             <div class="day-count">Day ${dayCount}</div>
+                                             <input type="hidden" id="interyDetailId${dayCount}" name="interyDetailId">
+                                                <input type="hidden" class="form-control l" id="itenaryId${dayCount}"  name="itenaryId" value="<%= itenaryId %>" data-day="${dayCount}" />
+                                             <div class="form-group row">
+                                               <div class="col-md-6 mb-4">
+                                                 <label for="title${dayCount}">Title</label>
+                                                 <input type="text" class="form-control l" id="title${dayCount}" name="title" data-day="${dayCount}" />
+                                                  <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="titleValidation${dayCount}"></div>
+                                               </div>
+                                               <div class="col-md-6 mb-4">
+                                                 <label for="siteSeenId${dayCount}">SiteSeen</label>
+                                                 <select class="js-example-basic-multiple form-control" multiple="multiple" id="siteSeenId${dayCount}" name="siteSeenId[]" data-day="${dayCount}">
+                                                   <option value="">Select a site</option>
+                                                   <% siteSeenData.forEach(function(site) { %>
+                                                     <option value="<%= site._id %>">
+                                                       <%= site.SiteseenName %>
+                                                     </option>
+                                                   <% }) %>
+                                                 </select>
+                                               </div>
+                                               <div class="col-md-6">
+                                                 <label for="description${dayCount}">Description</label>
+                                                 <input type="text" class="form-control" id="description${dayCount}" name="description" data-day="${dayCount}" />
+                                                 <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="description1Validation${dayCount}"></div>
+                                               </div>
+                                                   <div class="form-group">
+
+                                                     <div class="d-flex align-items-center" style="gap: 10px">
+                                       <label for="${dayCount}">Meal</label>
+                                        <button type="button" class="btn btn-sm btn-primary" id="addMealButton${dayCount}">
+                                          +
+                                        </button>
+                                      </div>
+                                                     <div class="d-flex" id="mealContainer${dayCount}">
+                                                       <div class="form-check mr-2">
+                                                         <input
+                                                           class="form-check-input"
+                                                           type="checkbox"
+                                                           id="breakfastMeal${dayCount}"
+                                                           name="meal[]"
+                                                           value="Breakfast"
+                                                           data-day="${dayCount}"
+                                                         />
+                                                         <label
+                                                           class="form-check-label m-0 p-0"
+                                                           for="breakfastMeal${dayCount}"
+                                                         >
+                                                           Breakfast
+                                                         </label>
+                                                       </div>
+                                                       <div class="form-check mr-2">
+                                                         <input
+                                                           class="form-check-input"
+                                                           type="checkbox"
+                                                           id="lunchMeal${dayCount}"
+                                                           name="meal[]"
+                                                           value="Lunch"
+                                                           data-day="${dayCount}"
+                                                         />
+                                                         <label
+                                                           class="form-check-label m-0 p-0"
+                                                           for="lunchMeal${dayCount}"
+                                                         >
+                                                           Lunch
+                                                         </label>
+                                                       </div>
+                                                       <div class="form-check mr-2">
+                                                         <input
+                                                           class="form-check-input"
+                                                           type="checkbox"
+                                                           id="dinnerMeal${dayCount}"
+                                                           name="meal[]"
+                                                           value="Dinner"
+                                                           data-day="${dayCount}"
+                                                         />
+                                                         <label
+                                                           class="form-check-label m-0 p-0"
+                                                           for="dinnerMeal${dayCount}"
+                                                         >
+                                                           Dinner
+                                                         </label>
+                                                       </div>
+
+                                                     </div>
+                                                      <div class="validation${dayCount}" style="color: red; font-size: 13px; margin-top: 5px;" id="mealValidation${dayCount}"></div>
+                                                      <div id="customMealContainer${dayCount}" class="mt-2"></div>
+                                                   </div>
+                                             </div>
+                                              <div class="d-flex w-100" style="gap: 10px">
+                                      <div class="border border-white p-2 w-50">
+                                        <div class="main-title-border mb-3">
+                                          <h4 class="mb-2">Hotel Details</h4>
+                                        </div>
+                                        <div>
+                                          <p class="mb-2">Select Hotel</p>
+                                          <div>
+                                            <input
+                                              list="hotelTypes"
+                                              class="form-control"
+                                              id="hotelName"
+                                              name="hotelName"
+                                              data-day="${dayCount}"
+                                              placeholder="Select or type Hotel Type"
+                                            />
+                                            <datalist id="hotelTypes">
+                                              <option value="Any 1 star Hotel"></option>
+                                              <option value="Any 2 star Hotel"></option>
+                                              <option value="Any 3 star Hotel"></option>
+                                              <option value="Any 4 star Hotel"></option>
+                                              <option value="Any 5 star Hotel"></option>
+                                            </datalist>
+                                          </div>
+                                           <div
+                                  class="validation${dayCount}"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="hotelNameValidation${dayCount}"
+                                ></div>
+                                        </div>
+
+                                        <div>
+                                          <p class="mt-3 mb-2">Select Room Type</p>
+                                          <div>
+                                            <input
+                                              list="roomTypes"
+                                              class="form-control"
+                                              id="hotelRoomType"
+                                              name="hotelRoomType"
+                                              data-day="${dayCount}"
+                                              placeholder="Select or type Room Type"
+                                            />
+                                            <datalist id="roomTypes">
+                                              <option value="Deluxe"></option>
+                                              <option value="Premium"></option>
+                                              <option value="Royal"></option>
+                                            </datalist>
+                                          </div>
+                                           <div
+                                  class="validation${dayCount}"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="hotelRoomTypeValidation${dayCount}"
+                                ></div>
+                                        </div>
+
+                                        <div>
+                                          <p class="mt-3 mb-0">Select Meal Plan Type</p>
+                                          <div>
+                                            <input
+                                              list="mealPlans"
+                                              class="form-control"
+                                              id="mealPlan"
+                                              name="mealPlan"
+                                               data-day="${dayCount}"
+                                              placeholder="Select or type Meal Plan Type"
+                                            />
+                                            <datalist id="mealPlans">
+                                              <option value="HB - Half Board"></option>
+                                              <option value="FB - Full Board"></option>
+                                              <option value="AI - All Inclusive"></option>
+                                              <option value="RO - Room Only"></option>
+                                              <option
+                                                value="BB - Bed and Breakfast"
+                                              ></option>
+                                              <option
+                                                value="CP - Continental Plan"
+                                              ></option>
+                                              <option
+                                                value="MAP - Modified American Plan"
+                                              ></option>
+                                              <option value="AP - American Plan"></option>
+                                              <option value="EP - European Plan"></option>
+                                            </datalist>
+                                          </div>
+                                           <div
+                                  class="validation${dayCount}"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="mealPlanValidation${dayCount}"
+                                ></div>
+                                        </div>
+                                      </div>
+
+                                      <div class="border border-white p-2 w-50">
+                                        <div class="main-title-border mb-3">
+                                          <h4 class="mb-2">Transport Details</h4>
+                                        </div>
+
+                                        <div>
+                                          <p>Airport/Station to Hotel Transfer</p>
+                                          <div class="d-flex" style="gap: 10px">
+                                            <label class="d-flex" style="gap: 7px">
+                                              <input
+                                                type="radio"
+                                                name="arrivalTransfer"
+                                                value="PVT"
+                                              />
+                                              <div class="hotel-transfer">PVT</div>
+                                            </label>
+                                            <label class="d-flex" style="gap: 7px">
+                                              <input
+                                                type="radio"
+                                                name="arrivalTransfer"
+                                                value="SIC"
+                                              />
+                                              <div class="hotel-transfer">SIC</div>
+                                            </label>
+                                            <label class="d-flex" style="gap: 7px">
+                                              <input
+                                                type="radio"
+                                                name="arrivalTransfer"
+                                                value="None"
+                                              />
+                                              <div class="hotel-transfer">None</div>
+                                            </label>
+                                          </div>
+                                           <div
+                                  class="validation${dayCount}"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="arrivalTransferValidation${dayCount}"
+                                ></div>
+                                        </div>
+
+                                        <div class="mt-3">
+                                          <div class="mb-3">
+                                            <p class="mb-1">
+                                              Hotel to Airport/Station Transfer
+                                            </p>
+                                          </div>
+                                          <div class="d-flex" style="gap: 10px">
+                                            <label class="d-flex" style="gap: 7px">
+                                              <input
+                                                type="radio"
+                                                name="pickupTransfer"
+                                                value="PVT"
+                                              />
+                                              <div class="hotel-transfer">PVT</div>
+                                            </label>
+                                            <label class="d-flex" style="gap: 7px">
+                                              <input
+                                                type="radio"
+                                                name="pickupTransfer"
+                                                value="SIC"
+                                              />
+                                              <div class="hotel-transfer">SIC</div>
+                                            </label>
+                                            <label class="d-flex" style="gap: 7px">
+                                              <input
+                                                type="radio"
+                                                name="pickupTransfer"
+                                                value="None"
+                                              />
+                                              <div class="hotel-transfer">None</div>
+                                            </label>
+                                          </div>
+                                           <div
+                                  class="validation${dayCount}"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="pickupTransferValidation${dayCount}"
+                                ></div>
+                                        </div>
+
+                                        <div class="mt-3">
+                                          <p class="mb-1">Road Type :</p>
+                                          <input
+                                            list="roadTypes"
+                                            class="form-control"
+                                            id="roadType"
+                                            name="roadType"
+                                             data-day="${dayCount}"
+                                            placeholder="Select or type Road Type"
+                                          />
+                                          <datalist id="roadTypes">
+                                            <option value="Highway"></option>
+                                            <option value="Mixed"></option>
+                                            <option value="Hill"></option>
+                                          </datalist>
+                                           <div
+                                  class="validation${dayCount}"
+                                  style="
+                                    color: red;
+                                    font-size: 13px;
+                                    margin-top: 5px;
+                                  "
+                                  id="roadTypeValidation${dayCount}"
+                                ></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                             <div class="buttons">
+                                                     <button type="button" id="saveBtn" class="btn btn-primary">
+                                                       Save
+                                                     </button>
+                                                   </div>
+                                             `;
+          daysContainer.appendChild(newDayBox);
+          addDayButton.disabled = true;
+          nextBtn.disabled = true;
+
+          const newMealButton = document.getElementById(`addMealButton${dayCount}`);
+          if (newMealButton) {
+            newMealButton.addEventListener('click', function() {
+              addCustomMealInput(dayCount);
+            });
+          }
+          initializeSelect2();
+        }
+
+        function addCustomMealInput(currentDay) {
+
+          const customMealContainer = document.getElementById(`customMealContainer${currentDay}`);
+
+          if (!customMealContainer) return;
+
+          const customMealInput = document.createElement('input');
+          customMealInput.type = 'text';
+          customMealInput.placeholder = 'Enter custom meal';
+          customMealInput.className = 'form-control mb-2';
+          customMealInput.id = `customMealInput${currentDay}`;
+
+          const submitButton = document.createElement('button');
+          submitButton.textContent = 'Submit';
+          submitButton.className = 'btn btn-sm btn-success';
+          submitButton.id = `submitCustomMealButton${currentDay}`;
+
+          customMealContainer.innerHTML = '';
+          customMealContainer.appendChild(customMealInput);
+          customMealContainer.appendChild(submitButton);
+
+          submitButton.addEventListener('click', function() {
+            const mealValue = customMealInput.value.trim();
+            if (mealValue) {
+              customMealContainer.innerHTML = '';
+
+              const mealContainer = document.getElementById(`mealContainer${currentDay}`);
+
+              const customMealCheck = document.createElement('div');
+              customMealCheck.className = 'form-check mr-2';
+
+              const customMealCheckbox = document.createElement('input');
+              customMealCheckbox.className = 'form-check-input';
+              customMealCheckbox.type = 'checkbox';
+              customMealCheckbox.name = 'meal[]';
+              customMealCheckbox.id =  `${mealValue}${currentDay}`;
+              customMealCheckbox.value = mealValue;
+              customMealCheckbox.setAttribute('data-day', currentDay);
+
+              const customMealLabel = document.createElement('label');
+              customMealLabel.className = 'form-check-label m-0 p-0';
+              customMealLabel.setAttribute('for', `${mealValue}${currentDay}`); 
+              customMealLabel.textContent = mealValue;
+
+              customMealCheck.appendChild(customMealCheckbox);
+              customMealCheck.appendChild(customMealLabel);
+              mealContainer.appendChild(customMealCheck);
+            } else {
+              alert('Please enter a valid meal.');
+            }
+          });
+        }
+
+        const firstDayMealButton = document.getElementById('addMealButton1');
+        if (firstDayMealButton) {
+          firstDayMealButton.addEventListener('click', function() {
+            addCustomMealInput(1);
+          });
+        }
+
+        const formSubmit = (saveButton) => {
+          event.preventDefault();
+
+          const currentDay = saveButton.closest('.main-box').querySelector('.day-count').textContent.split(' ')[1];
+
+          const currentDayInputs = document.querySelectorAll(`[data-day="${currentDay}"]`);
+          const formData = new FormData();
+
+          currentDayInputs.forEach((input) => {
+            if (input.type !== "checkbox" && input.type !== "select-multiple") {
+              formData.append(input.name, input.value);
+            }
+          });
+
+          const siteSeenSelect = document.getElementById(`siteSeenId${currentDay}`);
+          const selectedOptions = Array.from(siteSeenSelect.selectedOptions).map((opt) => opt.value);
+          selectedOptions.forEach((value) => {
+            formData.append("siteSeenId[]", value);
+          });
+
+
+          const meals = document.querySelectorAll(`input[name="meal[]"][data-day="${currentDay}"]:checked`);
+          //  console.log(meals, 'meals')
+          meals.forEach((meal) => {
+
+            formData.append("meal[]", meal.value);
+          });
+
+          const itenaryDetailId = document.getElementById(`interyDetailId${currentDay}`).value
+
+         var arrivalTransfer = document.querySelector('input[name="arrivalTransfer"]:checked');
+         var pickupTransfer = document.querySelector('input[name="pickupTransfer"]:checked');
+          formData.append('arrivalTransfer', arrivalTransfer?.value)
+          formData.append('pickupTransfer', pickupTransfer?.value)
+
+          if (itenaryDetailId == '') {
+
+            fetch("/admin/add-day-itenary", {
+                method: "POST",
+                body: formData,
+              })
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((error) => {
+
+                    const validationMessages = document.getElementsByClassName(`validation${currentDay}`);
+                    for (let i = 0; i < validationMessages.length; i++) {
+                      validationMessages[i].textContent = "";
+                    }
+
+                    const title = document.getElementById(`titleValidation${currentDay}`);
+                    const description = document.getElementById(`description1Validation${currentDay}`);
+                    const meal = document.getElementById(`mealValidation${currentDay}`);
+                    const hotelName = document.getElementById(`hotelNameValidation${currentDay}`);
+                    const hotelRoomType = document.getElementById(`hotelRoomTypeValidation${currentDay}`);
+                    const mealPlan = document.getElementById(`mealPlanValidation${currentDay}`);
+                    const arrivalTransfer = document.getElementById(`arrivalTransferValidation${currentDay}`);
+                    const pickupTransfer = document.getElementById(`pickupTransferValidation${currentDay}`);
+                    const roadType = document.getElementById(`roadTypeValidation${currentDay}`);
+
+                    const err = error.errors;
+                    if (err?.title && title) {
+                      title.textContent = err.title;
+                    }
+                    if (err?.description && description) {
+                      description.textContent = err.description;
+                    }
+                    if (err?.meal && meal) {
+                      meal.textContent = err.meal;
+                    }
+                    if (err?.hotelName && hotelName) {
+                      hotelName.textContent = err.hotelName;
+                    }
+                    if (err?.hotelRoomType && hotelRoomType) {
+                      hotelRoomType.textContent = err.hotelRoomType;
+                    }
+                    if (err?.mealPlan && mealPlan) {
+                      mealPlan.textContent = err.mealPlan;
+                    }
+                    if (err?.arrivalTransfer && arrivalTransfer) {
+                      arrivalTransfer.textContent = err.arrivalTransfer;
+                    }
+                    if (err?.pickupTransfer && pickupTransfer) {
+                      pickupTransfer.textContent = err.pickupTransfer;
+                    }
+                    if (err?.roadType && roadType) {
+                      roadType.textContent = err.roadType;
+                    }
+                  });
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data) {
+                  const validationMessages = document.getElementsByClassName(`validation${currentDay}`);
+                  for (let i = 0; i < validationMessages.length; i++) {
+                    validationMessages[i].textContent = "";
+                  }
+                  document.getElementById(`interyDetailId${currentDay}`).value = data.data._id;
+                  // document.querySelector('input[name="arrivalTransfer"]:checked').value = '';
+                  // document.querySelector('input[name="pickupTransfer"]:checked').value = '';
+                  addDayButton.disabled = false;
+                  nextBtn.disabled = false;
+                  alert('Saved Data successfully');
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("There was an error creating the package.");
+              });
+          } else {
+
+            fetch(`/admin/edit-day-itenary/${itenaryDetailId}`, {
+                method: "POST",
+                body: formData,
+              })
+              .then((response) => {
+                if (!response.ok) {
+                  return response.json().then((error) => {
+                    console.log(error, 'updated Code')
+                  });
+                }
+                return response.json();
+              })
+              .then((data) => {
+                if (data) {
+                  alert('Update Data successfully');
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("There was an error updating the package.");
+              });
+          }
+        }
+
+        function initializeSelect2() {
+          $(".js-example-basic-multiple").select2({
+            placeholder: "Select SiteSeen",
+            allowClear: true
+          });
+        }
+
       });
     </script>
   </body>

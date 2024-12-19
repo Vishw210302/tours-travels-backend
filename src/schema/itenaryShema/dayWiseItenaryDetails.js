@@ -1,3 +1,4 @@
+const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const itenaryDetailsSchema = new mongoose.Schema({
@@ -27,7 +28,30 @@ const itenaryDetailsSchema = new mongoose.Schema({
         type: [String],
         required: true
     },
-
+    hotelName: {
+        type: String,
+        required: true
+    },
+    hotelRoomType: {
+        type: String,
+        required: true
+    },
+    mealPlan: {
+        type: String,
+        required: true
+    },
+    arrivalTransfer: {
+        type: String,
+        required: true
+    },
+    pickupTransfer: {
+        type: String,
+        required: true
+    },
+    roadType: {
+        type: String,
+        required: true
+    },
     createdAt: {
         type: Date,
         default: new Date(),
