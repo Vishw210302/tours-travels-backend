@@ -47,3 +47,23 @@ exports.setEmployeePasswordEmail = async (empEmail, password) => {
         console.error('Error sending email:', error);
     }
 };
+
+exports.sendItenryInquirEmail = async (inqueryData, interyData) => {
+    try {
+
+        console.log(interyData, 'interyDatainteryData')
+        const templatePath = path.join(__dirname, '../views/admin-panel/templateUrl/itenaryDetail.ejs');
+        const htmlContent = await ejs.renderFile(templatePath, { inqueryData, interyData });
+
+        const mailOptions = {
+            from: 'meetnode@gmail.com',
+            to: inqueryData?.customerEmail,
+            subject: 'Itenary Details',
+            html: htmlContent,
+        };
+
+        await transporter.sendMail(mailOptions);
+    } catch (err) {
+        console.error('Error sending itinerary inquiry email:', err);
+    }
+}

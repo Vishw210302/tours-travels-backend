@@ -17,7 +17,6 @@ const specialFlights = require("../../schema/specialFlightsSchema/specialFlights
 const youtubeURL = require("../../schema/youtubeVideosSchema/youtubeVideosSchema");
 const teamMemberDetails = require("../../schema/teamMemberSchema/teamMemberSchema");
 const aboutUsContentImage = require("../../schema/aboutUsSchema/aboutUsSchema");
-const querySend = require("../../schema/querySendSchema/querySendSchema");
 const allPromoCodes = require("../../schema/promocodesSchema/promoCodesSchema");
 const discountCoupon = require("../../schema/discountCouponSchema/discountCouponSchema");
 const ticketsBooking = require("../../schema/ticketsBookingSchema/addTicketsBookingSchema");
@@ -42,6 +41,8 @@ const employees = require("../../schema/allEmployeeSchema/allEmployeeSchema");
 const { default: axios } = require("axios");
 const ItenaryPaymentDetails = require("../../schema/itenaryShema/itenaryPaymentSchema");
 const HotelBookingPayment = require("../../schema/HotelBookingPaymentSchema/HotelBookingPaymentSchema");
+const { sendItenryInquirEmail } = require("../../utils/sendMail");
+const intenaryInquiry = require("../../schema/intenaryInquirySchema/intenaryInquirySchema");
 const apicontroller = {};
 
 apicontroller.addPackages = async (req, res) => {
@@ -669,18 +670,159 @@ apicontroller.deleteAboutUsContent = async (req, res) => {
 
 apicontroller.postInqueryAPI = async (req, res) => {
   try {
-    const inqueryPostAPI = new querySend({
-      customerName: req.body.customerName,
-      mobileNumber: req.body.mobileNumber,
-      customerEmail: req.body.customerEmail,
-      packageName: req.body.packageName,
-      travelDate: req.body.travelDate,
-      numberOfAdult: req.body.numberOfAdult,
-      numberOfChildWithBed: req.body.numberOfChildWithBed,
-      numberOfChildWithoutBed: req.body.numberOfChildWithoutBed,
-    });
 
-    await inqueryPostAPI.save();
+    const {
+      itenaryId,
+      customerName,
+      mobileNumber,
+      customerEmail,
+      itenaryName,
+      travelDate,
+      numberOfAdult,
+      numberOfChildWithBed,
+      numberOfChildWithoutBed
+    } = req.body
+
+    const inqueryData = {
+      itenaryId,
+      customerName,
+      mobileNumber,
+      customerEmail,
+      travelDate,
+      itenaryName,
+      numberOfAdult,
+      numberOfChildWithBed,
+      numberOfChildWithoutBed
+    }
+
+    const id = new mongoose.Types.ObjectId(inqueryData.itenaryId);
+
+    const interyData = await itenary.aggregate([
+      {
+        $match: { _id: id }
+      },
+      {
+        $lookup: {
+          from: 'itenarydetails',
+          localField: '_id',
+          foreignField: 'itenaryId',
+          as: 'days',
+        }
+      },
+      {
+        $unwind: {
+          path: '$days',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'siteseens',
+          let: { siteSeenIds: '$days.siteSeenId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $in: ['$_id', '$$siteSeenIds'] }
+              }
+            }
+          ],
+          as: 'days.siteseens'
+        }
+      },
+      {
+        $addFields: {
+          'days.siteseenNames': { 
+            $map: {
+              input: '$days.siteseens',
+              as: 'siteseen',
+              in: '$$siteseen.SiteseenName'
+            }
+          },
+          'days.siteSeenImages': { 
+            $map: {
+              input: '$days.siteseens',
+              as: 'siteseen',
+              in: '$$siteseen.siteseen'
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'itenarypricedetails',
+          localField: '_id',
+          foreignField: 'itenaryId',
+          as: 'priceArray'
+        }
+      },
+      {
+        $unwind: {
+          path: '$priceArray',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'inclusionandexclusions',
+          localField: '_id',
+          foreignField: 'itenaryId',
+          as: 'inclusionExclusionArray'
+        }
+      },
+      {
+        $unwind: {
+          path: '$inclusionExclusionArray',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'itenaryflightdetails',
+          let: {
+            onwardFlightId: '$flightsDetailsId.onwardFlightId',
+            returnFlightId: '$flightsDetailsId.returnFlightId'
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [
+                    { $eq: ['$_id', '$$onwardFlightId'] },
+                    { $eq: ['$_id', '$$returnFlightId'] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'flightDetails'
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          packageTitle: { $first: '$packageTitle' },
+          departureFrom: { $first: '$departureFrom' },
+          departureTo: { $first: '$departureTo' },
+          days: {
+            $push: {
+              title: '$days.title',
+              description: '$days.description',
+              deFaultImage: '$days.deFaultImage',
+              siteseenNames: '$days.siteseenNames',
+              siteSeenImages: '$days.siteSeenImages'
+            }
+          },
+          priceArray: { $first: '$priceArray' }, 
+          inclusionExclusionArray: { $first: '$inclusionExclusionArray' }, 
+          flightDetails: { $first: '$flightDetails' } 
+        }
+      }
+    ]);
+    
+    await sendItenryInquirEmail(inqueryData, interyData[0])
+
+    await intenaryInquiry.create(inqueryData)
+
     return res.status(200).json({ status: true, message: 'Review message send successfully!' });
 
   } catch (error) {

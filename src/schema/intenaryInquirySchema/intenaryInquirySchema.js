@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
-const querySendSchema = new mongoose.Schema({
+const intenaryInquirySchema = new mongoose.Schema({
+    itenaryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'itenary',
+    },
     customerName: {
         type: String,
         required: true,
@@ -17,7 +21,7 @@ const querySendSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
-    packageName: {
+    itenaryName: {
         type: String,
         required: true,
     },
@@ -47,6 +51,6 @@ const querySendSchema = new mongoose.Schema({
     }
 });
 
-const querySend = mongoose.model('querySend', querySendSchema);
+const intenaryInquiry = mongoose.model('intenaryInquiry', intenaryInquirySchema);
 
-module.exports = querySend;
+module.exports = intenaryInquiry;

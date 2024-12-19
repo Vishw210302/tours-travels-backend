@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprehensive Travel Itinerary Details</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+      body {
+        font-family: "Poppins", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f4f8;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .email-container {
+        max-width: 900px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #000000, #1976d2);
+        color: #ffffff;
+        padding: 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+
+      .header-logo {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 80px;
+        height: 80px;
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #2196f3;
+      }
+
+      .header_title {
+        font-size: 21px;
+        font-weight: 700;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .traveler-info {
+        display: flex;
+        justify-content: space-between;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .traveler-details {
+        flex: 1;
+      }
+
+      .booking-code {
+        font-weight: bold;
+        color: #2196f3;
+      }
+
+      .section-header {
+        background-color: #2196f3;
+        color: white;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .itinerary-item {
+        background-color: #f9fafb;
+        border: 1px solid #e1e4e8;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        align-items: stretch;
+        position: relative;
+      }
+
+      .days-count {
+        width: 5%;
+        position: absolute;
+        top: 10px;
+        right: 7px;
+        background-color: rgba(33, 150, 243, 0.9);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .itinerary-image-container {
+        width: 40%;
+      }
+
+      .itinerary-image-container::after {
+        content: attr(data-day);
+        width: 5%;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(33, 150, 243, 0.9);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .itinerary-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .itinerary-content {
+        width: 60%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .itinerary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .itinerary-title {
+        font-size: 22px;
+        color: #2196f3;
+        margin: 0;
+      }
+
+      .itinerary-description {
+        margin-bottom: 15px;
+        color: #555;
+        font-size: 14px;
+        max-height: 150px;
+        overflow-y: auto;
+        padding-right: 10px;
+      }
+
+      .extra-points {
+        background-color: #e6f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 10px 15px;
+        margin-top: 15px;
+        border-radius: 0 4px 4px 0;
+      }
+
+      .extra-points h4 {
+        margin: 0 0 10px 0;
+        color: #2196f3;
+        font-size: 15px;
+      }
+
+      .extra-points ul {
+        padding-left: 20px;
+        margin: 0;
+        list-style-type: none;
+      }
+
+      .extra-points li {
+        margin-bottom: 10px;
+        position: relative;
+        padding-left: 20px;
+        font-size: 14px;
+      }
+
+      .extra-points li::before {
+        content: "✓";
+        color: #2196f3;
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-weight: bold;
+      }
+
+      .additional-info,
+      .travel-tips,
+      .visa-requirements,
+      .packing-list,
+      .currency-info,
+      .local-guidelines {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .pricing-section {
+        background-color: #e6f2ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .pricing-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+      }
+
+      .pricing-table th,
+      .pricing-table td {
+        border: 1px solid #2196f3;
+        padding: 10px;
+        text-align: left;
+      }
+
+      .pricing-table th {
+        background-color: #2196f3;
+        color: white;
+      }
+
+      .footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 15px;
+        font-size: 12px;
+        color: #777;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .contact-info {
+        margin-top: 15px;
+        font-size: 12px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">
+        <img src="/uploads/setting-image/assgardTravels.png" alt="main_logo" />
+        <p class="header_title">Assgard Tours and Travels</p>
+      </div>
+
+      <div class="content">
+        <div class="traveler-info">
+          <div class="traveler-details">
+            <strong>Traveler Name:</strong> <%= inqueryData.customerName %><br />
+            <strong>Booking Code:</strong>
+            <span class="booking-code">DTI2024XYZ</span>
+          </div>
+          <div class="traveler-details">
+            <strong>Travel Dates:</strong> <%= new
+            Date(inqueryData.travelDate).toLocaleDateString() %> <br />
+            <strong>Destination:</strong> <%= interyData.packageTitle %>
+          </div>
+        </div>
+
+        <div class="section-header">Detailed Itinerary</div>
+
+        <% interyData.days.forEach((day, index) => { %>
+        <div class="itinerary-item">
+          <!--  -->
+          <div
+            class="itinerary-image-container"
+            data-day="Day <%= index + 1 %>"
+          >
+            <img
+              src="<%= day.deFaultImage ? `/uploads/packages-Image/${day.deFaultImage}` : `/uploads/siteseen-image/${day.siteSeenImages[0]}` %>"
+              alt="<%= day.title %>"
+              class="itinerary-image"
+            />
+          </div>
+          <div class="itinerary-content">
+            <div>
+              <div class="itinerary-header">
+                <h3 class="itinerary-title"><%= day.title %></h3>
+              </div>
+              <p class="itinerary-description"><%= day.description %></p>
+
+              <% if (day.siteseenNames && day.siteseenNames.length > 0) { %>
+              <div class="extra-points">
+                <h4>Planned Activities</h4>
+                <ul>
+                  <% day.siteseenNames.forEach((siteseen) => { %>
+                  <li><%= siteseen %></li>
+                  <% }) %>
+                </ul>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+
+        <div class="section-header">Additional Travel Information</div>
+
+        <div class="additional-info">
+          <h3>Important Travel Details</h3>
+          <p>✈️ Flight Details: Emirates Airlines EK123</p>
+          <p>🏨 Hotel: Luxury Dubai Downtown Hotel</p>
+          <p>🚗 Airport Transfers: Included</p>
+        </div>
+
+        <div class="travel-tips">
+          <h3>Inclusion</h3>
+          <ul>
+            <%  interyData.inclusionExclusionArray.inclusion.forEach((inclusion)=> { %>
+              <li><%= inclusion %></li>
+            <%  }) %>
+          </ul>
+        </div>
+
+        <div class="visa-requirements">
+          <h3>Exclusion</h3>
+          <ul>
+            <%  interyData.inclusionExclusionArray.exclusion.forEach((exclusion)=> { %>
+              <li><%= exclusion %></li>
+            <%  }) %>
+          </ul>
+        </div>
+
+        <div class="section-header">Pricing and Booking Details</div>
+
+        <% var subtotal = (interyData.priceArray.perPersonPrice *
+        inqueryData.numberOfAdult) + (interyData.priceArray.childWithBed *
+        inqueryData.numberOfChildWithBed) +
+        (interyData.priceArray.childWithoutBed *
+        inqueryData.numberOfChildWithoutBed); %>
+
+        <div class="pricing-section">
+          <h3>Traveler Composition</h3>
+          <table class="pricing-table">
+            <thead>
+              <tr>
+                <th>Traveler Type</th>
+                <th>Number</th>
+                <th>Price per Person</th>
+                <th>Total Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Adults (Standard)</td>
+                <td><%= inqueryData.numberOfAdult %></td>
+                <td>₹<%= interyData.priceArray.perPersonPrice %></td>
+                <td>
+                  ₹<%= interyData.priceArray.perPersonPrice *
+                  inqueryData.numberOfAdult %>
+                </td>
+              </tr>
+              <tr>
+                <td>Children with Bed</td>
+                <td><%= inqueryData.numberOfChildWithBed %></td>
+                <td>₹<%= interyData.priceArray.childWithBed %></td>
+                <td>
+                  ₹<%= interyData.priceArray.childWithBed *
+                  inqueryData.numberOfChildWithBed %>
+                </td>
+              </tr>
+              <tr>
+                <td>Children without Bed</td>
+                <td><%= inqueryData.numberOfChildWithoutBed %></td>
+                <td>₹<%= interyData.priceArray.childWithoutBed %></td>
+                <td>
+                  ₹<%= interyData.priceArray.childWithoutBed *
+                  inqueryData.numberOfChildWithoutBed %>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Subtotal</strong></td>
+                <td colspan="3">
+                  <strong
+                    >₹<%= subtotal %></strong
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <% var GST = subtotal * 0.05;
+           var TCS = subtotal * 0.05;
+           var totalTaxes = GST + TCS;
+           var grandTotal = subtotal + totalTaxes;
+         %>
+
+        <div class="tax-info pricing-section">
+          <h3>Taxes and Additional Charges</h3>
+          <table class="pricing-table">
+            <thead>
+              <tr>
+                <th>Tax/Charge Type</th>
+                <th>Rate</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>GST (Goods and Services Tax)</td>
+                <td>5%</td>
+                <td>₹<%= GST.toFixed(2) %></td>
+              </tr>
+              <tr>
+                <td>TCS (Tax Collected at Source)</td>
+                <td>5%</td>
+                <td>₹<%= TCS.toFixed(2) %></td>
+              </tr>
+              <tr>
+                <td><strong>Total Taxes</strong></td>
+                <td colspan="2"><strong>₹<%= totalTaxes.toFixed(2) %></strong></td>
+              </tr>
+              <tr>
+                <td><strong>Grand Total</strong></td>
+                <td colspan="2"><strong>₹<%= grandTotal.toFixed(2) %></strong></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            <small
+              >* Taxes and charges are subject to change. Please confirm at the
+              time of booking.</small
+            >
+          </p>
+        </div>
+
+        <div class="footer">
+          <p>© 2024 Assgard Travel. All Rights Reserved.</p>
+          <div class="contact-info">
+            <p>
+              Customer Support: +971 50 123 4567 |
+              support@assgardtravel.com
+            </p>
+            <p>Emergency Contact: +971 52 987 6543</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
