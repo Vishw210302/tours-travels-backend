@@ -128,6 +128,7 @@ apiRoute.delete('/delete-hotel-testimonial-review/:id', apiController.deletehote
 apiRoute.get('/get-package-theme', apiController.getPackageTheme);
 apiRoute.get('/get-package-theme-active', apiController.getPackageThemeActive);
 apiRoute.delete('/delete-package-theme/:id', apiController.deletePackageTheme);
+apiRoute.get("/get-data-by-theme/:id", apiController.getDataByTheme)
 
 // Hotel Coupon Code API
 apiRoute.get('/get-all-coupon-code', apiController.getAllCouponCodeListing);

@@ -731,14 +731,14 @@ apicontroller.postInqueryAPI = async (req, res) => {
       },
       {
         $addFields: {
-          'days.siteseenNames': { 
+          'days.siteseenNames': {
             $map: {
               input: '$days.siteseens',
               as: 'siteseen',
               in: '$$siteseen.SiteseenName'
             }
           },
-          'days.siteSeenImages': { 
+          'days.siteSeenImages': {
             $map: {
               input: '$days.siteseens',
               as: 'siteseen',
@@ -812,13 +812,13 @@ apicontroller.postInqueryAPI = async (req, res) => {
               siteSeenImages: '$days.siteSeenImages'
             }
           },
-          priceArray: { $first: '$priceArray' }, 
-          inclusionExclusionArray: { $first: '$inclusionExclusionArray' }, 
-          flightDetails: { $first: '$flightDetails' } 
+          priceArray: { $first: '$priceArray' },
+          inclusionExclusionArray: { $first: '$inclusionExclusionArray' },
+          flightDetails: { $first: '$flightDetails' }
         }
       }
     ]);
-    
+
     await sendItenryInquirEmail(inqueryData, interyData[0])
 
     await intenaryInquiry.create(inqueryData)
@@ -1805,10 +1805,6 @@ apicontroller.addFlightTicketsData = async (req, res) => {
   }
 }
 
-const seatUpdate = () => {
-
-}
-
 apicontroller.getPackageTheme = async (req, res) => {
   try {
     const packageThemeListing = await packageThemeImage.find();
@@ -1817,6 +1813,23 @@ apicontroller.getPackageTheme = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
+
+apicontroller.getDataByTheme = async (req, res) => {
+  try {
+    const themeId = req.params.id;
+
+    const data = await itenary.find({ packageThemeImageId: themeId }).populate('packageThemeImageId');
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ success: false, message: 'No data found for the given theme ID' });
+    }
+
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error('Error fetching data by theme:', error);
+    return res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+  }
+};
 
 apicontroller.getPackageThemeActive = async (req, res) => {
   try {
