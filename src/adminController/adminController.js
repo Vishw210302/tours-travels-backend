@@ -43,9 +43,9 @@ const { setEmployeePasswordEmail } = require('../utils/sendMail');
 const bcrypt = require('bcrypt');
 const userAndPermission = require('../schema/userAndPermissionSchema/userAndPermissionSchema');
 const { getFlightPayment, deletePaymentIntent, getFlightPayments } = require('../API/apiController/payments.controller');
-const querySend = require('../schema/querySendSchema/querySendSchema');
 const flightContactUs = require('../schema/passengerDetailsSchema/contactUsTicketsSchema');
 const passengerDetails = require('../schema/passengerDetailsSchema/passengerDetailsSchema');
+const intenaryInquiry = require('../schema/intenaryInquirySchema/intenaryInquirySchema');
 
 adminController.index = async (req, res) => {
     try {
@@ -1154,7 +1154,7 @@ adminController.updateInqueries = async (req, res) => {
     try {
         const inqueriesId = req.params.id;
         const { status } = req.body;
-        const inqueriesUser = await querySend.findById(inqueriesId);
+        const inqueriesUser = await intenaryInquiry.findById(inqueriesId);
 
         if (!inqueriesUser) {
             return res.status(404).json({ message: "Inqueries Theme not found" });
@@ -2409,7 +2409,7 @@ adminController.flightPaymentDelete = async (req, res) => {
 
 adminController.getTestTemplete = async (req, res) => {
     try {
-        res.render("admin-panel/templateUrl/templateUrlListing")
+        res.render("admin-panel/templateUrl/itenaryDetail")
     } catch (error) {
         console.log("error", error)
     }

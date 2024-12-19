@@ -31,6 +31,10 @@
       $(this).addClass("selected");
     });
 
+    $("#sidebar-active").on("click", function() {
+      $('.sidebar.sidebar-offcanvas').toggleClass('active')
+    })
+
 
     //Navbar Backgrounds
     $(".tiles.primary").on("click", function() {

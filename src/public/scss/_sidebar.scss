@@ -444,7 +444,7 @@
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;
     &.active {
-      right: 0;
+      right: unset;
     }
   }
 }
