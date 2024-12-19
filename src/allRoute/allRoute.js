@@ -45,7 +45,6 @@ router.get('/particularDomesticItenary/:id', adminController.particularDomesticI
 router.get('/allDetailsItenaryDetails', adminController.allDetailsItenaryDetails);
 router.post('/add-itenary-create-package', upload('/itenary-package').fields([
     { name: 'bannerImage', maxCount: 1 },
-    { name: 'fileUpload', maxCount: 1 }
 ]), adminController.addItenaryPackageImage);
 router.get('/add-day-itenary-page/:firstId/:secondId', adminController.adddDayWiseItenaryPage);
 router.post('/add-day-itenary', uploads.none(), adminController.adddDayWiseItenary);

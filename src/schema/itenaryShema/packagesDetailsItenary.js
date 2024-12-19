@@ -19,11 +19,11 @@ const packagesDetailsItenary = new mongoose.Schema({
     },
 
     flightsDetailsId: {
-        onwardFlightId:{
+        onwardFlightId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'itenaryFlightDetails',
         },
-        returnFlightId:{
+        returnFlightId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'itenaryFlightDetails',
         }
@@ -55,11 +55,6 @@ const packagesDetailsItenary = new mongoose.Schema({
     },
 
     departureTo: {
-        type: String,
-        required: true
-    },
-
-    fileUpload: {
         type: String,
         required: true
     },

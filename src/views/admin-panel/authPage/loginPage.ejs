@@ -284,6 +284,21 @@
         justify-content: end;
       }
 
+      .input-wrapper {
+        position: relative;
+        margin: 10px 0;
+      }
+
+      .eye-icon {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--text-secondary);
+        font-size: 20px;
+      }
+
       .forgot-password-text {
         color: white;
         text-decoration: none;
@@ -327,13 +342,24 @@
             required
           />
           <p class="lable-color">Password :-</p>
-          <input
-            type="password"
-            name="employeePassword"
-            class="input-field"
-            placeholder="Enter password here ..."
-            required
-          />
+          <div class="input-wrapper">
+            <input
+              type="password"
+              id="employeePassword"
+              name="employeePassword"
+              class="input-field"
+              placeholder="Enter password here ..."
+              required
+            />
+              <span
+                id="toggleEmployeePassword"
+                class="eye-icon"
+                style="cursor: pointer"
+                onclick="togglePasswordVisibility('employeePassword','toggleEmployeePassword')"
+                >👁️</span
+              >
+          </div>
+
           <div class="forgot-password">
             <a href="/get-forgot-password" class="forgot-password-text"
               >Forgot Password</a
@@ -445,7 +471,7 @@
       </div>
     </div>
 
-    <script>
+    <script defer>
       let generatedOTP = "";
 
       $(document).ready(function () {
@@ -667,6 +693,19 @@
           }
         });
       });
+
+      function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input.type === "password") {
+          input.type = "text";
+          icon.textContent = "🙈";
+        } else {
+          input.type = "password";
+          icon.textContent = "👁️";
+        }
+      }
     </script>
   </body>
 </html>
