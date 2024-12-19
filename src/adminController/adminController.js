@@ -424,7 +424,7 @@ adminController.addItenaryPackageImage = async (req, res) => {
         await returnFlight.save();
 
         const formattedDepartureDates = departureDates.map(date => format(parseISO(date), 'yyyy-MM-dd'));
-        const { bannerImage, fileUpload } = req.files
+        const { bannerImage } = req.files
 
         const allItenaryDetails = await packagesDetailsItenary.create({
             mainPackageId,
@@ -438,7 +438,6 @@ adminController.addItenaryPackageImage = async (req, res) => {
                 returnFlightId: returnFlight._id
             },
             departureTo,
-            fileUpload: fileUpload[0].filename,
             categories,
             bannerImage: bannerImage[0].filename,
             packageThemeImageId: packageThemes
@@ -1868,8 +1867,8 @@ adminController.permissionListing = async (req, res) => {
     try {
         const response = await axios.get(`${process.env.baseUrl}/api/get-all-permission-listing`)
         if (response.data.status == true) {
-            res.render("admin-panel/persmissionPage/persmissionListing", { 
-                data: response.data.data 
+            res.render("admin-panel/persmissionPage/persmissionListing", {
+                data: response.data.data
             })
         } else {
             req.flash('error', 'Unable to fetch permission listings')
@@ -2327,7 +2326,7 @@ adminController.flightPaymentDetails = async (req, res) => {
             const paymentDate = detail.paymentIntent
                 ? formatDateToDMY(detail.paymentIntent.created)
                 : "Pending";
-            
+
             return (
                 detail.contactDetails.fullName.toLowerCase().includes(searchTerm) ||
                 detail.contactDetails.mobileNumber.includes(searchTerm) ||
@@ -2340,10 +2339,10 @@ adminController.flightPaymentDetails = async (req, res) => {
                         detail.paymentIntent.id?.toLowerCase().includes(searchTerm) ||
                         detail.paymentIntent.status?.toLowerCase().includes(searchTerm) ||
                         detail.paymentIntent.description?.toLowerCase().includes(searchTerm) ||
-                        detail.paymentIntent.amount?.toString().includes(searchTerm) || 
+                        detail.paymentIntent.amount?.toString().includes(searchTerm) ||
                         formatDateToDMY(detail.paymentIntent.created).includes(searchTerm)
                     )
-                )||
+                ) ||
                 paymentStatus.toLowerCase().includes(searchTerm) ||
                 paymentDate.toLowerCase().includes(searchTerm)
             );

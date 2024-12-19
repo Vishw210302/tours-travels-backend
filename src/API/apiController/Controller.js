@@ -274,7 +274,7 @@ apicontroller.getParticularItenary = async (req, res) => {
 apicontroller.allDetailsOfItenaty = async (req, res) => {
   try {
     const id = new mongoose.Types.ObjectId(req.params.id);
-    
+
     const itenaryData = await itenary.aggregate([
       {
         $match: { _id: id }
@@ -320,7 +320,6 @@ apicontroller.allDetailsOfItenaty = async (req, res) => {
           perPersonCost: { $first: '$perPersonCost' },
           departureFrom: { $first: '$departureFrom' },
           departureTo: { $first: '$departureTo' },
-          fileUpload: { $first: '$fileUpload' },
           categories: { $first: '$categories' },
           flightsDetailsId: { $first: '$flightsDetailsId' },
           createdAt: { $first: '$createdAt' },
@@ -385,7 +384,6 @@ apicontroller.allDetailsOfItenaty = async (req, res) => {
           perPersonCost: 1,
           departureFrom: 1,
           departureTo: 1,
-          fileUpload: 1,
           categories: 1,
           createdAt: 1,
           days: 1,
@@ -400,13 +398,13 @@ apicontroller.allDetailsOfItenaty = async (req, res) => {
       return res.status(404).json({ message: 'No itinerary found' });
     }
 
-    res.status(200).json({ 
+    res.status(200).json({
       itenaryData: itenaryData[0],
     });
 
   } catch (error) {
     console.error('Detailed Error in allDetailsOfItenaty:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'An error occurred while fetching itinerary details',
       errorMessage: error.message,
       errorStack: error.stack
