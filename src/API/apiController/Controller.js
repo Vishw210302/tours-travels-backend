@@ -41,7 +41,7 @@ const employees = require("../../schema/allEmployeeSchema/allEmployeeSchema");
 const { default: axios } = require("axios");
 const ItenaryPaymentDetails = require("../../schema/itenaryShema/itenaryPaymentSchema");
 const HotelBookingPayment = require("../../schema/HotelBookingPaymentSchema/HotelBookingPaymentSchema");
-const { sendItenryInquirEmail } = require("../../utils/sendMail");
+const { sendItenryInquirEmail, sendPaymentDetailsEmail, sendItenryDetailEmail, sendHotelBookingDetails } = require("../../utils/sendMail");
 const intenaryInquiry = require("../../schema/intenaryInquirySchema/intenaryInquirySchema");
 const apicontroller = {};
 
@@ -819,7 +819,7 @@ apicontroller.postInqueryAPI = async (req, res) => {
       }
     ]);
 
-    await sendItenryInquirEmail(inqueryData, interyData[0])
+    await sendItenryDetailEmail(inqueryData, interyData[0], key = 0)
 
     await intenaryInquiry.create(inqueryData)
 
@@ -2125,6 +2125,8 @@ apicontroller.itenaryPayment = async (req, res) => {
 
     const { paymentId, personDetail, payPrice, itenaryId, remainingBalance } = req.body
 
+    // console.log(req.body, 'hotel payment')
+
     if (!paymentId || !personDetail || !personDetail.name || !personDetail.mobile || !personDetail.email || !itenaryId) {
       return res.status(400).json({ message: 'Missing required fields.' });
     }
@@ -2135,8 +2137,140 @@ apicontroller.itenaryPayment = async (req, res) => {
       email,
       adults,
       childrenWithoutBed,
+      childrenWithBed,
       infants
     } = personDetail;
+
+    const paymentSummary = {
+      amountPaid: payPrice, 
+      balanceDue: remainingBalance,
+    }
+
+    const id = new mongoose.Types.ObjectId(itenaryId);
+
+    const interyData = await itenary.aggregate([
+      {
+        $match: { _id: id }
+      },
+      {
+        $lookup: {
+          from: 'itenarydetails',
+          localField: '_id',
+          foreignField: 'itenaryId',
+          as: 'days',
+        }
+      },
+      {
+        $unwind: {
+          path: '$days',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'siteseens',
+          let: { siteSeenIds: '$days.siteSeenId' },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $in: ['$_id', '$$siteSeenIds'] }
+              }
+            }
+          ],
+          as: 'days.siteseens'
+        }
+      },
+      {
+        $addFields: {
+          'days.siteseenNames': {
+            $map: {
+              input: '$days.siteseens',
+              as: 'siteseen',
+              in: '$$siteseen.SiteseenName'
+            }
+          },
+          'days.siteSeenImages': {
+            $map: {
+              input: '$days.siteseens',
+              as: 'siteseen',
+              in: '$$siteseen.siteseen'
+            }
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'itenarypricedetails',
+          localField: '_id',
+          foreignField: 'itenaryId',
+          as: 'priceArray'
+        }
+      },
+      {
+        $unwind: {
+          path: '$priceArray',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'inclusionandexclusions',
+          localField: '_id',
+          foreignField: 'itenaryId',
+          as: 'inclusionExclusionArray'
+        }
+      },
+      {
+        $unwind: {
+          path: '$inclusionExclusionArray',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'itenaryflightdetails',
+          let: {
+            onwardFlightId: '$flightsDetailsId.onwardFlightId',
+            returnFlightId: '$flightsDetailsId.returnFlightId'
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [
+                    { $eq: ['$_id', '$$onwardFlightId'] },
+                    { $eq: ['$_id', '$$returnFlightId'] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: 'flightDetails'
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          packageTitle: { $first: '$packageTitle' },
+          departureFrom: { $first: '$departureFrom' },
+          departureTo: { $first: '$departureTo' },
+          days: {
+            $push: {
+              title: '$days.title',
+              description: '$days.description',
+              deFaultImage: '$days.deFaultImage',
+              siteseenNames: '$days.siteseenNames',
+              siteSeenImages: '$days.siteSeenImages'
+            }
+          },
+          priceArray: { $first: '$priceArray' },
+          inclusionExclusionArray: { $first: '$inclusionExclusionArray' },
+          flightDetails: { $first: '$flightDetails' }
+        }
+      }
+    ]);
+
+     await sendItenryDetailEmail(personDetail, interyData[0], key = 1, paymentSummary)
 
     const paymentRecord = await ItenaryPaymentDetails.create({
       cardHolderName: name,
@@ -2146,6 +2280,7 @@ apicontroller.itenaryPayment = async (req, res) => {
         adults: parseInt(adults, 10) || 0,
         childrenWithoutBed: parseInt(childrenWithoutBed, 10) || 0,
         infants: parseInt(infants, 10) || 0,
+        childrenWithBed:parseInt(childrenWithBed, 10) || 0,
       },
       paymentId,
       payPrice,
@@ -2173,6 +2308,8 @@ apicontroller.processHotelPayments = async (req, res) => {
       bookingAmount,
       paymentId
     } = req.body;
+
+    const response =  await sendHotelBookingDetails(hotelBookingDetails, personDetails, bookingAmount)
 
     const savedBooking = await HotelBookingPayment.create({
       hotelName: hotelBookingDetails.hotelName,

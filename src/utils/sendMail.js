@@ -48,16 +48,32 @@ exports.setEmployeePasswordEmail = async (empEmail, password) => {
     }
 };
 
-exports.sendItenryInquirEmail = async (inqueryData, interyData) => {
+exports.sendItenryDetailEmail = async (details, interyData, key, paymentSummary) => {
     try {
 
-        console.log(interyData, 'interyDatainteryData')
+        if(key == 0){
+            customerDetails = details
+        }else{
+            customerDetails = {
+                customerName: details.name,
+                customerEmail: details.email,
+                customerPhone: details.mobile,
+                numberOfAdult: details.adults,
+                numberOfChildWithBed: details.childrenWithBed,
+                numberOfChildWithoutBed: details.childrenWithoutBed,
+                itenaryName: interyData.packageTitle,
+                travelDate: details.departureDate,
+                numberOfInfants: details.infants,
+                paymentSummary
+            }
+        }
+
         const templatePath = path.join(__dirname, '../views/admin-panel/templateUrl/itenaryDetail.ejs');
-        const htmlContent = await ejs.renderFile(templatePath, { inqueryData, interyData });
+        const htmlContent = await ejs.renderFile(templatePath, { customerDetails, interyData });
 
         const mailOptions = {
             from: 'meetnode@gmail.com',
-            to: inqueryData?.customerEmail,
+            to: customerDetails?.customerEmail,
             subject: 'Itenary Details',
             html: htmlContent,
         };
@@ -65,5 +81,50 @@ exports.sendItenryInquirEmail = async (inqueryData, interyData) => {
         await transporter.sendMail(mailOptions);
     } catch (err) {
         console.error('Error sending itinerary inquiry email:', err);
+    }
+}
+
+exports.sendPyamentDetails = async (details, paymentSummary) => {
+ // for testing only
+    const email=[
+        'varmaajay182@gmail.com',
+        'sandipganava2357@gmail.com'
+    ]
+
+       const textContent = `
+       Payment Details:
+
+       Payment Summary: ${paymentSummary}
+
+       details:
+       - Total Amount: ${details}
+   `;
+
+   // Mail options
+   const mailOptions = {
+       from: 'meetnode@gmail.com',
+       to: email,
+       subject: 'Hotel Booking Payment Details',
+       text: textContent, 
+   };
+   await transporter.sendMail(mailOptions);
+}
+
+exports.sendHotelBookingDetails =async (hotelBookingDetails, personDetails, bookingAmount) => {
+    try {
+        
+        const templatePath = path.join(__dirname, '../views/admin-panel/templateUrl/hotelTemplateListing.ejs');
+        const htmlContent = await ejs.renderFile(templatePath, { hotelBookingDetails, personDetails, bookingAmount});
+
+        const mailOptions = {
+            from: 'meetnode@gmail.com',
+            to: personDetails?.email,
+            subject: 'Hotel booking',
+            html: htmlContent,
+        };
+
+        await transporter.sendMail(mailOptions);
+    } catch (err) {
+        console.error('Error sending hotel booking email:', err);
     }
 }

@@ -253,6 +253,31 @@
         border-top: 1px solid #e0e0e0;
       }
 
+      
+      .flight-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .flight-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+
+        .flight-route {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .flight-time {
+            font-size: 1.2em;
+            color: #1e3c72;
+        }
+
       .contact-info {
         margin-top: 15px;
         font-size: 12px;
@@ -270,13 +295,14 @@
       <div class="content">
         <div class="traveler-info">
           <div class="traveler-details">
-            <strong>Traveler Name:</strong> <%= inqueryData.customerName %><br />
+            <strong>Traveler Name:</strong> <%= customerDetails.customerName
+            %><br />
             <strong>Booking Code:</strong>
             <span class="booking-code">DTI2024XYZ</span>
           </div>
           <div class="traveler-details">
             <strong>Travel Dates:</strong> <%= new
-            Date(inqueryData.travelDate).toLocaleDateString() %> <br />
+            Date(customerDetails.travelDate).toLocaleDateString() %> <br />
             <strong>Destination:</strong> <%= interyData.packageTitle %>
           </div>
         </div>
@@ -285,7 +311,7 @@
 
         <% interyData.days.forEach((day, index) => { %>
         <div class="itinerary-item">
-          <!--  -->
+          
           <div
             class="itinerary-image-container"
             data-day="Day <%= index + 1 %>"
@@ -320,38 +346,59 @@
 
         <div class="section-header">Additional Travel Information</div>
 
-        <div class="additional-info">
-          <h3>Important Travel Details</h3>
-          <p>✈️ Flight Details: Emirates Airlines EK123</p>
-          <p>🏨 Hotel: Luxury Dubai Downtown Hotel</p>
-          <p>🚗 Airport Transfers: Included</p>
-        </div>
+        <section class="additional-info">
+          <h2 class="card-title">Flight Details</h2>
+          <div class="flight-details">
+            <% interyData.flightDetails.forEach(flight => { %>
+            <div class="flight-card">
+              <div class="flight-route">
+                <div>
+                  <div><%= flight.departure.location %></div>
+                  <div class="flight-time"><%= flight.departure.time %></div>
+                </div>
+                <div>→</div>
+                <div>
+                  <div><%= flight.arrival.location %></div>
+                  <div class="flight-time"><%= flight.arrival.time %></div>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </section>
 
         <div class="travel-tips">
           <h3>Inclusion</h3>
           <ul>
-            <%  interyData.inclusionExclusionArray.inclusion.forEach((inclusion)=> { %>
-              <li><%= inclusion %></li>
-            <%  }) %>
+            <%
+            interyData.inclusionExclusionArray.inclusion.forEach((inclusion)=> {
+            %>
+            <li><%= inclusion %></li>
+            <% }) %>
           </ul>
         </div>
 
         <div class="visa-requirements">
           <h3>Exclusion</h3>
           <ul>
-            <%  interyData.inclusionExclusionArray.exclusion.forEach((exclusion)=> { %>
-              <li><%= exclusion %></li>
-            <%  }) %>
+            <%
+            interyData.inclusionExclusionArray.exclusion.forEach((exclusion)=> {
+            %>
+            <li><%= exclusion %></li>
+            <% }) %>
           </ul>
         </div>
 
         <div class="section-header">Pricing and Booking Details</div>
 
         <% var subtotal = (interyData.priceArray.perPersonPrice *
-        inqueryData.numberOfAdult) + (interyData.priceArray.childWithBed *
-        inqueryData.numberOfChildWithBed) +
+        customerDetails.numberOfAdult) + (interyData.priceArray.childWithBed *
+        customerDetails.numberOfChildWithBed) +
         (interyData.priceArray.childWithoutBed *
-        inqueryData.numberOfChildWithoutBed); %>
+        customerDetails.numberOfChildWithoutBed); if
+        (customerDetails.numberOfInfants > 0) { subtotal +=
+        interyData.priceArray.costPerInfont * customerDetails.numberOfInfants; }
+        %>
 
         <div class="pricing-section">
           <h3>Traveler Composition</h3>
@@ -367,47 +414,56 @@
             <tbody>
               <tr>
                 <td>Adults (Standard)</td>
-                <td><%= inqueryData.numberOfAdult %></td>
+                <td><%= customerDetails.numberOfAdult %></td>
                 <td>₹<%= interyData.priceArray.perPersonPrice %></td>
                 <td>
                   ₹<%= interyData.priceArray.perPersonPrice *
-                  inqueryData.numberOfAdult %>
+                  customerDetails.numberOfAdult %>
                 </td>
               </tr>
               <tr>
                 <td>Children with Bed</td>
-                <td><%= inqueryData.numberOfChildWithBed %></td>
+                <td><%= customerDetails.numberOfChildWithBed %></td>
                 <td>₹<%= interyData.priceArray.childWithBed %></td>
                 <td>
                   ₹<%= interyData.priceArray.childWithBed *
-                  inqueryData.numberOfChildWithBed %>
+                  customerDetails.numberOfChildWithBed %>
                 </td>
               </tr>
               <tr>
                 <td>Children without Bed</td>
-                <td><%= inqueryData.numberOfChildWithoutBed %></td>
+                <td><%= customerDetails.numberOfChildWithoutBed %></td>
                 <td>₹<%= interyData.priceArray.childWithoutBed %></td>
                 <td>
                   ₹<%= interyData.priceArray.childWithoutBed *
-                  inqueryData.numberOfChildWithoutBed %>
+                  customerDetails.numberOfChildWithoutBed %>
                 </td>
               </tr>
+              <% if(customerDetails?.numberOfInfants) { %>
               <tr>
-                <td><strong>Subtotal</strong></td>
+                <td>Infants</td>
+                <td><%= customerDetails.numberOfInfants %></td>
+                <td>₹<%= interyData.priceArray.costPerInfont %></td>
+                <td>
+                  ₹<%= interyData.priceArray.costPerInfont *
+                  customerDetails.numberOfInfants %>
+                </td>
+              </tr>
+              <% } %>
+              <tr>
+                <td>
+                  <strong>Subtotal </strong>
+                </td>
                 <td colspan="3">
-                  <strong
-                    >₹<%= subtotal %></strong
-                  >
+                  <strong>₹<%= subtotal %></strong>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <% var GST = subtotal * 0.05;
-           var TCS = subtotal * 0.05;
-           var totalTaxes = GST + TCS;
-           var grandTotal = subtotal + totalTaxes;
-         %>
+
+        <% var GST = subtotal * 0.05; var TCS = subtotal * 0.05; var totalTaxes
+        = GST + TCS; var grandTotal = subtotal + totalTaxes; %>
 
         <div class="tax-info pricing-section">
           <h3>Taxes and Additional Charges</h3>
@@ -432,11 +488,15 @@
               </tr>
               <tr>
                 <td><strong>Total Taxes</strong></td>
-                <td colspan="2"><strong>₹<%= totalTaxes.toFixed(2) %></strong></td>
+                <td colspan="2">
+                  <strong>₹<%= totalTaxes.toFixed(2) %></strong>
+                </td>
               </tr>
               <tr>
                 <td><strong>Grand Total</strong></td>
-                <td colspan="2"><strong>₹<%= grandTotal.toFixed(2) %></strong></td>
+                <td colspan="2">
+                  <strong>₹<%= grandTotal.toFixed(2) %></strong>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -447,13 +507,42 @@
             >
           </p>
         </div>
+   
+        <% if(customerDetails?.paymentSummary) {%>
+        <div class="tax-info pricing-section">
+          <h3>Payment Details</h3>
+          <table class="pricing-table">
+            <thead>
+              <tr>
+                <th>Description</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Amount Paid</td>
+                <td>₹<%= customerDetails.paymentSummary.amountPaid %></td>
+              </tr>
+              <tr>
+                <td>Remaining Balance</td>
+                <td>₹<%= customerDetails.paymentSummary.balanceDue %></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            <small
+              >* Taxes and charges are subject to change. Please confirm at the
+              time of booking.</small
+            >
+          </p>
+        </div>
+        <% } %>
 
         <div class="footer">
           <p>© 2024 Assgard Travel. All Rights Reserved.</p>
           <div class="contact-info">
             <p>
-              Customer Support: +971 50 123 4567 |
-              support@assgardtravel.com
+              Customer Support: +971 50 123 4567 | support@assgardtravel.com
             </p>
             <p>Emergency Contact: +971 52 987 6543</p>
           </div>
