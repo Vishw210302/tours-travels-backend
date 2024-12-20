@@ -31,7 +31,7 @@ authController.successGoogleLogin = async (req, res) => {
 
             if (existingAdmin.email === req.user.email) {
 
-                var token = genarateToken(existingAdmin, 'admin')
+                var token = await genarateToken(existingAdmin, 'admin')
                 res.cookie('token', token)
                 return res.redirect('/admin');
 
@@ -75,7 +75,8 @@ authController.employeeLogin = async (req, res) => {
         if (!isPasswordValid) {
             return res.render('admin-panel/404page/404page')
         }
-        const token = genarateToken(employee, 'employee')
+
+        const token = await genarateToken(employee, 'employee', employeePassword)
 
         req.session.user = employee
         res.cookie('token', token)
