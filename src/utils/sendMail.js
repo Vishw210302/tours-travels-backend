@@ -1,11 +1,13 @@
-const fs = require('fs');
 const path = require('path');
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
 const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 
 const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
     service: 'gmail',
+    port: 465,
+    secure: true,
     auth: {
         user: 'meetnode@gmail.com',
         pass: 'wuafmrngtspmdiwo'
@@ -50,10 +52,9 @@ exports.setEmployeePasswordEmail = async (empEmail, password) => {
 
 exports.sendItenryDetailEmail = async (details, interyData, key, paymentSummary) => {
     try {
-
-        if(key == 0){
+        if (key == 0) {
             customerDetails = details
-        }else{
+        } else {
             customerDetails = {
                 customerName: details.name,
                 customerEmail: details.email,
@@ -85,13 +86,12 @@ exports.sendItenryDetailEmail = async (details, interyData, key, paymentSummary)
 }
 
 exports.sendPyamentDetails = async (details, paymentSummary) => {
- // for testing only
-    const email=[
+    const email = [
         'varmaajay182@gmail.com',
         'sandipganava2357@gmail.com'
     ]
 
-       const textContent = `
+    const textContent = `
        Payment Details:
 
        Payment Summary: ${paymentSummary}
@@ -100,21 +100,20 @@ exports.sendPyamentDetails = async (details, paymentSummary) => {
        - Total Amount: ${details}
    `;
 
-   // Mail options
-   const mailOptions = {
-       from: 'meetnode@gmail.com',
-       to: email,
-       subject: 'Hotel Booking Payment Details',
-       text: textContent, 
-   };
-   await transporter.sendMail(mailOptions);
+    const mailOptions = {
+        from: 'meetnode@gmail.com',
+        to: email,
+        subject: 'Hotel Booking Payment Details',
+        text: textContent,
+    };
+    await transporter.sendMail(mailOptions);
 }
 
-exports.sendHotelBookingDetails =async (hotelBookingDetails, personDetails, bookingAmount) => {
+exports.sendHotelBookingDetails = async (hotelBookingDetails, personDetails, bookingAmount) => {
     try {
-        
+
         const templatePath = path.join(__dirname, '../views/admin-panel/templateUrl/hotelTemplateListing.ejs');
-        const htmlContent = await ejs.renderFile(templatePath, { hotelBookingDetails, personDetails, bookingAmount});
+        const htmlContent = await ejs.renderFile(templatePath, { hotelBookingDetails, personDetails, bookingAmount });
 
         const mailOptions = {
             from: 'meetnode@gmail.com',
