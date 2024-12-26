@@ -1163,7 +1163,7 @@ adminController.inqueriesListing = async (req, res) => {
     try {
         const response = await axios.get(`${process.env.baseUrl}/api/get-inqueries-details`);
         if (response.data.status == true) {
-            res.render("admin-panel/allInqueries/allInqueriesListing", { data: response.data.data })
+            res.render("admin-panel/allInqueries/allInqueriesListing")
         } else {
             console.log("Error get in listing in packages")
         }
