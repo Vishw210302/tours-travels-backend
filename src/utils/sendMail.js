@@ -4,14 +4,13 @@ const ejs = require('ejs');
 const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    service: 'gmail',
+    host: "mail.codecrewinfotech.com",
+    // domain: "codecrewinfotech.com",
     port: 465,
-    secure: true,
     auth: {
-        user: 'meetnode@gmail.com',
-        pass: 'wuafmrngtspmdiwo'
-    }
+        user: "aman.shah@codecrewinfotech.com",
+        pass: "aNLn?O]}{&ve",
+    },
 });
 
 exports.sendTicketByEmail = async (to, subject) => {
