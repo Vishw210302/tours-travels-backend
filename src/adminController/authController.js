@@ -98,8 +98,8 @@ authController.getForgotPassword = async (req, res) => {
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'meetnode@gmail.com',
-        pass: 'wuafmrngtspmdiwo'
+        user: 'vishwprajapaticodecrewinfotech@gmail.com',
+        pass: 'Vishw@2103'
     }
 });
 
@@ -121,7 +121,7 @@ authController.OTPSendEmail = async (req, res) => {
         await user.save();
 
         const mailOptions = {
-            from: 'meetnode@gmail.com',
+            from: 'vishwprajapaticodecrewinfotech@gmail.com',
             to: email,
             subject: 'Your OTP for Password Reset',
             text: `Your OTP is ${otp}. It is valid for 10 minutes.`

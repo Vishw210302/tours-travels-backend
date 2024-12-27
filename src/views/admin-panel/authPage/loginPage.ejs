@@ -321,16 +321,9 @@
     <div class="container">
       <div class="welcome-text">Tours and Travel</div>
       <div class="subtitle">Secure and seamless login experience</div>
-      <!-- <div class="tab-buttons">
-        <button class="tab-button active" onclick="showForm('employeeForm')">
-          Employee Login
-        </button>
-        <button class="tab-button" onclick="showForm('adminForm')">
-          Admin Login
-        </button>
-      </div> -->
 
       <!-- Employee Login Form -->
+
       <div id="employeeForm" class="form-container active">
         <form action="/employee-loginPage" method="POST">
           <p class="lable-color">Email :-</p>
@@ -351,13 +344,13 @@
               placeholder="Enter password here ..."
               required
             />
-              <span
-                id="toggleEmployeePassword"
-                class="eye-icon"
-                style="cursor: pointer"
-                onclick="togglePasswordVisibility('employeePassword','toggleEmployeePassword')"
-                >👁️</span
-              >
+            <span
+              id="toggleEmployeePassword"
+              class="eye-icon"
+              style="cursor: pointer"
+              onclick="togglePasswordVisibility('employeePassword','toggleEmployeePassword')"
+              >👁️</span
+            >
           </div>
 
           <div class="forgot-password">

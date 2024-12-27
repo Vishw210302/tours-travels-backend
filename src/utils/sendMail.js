@@ -4,19 +4,17 @@ const ejs = require('ejs');
 const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 
 const transporter = nodemailer.createTransport({
-    host: "mail.codecrewinfotech.com",
-    // domain: "codecrewinfotech.com",
     port: 465,
     auth: {
-        user: "aman.shah@codecrewinfotech.com",
-        pass: "aNLn?O]}{&ve",
+        user: "vishwprajapaticodecrewinfotech@gmail.com",
+        pass: "Vishw@2103",
     },
 });
 
 exports.sendTicketByEmail = async (to, subject) => {
 
     const mailOptions = {
-        from: 'varmaajay182@gmail.com',
+        from: 'vishwprajapaticodecrewinfotech@gmail.com',
         to: to,
         subject: subject,
     };
@@ -37,7 +35,7 @@ exports.setEmployeePasswordEmail = async (empEmail, password) => {
 
         const htmlContent = await ejs.renderFile(templatePath, { data });
         const mailOptions = {
-            from: 'meetnode@gmail.com',
+            from: 'vishwprajapaticodecrewinfotech@gmail.com',
             to: empEmail,
             subject: 'Set Password',
             html: htmlContent,
@@ -72,7 +70,7 @@ exports.sendItenryDetailEmail = async (details, interyData, key, paymentSummary)
         const htmlContent = await ejs.renderFile(templatePath, { customerDetails, interyData });
 
         const mailOptions = {
-            from: 'meetnode@gmail.com',
+            from: 'vishwprajapaticodecrewinfotech@gmail.com',
             to: customerDetails?.customerEmail,
             subject: 'Itenary Details',
             html: htmlContent,
@@ -86,7 +84,7 @@ exports.sendItenryDetailEmail = async (details, interyData, key, paymentSummary)
 
 exports.sendPyamentDetails = async (details, paymentSummary) => {
     const email = [
-        'varmaajay182@gmail.com',
+        'vishwprajapaticodecrewinfotech@gmail.com',
         'sandipganava2357@gmail.com'
     ]
 
@@ -100,7 +98,7 @@ exports.sendPyamentDetails = async (details, paymentSummary) => {
    `;
 
     const mailOptions = {
-        from: 'meetnode@gmail.com',
+        from: 'vishwprajapaticodecrewinfotech@gmail.com',
         to: email,
         subject: 'Hotel Booking Payment Details',
         text: textContent,
@@ -115,7 +113,7 @@ exports.sendHotelBookingDetails = async (hotelBookingDetails, personDetails, boo
         const htmlContent = await ejs.renderFile(templatePath, { hotelBookingDetails, personDetails, bookingAmount });
 
         const mailOptions = {
-            from: 'meetnode@gmail.com',
+            from: 'vishwprajapaticodecrewinfotech@gmail.com',
             to: personDetails?.email,
             subject: 'Hotel booking',
             html: htmlContent,
