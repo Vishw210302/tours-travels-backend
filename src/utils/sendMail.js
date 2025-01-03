@@ -4,7 +4,9 @@ const ejs = require('ejs');
 const employees = require('../schema/allEmployeeSchema/allEmployeeSchema');
 
 const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
     port: 465,
+    secure: true,
     auth: {
         user: "vishwprajapaticodecrewinfotech@gmail.com",
         pass: "Vishw@2103",
@@ -12,7 +14,6 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.sendTicketByEmail = async (to, subject) => {
-
     const mailOptions = {
         from: 'vishwprajapaticodecrewinfotech@gmail.com',
         to: to,
@@ -24,13 +25,12 @@ exports.sendTicketByEmail = async (to, subject) => {
     } catch (error) {
         console.error('Error sending email:', error);
     }
-}
+};
 
 exports.setEmployeePasswordEmail = async (empEmail, password) => {
     try {
-
-        const empData = await employees.findOne({ employeeEmail: empEmail }).select('-employeePassword -__v').populate('employeeRole', { roleName: 1 }).lean()
-        const data = { ...empData, password }
+        const empData = await employees.findOne({ employeeEmail: empEmail }).select('-employeePassword -__v').populate('employeeRole', { roleName: 1 }).lean();
+        const data = { ...empData, password };
         const templatePath = path.join(__dirname, '../views/admin-panel/allUsers/employeePasswordReset.ejs');
 
         const htmlContent = await ejs.renderFile(templatePath, { data });
@@ -49,51 +49,47 @@ exports.setEmployeePasswordEmail = async (empEmail, password) => {
 
 exports.sendItenryDetailEmail = async (details, interyData, key, paymentSummary) => {
     try {
-        if (key == 0) {
-            customerDetails = details
-        } else {
-            customerDetails = {
-                customerName: details.name,
-                customerEmail: details.email,
-                customerPhone: details.mobile,
-                numberOfAdult: details.adults,
-                numberOfChildWithBed: details.childrenWithBed,
-                numberOfChildWithoutBed: details.childrenWithoutBed,
-                itenaryName: interyData.packageTitle,
-                travelDate: details.departureDate,
-                numberOfInfants: details.infants,
-                paymentSummary
-            }
-        }
+        const customerDetails = key === 0 ? details : {
+            customerName: details.name,
+            customerEmail: details.email,
+            customerPhone: details.mobile,
+            numberOfAdult: details.adults,
+            numberOfChildWithBed: details.childrenWithBed,
+            numberOfChildWithoutBed: details.childrenWithoutBed,
+            itenaryName: interyData.packageTitle,
+            travelDate: details.departureDate,
+            numberOfInfants: details.infants,
+            paymentSummary
+        };
 
         const templatePath = path.join(__dirname, '../views/admin-panel/templateUrl/itenaryDetail.ejs');
         const htmlContent = await ejs.renderFile(templatePath, { customerDetails, interyData });
 
         const mailOptions = {
             from: 'vishwprajapaticodecrewinfotech@gmail.com',
-            to: customerDetails?.customerEmail,
+            to: customerDetails.customerEmail,
             subject: 'Itenary Details',
             html: htmlContent,
         };
 
         await transporter.sendMail(mailOptions);
-    } catch (err) {
-        console.error('Error sending itinerary inquiry email:', err);
+    } catch (error) {
+        console.error('Error sending itinerary inquiry email:', error);
     }
-}
+};
 
 exports.sendPyamentDetails = async (details, paymentSummary) => {
     const email = [
         'vishwprajapaticodecrewinfotech@gmail.com',
         'sandipganava2357@gmail.com'
-    ]
+    ];
 
     const textContent = `
        Payment Details:
 
        Payment Summary: ${paymentSummary}
 
-       details:
+       Details:
        - Total Amount: ${details}
    `;
 
@@ -103,19 +99,23 @@ exports.sendPyamentDetails = async (details, paymentSummary) => {
         subject: 'Hotel Booking Payment Details',
         text: textContent,
     };
-    await transporter.sendMail(mailOptions);
-}
+
+    try {
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error('Error sending payment details email:', error);
+    }
+};
 
 exports.sendHotelBookingDetails = async (hotelBookingDetails, personDetails, bookingAmount) => {
     try {
-
         const templatePath = path.join(__dirname, '../views/admin-panel/templateUrl/hotelTemplateListing.ejs');
         const htmlContent = await ejs.renderFile(templatePath, { hotelBookingDetails, personDetails, bookingAmount });
 
         const mailOptions = {
             from: 'vishwprajapaticodecrewinfotech@gmail.com',
-            to: personDetails?.email,
-            subject: 'Hotel booking',
+            to: personDetails.email,
+            subject: 'Hotel Booking',
             html: htmlContent,
         };
 
@@ -123,4 +123,4 @@ exports.sendHotelBookingDetails = async (hotelBookingDetails, personDetails, boo
     } catch (err) {
         console.error('Error sending hotel booking email:', err);
     }
-}
+};
