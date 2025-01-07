@@ -28,6 +28,7 @@ const flightContactUs = require("../../schema/passengerDetailsSchema/contactUsTi
 const { pdfGenerator } = require("../../utils/pdfGenerator");
 const path = require("path");
 const fs = require("fs");
+const nodemailer = require('nodemailer');
 const packageThemeImage = require("../../schema/packageThemeSchema/packageThemeSchema");
 const socialMediaLink = require("../../schema/socialMediaLinkSchema/socialMediaLinkSchema");
 const hotelContactUs = require("../../schema/hotelContactUsSchema/hotelContactUsSchema");
@@ -2142,7 +2143,7 @@ apicontroller.itenaryPayment = async (req, res) => {
     } = personDetail;
 
     const paymentSummary = {
-      amountPaid: payPrice, 
+      amountPaid: payPrice,
       balanceDue: remainingBalance,
     }
 
@@ -2270,7 +2271,7 @@ apicontroller.itenaryPayment = async (req, res) => {
       }
     ]);
 
-     await sendItenryDetailEmail(personDetail, interyData[0], key = 1, paymentSummary)
+    await sendItenryDetailEmail(personDetail, interyData[0], key = 1, paymentSummary)
 
     const paymentRecord = await ItenaryPaymentDetails.create({
       cardHolderName: name,
@@ -2280,7 +2281,7 @@ apicontroller.itenaryPayment = async (req, res) => {
         adults: parseInt(adults, 10) || 0,
         childrenWithoutBed: parseInt(childrenWithoutBed, 10) || 0,
         infants: parseInt(infants, 10) || 0,
-        childrenWithBed:parseInt(childrenWithBed, 10) || 0,
+        childrenWithBed: parseInt(childrenWithBed, 10) || 0,
       },
       paymentId,
       payPrice,
@@ -2309,7 +2310,7 @@ apicontroller.processHotelPayments = async (req, res) => {
       paymentId
     } = req.body;
 
-    const response =  await sendHotelBookingDetails(hotelBookingDetails, personDetails, bookingAmount)
+    const response = await sendHotelBookingDetails(hotelBookingDetails, personDetails, bookingAmount)
 
     const savedBooking = await HotelBookingPayment.create({
       hotelName: hotelBookingDetails.hotelName,

@@ -5,8 +5,8 @@ const OTP = require('../schema/adminLoginSchema/adminOtpSchema');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'meetnode@gmail.com',
-        pass: 'wuafmrngtspmdiwo'
+        user: 'vishwprajapaticodecrewinfotech@gmail.com',
+        pass: 'gugb cdcg musq uyre'
     }
 });
 
@@ -17,7 +17,7 @@ exports.sendOTP = async (email) => {
     const generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
     const mailOptions = {
-      from: 'meetnode@gmail.com',
+      from: 'vishwprajapaticodecrewinfotech@gmail.com',
       to: email,
       subject: 'Your OTP Code',
       text: `Your OTP code is ${generatedOTP}. It is valid for 1 minute.`,
